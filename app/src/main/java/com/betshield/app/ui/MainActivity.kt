@@ -87,6 +87,17 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        // AdMob Monetization & Real Ad Units Settings
+        val openAdSettings = {
+            com.betshield.app.monetization.AdSettingsDialog(this) {
+                AdManager.loadBanner(binding.adBannerContainer, this)
+                AdManager.loadInterstitial(this)
+                AdManager.loadRewardedAd(this)
+            }.show()
+        }
+        binding.btnAdSettings.setOnClickListener { openAdSettings() }
+        binding.btnMonetizationSettings.setOnClickListener { openAdSettings() }
+
         // Top Lock Button (Manage Password)
         binding.btnPasswordSettings.setOnClickListener {
             if (app.passwordManager.isPasswordSet()) {

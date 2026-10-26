@@ -190,6 +190,51 @@ class DnsPacketParser {
         return response
     }
 
+    /**
+     * Builds a valid IPv4 UDP packet containing the real upstream DNS response
+     * addressed back to the client device.
+     */
+    fun createForwardedResponsePacket(
+        parsed: ParsedDnsQuery,
+        dnsResponsePayload: ByteArray,
+        payloadLength: Int
+    ): ByteArray {
+        val totalUdpLength = 8 + payloadLength
+        val totalIpLength = 20 + totalUdpLength
+
+        val packet = ByteArray(totalIpLength)
+        val buffer = ByteBuffer.wrap(packet)
+        buffer.order(ByteOrder.BIG_ENDIAN)
+
+        // IPv4 Header (20 bytes)
+        buffer.put(0x45.toByte()) // Version 4, IHL 5
+        buffer.put(0x00.toByte()) // DSCP/ECN
+        buffer.putShort(totalIpLength.toShort()) // Total length
+        buffer.putShort(0x4321.toShort()) // Identification
+        buffer.putShort(0x4000.toShort()) // Flags (Don't Fragment)
+        buffer.put(64.toByte()) // TTL
+        buffer.put(17.toByte()) // Protocol: UDP (17)
+        buffer.putShort(0.toShort()) // Checksum placeholder
+        buffer.put(parsed.destIp) // Source IP = original Destination IP (DNS server)
+        buffer.put(parsed.sourceIp) // Destination IP = original Source IP (Client device)
+
+        // Calculate IP Checksum
+        val ipChecksum = computeIpChecksum(packet, 0, 20)
+        buffer.putShort(10, ipChecksum.toShort())
+
+        // UDP Header (8 bytes)
+        buffer.position(20)
+        buffer.putShort(parsed.destPort.toShort()) // Source Port (53)
+        buffer.putShort(parsed.sourcePort.toShort()) // Destination Port (Client port)
+        buffer.putShort(totalUdpLength.toShort())
+        buffer.putShort(0.toShort()) // UDP checksum 0 (optional in IPv4)
+
+        // DNS Response Payload (starts at offset 28)
+        System.arraycopy(dnsResponsePayload, 0, packet, 28, payloadLength)
+
+        return packet
+    }
+
     private fun computeIpChecksum(data: ByteArray, offset: Int, length: Int): Int {
         var sum = 0
         var i = offset

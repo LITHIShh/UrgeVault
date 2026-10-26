@@ -4,6 +4,7 @@ import android.accessibilityservice.AccessibilityService
 import android.content.Intent
 import android.util.Log
 import android.view.accessibility.AccessibilityEvent
+import android.view.accessibility.AccessibilityNodeInfo
 import com.betshield.app.BetShieldApplication
 import com.betshield.app.ui.BlockedActivity
 import com.betshield.app.ui.PasswordUnlockActivity
@@ -15,6 +16,14 @@ class BetBlockerAccessibilityService : AccessibilityService() {
         @Volatile
         var isServiceActive: Boolean = false
             private set
+
+        private val BROWSER_PACKAGES = setOf(
+            "com.android.chrome", "com.chrome.beta", "com.chrome.dev", "com.chrome.canary",
+            "org.mozilla.firefox", "org.mozilla.firefox_beta", "org.mozilla.focus",
+            "com.sec.android.app.sbrowser", "com.sec.android.app.sbrowser.beta",
+            "com.microsoft.emmx", "com.brave.browser", "com.opera.browser", "com.opera.mini.native",
+            "com.duckduckgo.mobile.android", "com.android.browser", "com.UCMobile.intl"
+        )
     }
 
     override fun onServiceConnected() {
@@ -58,12 +67,36 @@ class BetBlockerAccessibilityService : AccessibilityService() {
             }
         }
 
-        // 2. Check if the foreground application is a gambling/betting platform
+        // 2. Browser Website Monitoring (Deep URL Bar Inspection for Chrome, Edge, Firefox, Samsung Internet)
+        if (BROWSER_PACKAGES.contains(eventPackage)) {
+            val rootNode = rootInActiveWindow ?: event.source
+            if (rootNode != null) {
+                val detectedUrl = findUrlInNode(rootNode)
+                if (detectedUrl != null && blocklist.isDomainBlocked(detectedUrl)) {
+                    Log.w(TAG, "BLOCKED gambling website in browser: $detectedUrl")
+                    app.preferencesManager.incrementInterceptionCount()
+
+                    // Kick browser to home screen immediately
+                    performGlobalAction(GLOBAL_ACTION_HOME)
+
+                    // Launch high-priority blocked screen
+                    val blockIntent = Intent(this, BlockedActivity::class.java).apply {
+                        flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+                        putExtra(BlockedActivity.EXTRA_TARGET, detectedUrl)
+                        putExtra(BlockedActivity.EXTRA_IS_APP, false)
+                    }
+                    startActivity(blockIntent)
+                    return
+                }
+            }
+        }
+
+        // 3. Check if foreground app is a gambling/betting platform or custom blocked app
         val windowTitle = event.className?.toString()
         val isBlockedApp = blocklist.isAppBlocked(eventPackage, windowTitle)
 
         if (isBlockedApp) {
-            Log.w(TAG, "BLOCKED gambling application detected: $eventPackage")
+            Log.w(TAG, "BLOCKED gambling/custom application detected: $eventPackage")
             app.preferencesManager.incrementInterceptionCount()
 
             // Kick user immediately to home screen
@@ -77,6 +110,51 @@ class BetBlockerAccessibilityService : AccessibilityService() {
             }
             startActivity(blockIntent)
         }
+    }
+
+    private fun findUrlInNode(node: AccessibilityNodeInfo): String? {
+        val text = node.text?.toString()
+        if (!text.isNullOrBlank()) {
+            val cleaned = cleanUrl(text)
+            if (cleaned != null) return cleaned
+        }
+
+        val contentDesc = node.contentDescription?.toString()
+        if (!contentDesc.isNullOrBlank()) {
+            val cleaned = cleanUrl(contentDesc)
+            if (cleaned != null) return cleaned
+        }
+
+        for (i in 0 until node.childCount) {
+            val child = node.getChild(i) ?: continue
+            val found = findUrlInNode(child)
+            if (found != null) return found
+        }
+        return null
+    }
+
+    private fun cleanUrl(raw: String): String? {
+        var str = raw.trim().lowercase()
+        // Strip common prefixes
+        if (str.startsWith("https://")) str = str.substring(8)
+        if (str.startsWith("http://")) str = str.substring(7)
+        if (str.startsWith("www.")) str = str.substring(4)
+
+        // Strip path and query parameters
+        val slashIndex = str.indexOf('/')
+        if (slashIndex != -1) {
+            str = str.substring(0, slashIndex)
+        }
+        val colonIndex = str.indexOf(':')
+        if (colonIndex != -1) {
+            str = str.substring(0, colonIndex)
+        }
+
+        // Check if looks like domain name
+        if (str.contains(".") && !str.contains(" ") && str.length > 3) {
+            return str
+        }
+        return null
     }
 
     private fun extractEventText(event: AccessibilityEvent): String {

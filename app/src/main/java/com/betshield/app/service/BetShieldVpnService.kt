@@ -60,10 +60,13 @@ class BetShieldVpnService : VpnService(), Runnable {
                 .addDnsServer("10.1.10.1")
                 // Route DNS traffic through our local sinkhole tunnel
                 .addRoute("10.1.10.1", 32)
-                .addRoute("1.1.1.3", 32)
-                .addRoute("1.0.0.3", 32)
-                .addRoute("8.8.8.8", 32)
-                .addRoute("8.8.4.4", 32)
+                .addRoute("1.1.1.0", 24)
+                .addRoute("1.0.0.0", 24)
+                .addRoute("8.8.8.0", 24)
+                .addRoute("8.8.4.0", 24)
+                .addRoute("9.9.9.0", 24)
+                .addRoute("208.67.222.0", 24)
+                .addRoute("208.67.220.0", 24)
                 .setMtu(1500)
 
             vpnInterface = builder.establish()
@@ -141,8 +144,11 @@ class BetShieldVpnService : VpnService(), Runnable {
                             upstreamSocket.receive(receivePacket)
 
                             // Translate upstream DNS response back to TUN interface
-                            val clientResponse = ByteArray(20 + 8 + receivePacket.length)
-                            // Populate IPv4 & UDP header swapped to client
+                            val clientResponse = dnsParser.createForwardedResponsePacket(
+                                query,
+                                receivePacket.data,
+                                receivePacket.length
+                            )
                             outputStream.write(clientResponse)
                             outputStream.flush()
                         } catch (e: Exception) {

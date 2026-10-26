@@ -26,22 +26,28 @@ jobs:
       - name: Make Gradlew Executable
         run: chmod +x ./gradlew
 
+      - name: Generate Release Signing Keystore
+        run: |
+          keytool -genkey -v -keystore app/release.jks -alias betshield -keyalg RSA -keysize 2048 -validity 10000 -storepass BetShield@2026 -keypass BetShield@2026 -dname "CN=BetShield, OU=Mobile, O=BetShield, L=City, S=State, C=US"
+
       - name: Build Debug APK
         run: ./gradlew assembleDebug --stacktrace
 
-      - name: Build Release AAB (Android App Bundle for Google Play)
-        run: ./gradlew bundleRelease --stacktrace
+      - name: Build Release APK and Play Store AAB
+        run: |
+          ./gradlew assembleRelease --stacktrace
+          ./gradlew bundleRelease --stacktrace
 
-      - name: Upload Debug APK as Artifact
+      - name: Upload Debug and Release APKs
         uses: actions/upload-artifact@v4
         with:
-          name: BetShield-Debug-APK
-          path: app/build/outputs/apk/debug/app-debug.apk
+          name: BetShield-Installable-APKs
+          path: app/build/outputs/apk/**/*.apk
           retention-days: 30
 
-      - name: Upload Release AAB for Play Store as Artifact
+      - name: Upload Signed Play Store AAB
         uses: actions/upload-artifact@v4
         with:
-          name: BetShield-PlayStore-AAB
-          path: app/build/outputs/bundle/release/app-release.aab
+          name: BetShield-GooglePlay-AAB
+          path: app/build/outputs/bundle/release/*.aab
           retention-days: 30
