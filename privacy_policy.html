@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Privacy Policy - BetShield</title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; line-height: 1.6; color: #1e293b; max-width: 800px; margin: 0 auto; padding: 24px; background: #f8fafc; }
+    h1, h2, h3 { color: #0f172a; }
+    .card { background: white; padding: 32px; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); border: 1px solid #e2e8f0; }
+    .badge { display: inline-block; background: #0d9488; color: white; padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: bold; }
+    ul { padding-left: 20px; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <span class="badge">Privacy Policy</span>
+    <h1>BetShield - Gambling &amp; Custom App Blocker</h1>
+    <p><strong>Effective Date:</strong> October 2026</p>
+
+    <p><strong>BetShield</strong> ("we", "our", or "the app") is committed to protecting your privacy. This Privacy Policy explains how our application handles your data when you use BetShield.</p>
+
+    <h2>1. Data Collection &amp; Processing</h2>
+    <p><strong>We do NOT collect, store, transmit, or sell your personal information or browsing history.</strong> All filtering and blocking calculations take place 100% locally on your device.</p>
+
+    <h2>2. Use of Android VpnService (Web Filter)</h2>
+    <p>BetShield uses Android's <code>VpnService</code> strictly to provide a local DNS sinkhole for blocking gambling websites and user-designated custom domains.</p>
+    <ul>
+      <li>The VPN tunnel operates exclusively on your local device loopback (<code>10.1.10.1</code>).</li>
+      <li>Your web browsing traffic is <strong>NEVER redirected to remote proxy servers</strong> or logged by us.</li>
+      <li>Only DNS queries destined for gambling domains are dropped locally; safe queries are relayed directly to standard family DNS resolvers (e.g., Cloudflare Family DNS).</li>
+    </ul>
+
+    <h2>3. Use of Android AccessibilityService (App Guardian)</h2>
+    <p>BetShield uses the Android <code>AccessibilityService</code> API strictly for self-exclusion and digital well-being purposes:</p>
+    <ul>
+      <li>To detect foreground package names and close gambling or user-blocked applications immediately upon launch.</li>
+      <li>To prevent tampering or unauthorized uninstallation of the app without the user's master password.</li>
+      <li>We do <strong>NOT</strong> collect, read, or record user keystrokes, personal messages, passwords, or on-screen text.</li>
+    </ul>
+
+    <h2>4. Advertising &amp; Third-Party Services (Google AdMob)</h2>
+    <p>BetShield is completely free to use and is supported by advertising via <strong>Google AdMob</strong>.</p>
+    <p>Google AdMob may collect and process standard device identifiers, advertising IDs (GAID), IP addresses, and diagnostic information to serve personalized or non-personalized advertisements in compliance with Google's Play Services policies. You can learn more about how Google uses information from sites or apps that use their services at <a href="https://policies.google.com/technologies/ads" target="_blank">Google's Privacy &amp; Terms</a>.</p>
+
+    <h2>5. Security of Master Password</h2>
+    <p>Your master password / PIN is stored securely using a 16-byte cryptographic salt and iterated SHA-256 cryptographic hashing in private application storage. Your plain password is never recorded or sent off your device.</p>
+
+    <h2>6. Contact Us</h2>
+    <p>If you have any questions or concerns regarding this Privacy Policy, please contact our support team at: <strong>support@betshield.app</strong>.</p>
+  </div>
+</body>
+</html>

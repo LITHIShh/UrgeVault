@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#11070A"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="28dp">
+
+    <!-- Block Icon -->
+    <ImageView
+        android:id="@+id/ivBlockedIcon"
+        android:layout_width="110dp"
+        android:layout_height="110dp"
+        android:layout_marginBottom="24dp"
+        android:contentDescription="Blocked"
+        android:src="@drawable/ic_block" />
+
+    <!-- Title -->
+    <TextView
+        android:id="@+id/tvBlockedTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/blocked_title"
+        android:textColor="@color/danger"
+        android:textSize="26sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tvBlockedSubtitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:gravity="center"
+        android:text="@string/blocked_subtitle"
+        android:textColor="@color/text_primary"
+        android:textSize="15sp" />
+
+    <!-- Target Item Tag -->
+    <TextView
+        android:id="@+id/tvBlockedTarget"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:background="@color/surface"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="8dp"
+        android:text="com.betting.app"
+        android:textColor="@color/primary_light"
+        android:textSize="13sp"
+        android:textStyle="bold" />
+
+    <!-- Motivational Card -->
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="28dp"
+        app:cardBackgroundColor="@color/surface"
+        app:cardCornerRadius="18dp"
+        app:strokeColor="@color/card_stroke"
+        app:strokeWidth="1dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <TextView
+                android:id="@+id/tvQuote"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="serif"
+                android:gravity="center"
+                android:text="@string/blocked_quote"
+                android:textColor="@color/text_primary"
+                android:textSize="16sp"
+                android:textStyle="italic" />
+
+            <View
+                android:layout_width="60dp"
+                android:layout_height="1dp"
+                android:layout_marginVertical="14dp"
+                android:background="@color/card_stroke" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/blocked_helpline_text"
+                android:textColor="@color/text_secondary"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/tvHelpline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:gravity="center"
+                android:text="@string/blocked_helpline_number"
+                android:textColor="@color/accent"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- Return Home Button -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnReturnHome"
+        style="@style/Widget.Material3.Button"
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:text="@string/btn_return_home"
+        android:textColor="@color/white"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        app:cornerRadius="14dp" />
+
+</LinearLayout>

@@ -1,0 +1,43 @@
+<resources>
+    <string name="app_name">BetShield</string>
+    <string name="title_blocklist">Blocked Items</string>
+    <string name="title_permissions">Protection Setup</string>
+    <string name="accessibility_description">Monitors and blocks gambling and betting applications, and prevents unauthorized tampering without master password.</string>
+    <string name="device_admin_description">Enables anti-uninstall protection for BetShield to prevent impulsive removal without authorization.</string>
+
+    <string name="status_protected">Shield Active</string>
+    <string name="status_unprotected">Shield Inactive</string>
+    <string name="status_protected_desc">All known gambling websites and apps are currently blocked.</string>
+    <string name="status_unprotected_desc">Protection is turned off. Your device is vulnerable to betting triggers.</string>
+
+    <string name="vpn_service_title">Web Filter (DNS Sinkhole)</string>
+    <string name="vpn_service_desc">Intercepts and drops connections to betting &amp; casino websites.</string>
+    <string name="accessibility_service_title">App Guardian</string>
+    <string name="accessibility_service_desc">Detects and blocks betting app launches and settings bypass.</string>
+    <string name="device_admin_title">Uninstall Protection</string>
+    <string name="device_admin_desc">Prevents bypassing the shield by deleting the app.</string>
+
+    <string name="blocked_title">Access Blocked</string>
+    <string name="blocked_subtitle">BetShield prevented access to a gambling platform.</string>
+    <string name="blocked_quote">"The greatest victory is victory over oneself."</string>
+    <string name="blocked_helpline_text">Need support? Free, confidential 24/7 gambling helpline:</string>
+    <string name="blocked_helpline_number">1-800-GAMBLER (USA) / 0808 8020 133 (UK)</string>
+    <string name="btn_return_home">Return to Safety (Home)</string>
+
+    <string name="password_title_setup">Set Master Password</string>
+    <string name="password_title_unlock">Enter Master Password</string>
+    <string name="password_desc_setup">Choose a strong PIN or password. You will need this to change settings or turn off protection.</string>
+    <string name="password_desc_unlock">Enter your master password to unlock changes or disable the shield.</string>
+    <string name="password_hint">Enter PIN / Password</string>
+    <string name="password_confirm_hint">Confirm PIN / Password</string>
+    <string name="btn_confirm">Confirm</string>
+    <string name="btn_cancel">Cancel</string>
+    <string name="btn_unlock">Unlock</string>
+    <string name="error_password_mismatch">Passwords do not match.</string>
+    <string name="error_password_incorrect">Incorrect password. Access denied.</string>
+    <string name="error_password_short">Password must be at least 4 digits/characters.</string>
+
+    <string name="stats_domains_blocked">Blocked Domains</string>
+    <string name="stats_apps_blocked">Blocked Apps</string>
+    <string name="stats_events_intercepted">Interceptions</string>
+</resources>
