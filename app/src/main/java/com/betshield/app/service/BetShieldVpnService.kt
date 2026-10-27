@@ -37,9 +37,9 @@ class BetShieldVpnService : VpnService(), Runnable {
         private const val VPN_DNS_SERVER_IP = "10.0.0.1"
 
         private val FALLBACK_UPSTREAM_RESOLVERS = listOf(
-            "1.1.1.3", // Cloudflare Family (Malware & Adult/Betting filter)
             "8.8.8.8", // Google DNS (Globally accessible, resilient fallback)
             "1.1.1.1", // Cloudflare standard
+            "8.8.4.4", // Google Secondary
             "9.9.9.9"  // Quad9
         )
 
@@ -103,43 +103,11 @@ class BetShieldVpnService : VpnService(), Runnable {
                 .setMtu(1500)
                 // Virtual TUN address
                 .addAddress(VPN_INTERFACE_IP, 24)
-                // Set the virtual DNS server to 10.0.0.1
+                // Set the virtual DNS server to 10.0.0.1 and route ONLY DNS traffic to TUN
                 .addDnsServer(VPN_DNS_SERVER_IP)
                 .addRoute(VPN_DNS_SERVER_IP, 32)
-                // Route common public DNS resolver IPs so hardcoded and DoH lookups enter TUN
-                .addRoute("8.8.8.8", 32)
-                .addRoute("8.8.4.4", 32)
-                .addRoute("1.1.1.1", 32)
-                .addRoute("1.0.0.1", 32)
-                .addRoute("9.9.9.9", 32)
-                .addRoute("208.67.222.222", 32)
 
-            // Dynamically discover and route active network DNS servers so system lookups enter TUN
-            val cm = getSystemService(ConnectivityManager::class.java)
-            if (cm != null) {
-                try {
-                    val activeNetwork = cm.activeNetwork
-                    if (activeNetwork != null) {
-                        val lp = cm.getLinkProperties(activeNetwork)
-                        if (lp != null) {
-                            for (dns in lp.dnsServers) {
-                                if (dns is Inet4Address) {
-                                    val ip = dns.hostAddress
-                                    if (ip != null && ip != VPN_INTERFACE_IP) {
-                                        try {
-                                            builder.addRoute(ip, 32)
-                                        } catch (_: Exception) {}
-                                    }
-                                }
-                            }
-                        }
-                    }
-                } catch (e: Exception) {
-                    Log.w(TAG, "Could not discover active network DNS", e)
-                }
-            }
-
-            // Allow applications to bypass the VPN for non-VPN web destinations
+            // Allow applications to bypass the VPN for all non-DNS web destinations (HTTP/HTTPS/streaming)
             builder.allowBypass()
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 builder.setMetered(false)
@@ -242,6 +210,35 @@ class BetShieldVpnService : VpnService(), Runnable {
         }
     }
 
+    private fun getActiveNetworkDnsResolvers(): List<String> {
+        val resolvers = mutableListOf<String>()
+        try {
+            val cm = getSystemService(ConnectivityManager::class.java)
+            val activeNetwork = cm?.activeNetwork
+            if (activeNetwork != null) {
+                val lp = cm.getLinkProperties(activeNetwork)
+                if (lp != null) {
+                    for (dns in lp.dnsServers) {
+                        if (dns is Inet4Address) {
+                            val ip = dns.hostAddress
+                            if (!ip.isNullOrBlank() && ip != VPN_INTERFACE_IP && ip != VPN_DNS_SERVER_IP) {
+                                resolvers.add(ip)
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (e: Exception) {
+            Log.w(TAG, "Error fetching active network DNS servers", e)
+        }
+        for (fallback in FALLBACK_UPSTREAM_RESOLVERS) {
+            if (!resolvers.contains(fallback)) {
+                resolvers.add(fallback)
+            }
+        }
+        return resolvers
+    }
+
     private fun forwardDnsQuery(
         query: DnsPacketParser.ParsedDnsQuery,
         rawPacket: ByteArray,
@@ -256,14 +253,13 @@ class BetShieldVpnService : VpnService(), Runnable {
             query.dnsPayloadLength
         )
 
-        // Try preferred upstream first, then failover through known good resolvers
         val resolversToTry = mutableListOf<String>()
-        if (preferredUpstream.isNotBlank()) {
+        if (preferredUpstream.isNotBlank() && preferredUpstream != "1.1.1.3") {
             resolversToTry.add(preferredUpstream)
         }
-        for (fallback in FALLBACK_UPSTREAM_RESOLVERS) {
-            if (!resolversToTry.contains(fallback)) {
-                resolversToTry.add(fallback)
+        for (res in getActiveNetworkDnsResolvers()) {
+            if (!resolversToTry.contains(res)) {
+                resolversToTry.add(res)
             }
         }
 
@@ -275,7 +271,7 @@ class BetShieldVpnService : VpnService(), Runnable {
             try {
                 socket = DatagramSocket()
                 protect(socket)
-                socket.soTimeout = 1500
+                socket.soTimeout = 700
 
                 val targetAddress = InetAddress.getByName(resolverIp)
                 val sendPacket = DatagramPacket(dnsPayload, dnsPayload.size, targetAddress, 53)

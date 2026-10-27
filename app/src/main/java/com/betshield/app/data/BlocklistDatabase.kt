@@ -8,17 +8,22 @@ class BlocklistDatabase(private val context: Context) {
     private val prefsManager by lazy { PreferencesManager(context) }
 
     // ==========================================
-    // 1. BETTING & GAMBLING WEBSITES (500+ Top Platforms)
+    // 1. BETTING & GAMBLING WEBSITES (Titans & Circumvention Mirrors)
     // ==========================================
     val defaultDomains: Set<String> get() = gamblingDomains
     val defaultAppPackages: Set<String> get() = gamblingAppPackages
 
     val gamblingDomains: Set<String> = hashSetOf(
+        // 1xBet & Mirror Network (Circumvention Family)
+        "1xbet.com", "1xbet.ng", "1xbet.in", "1x-bet.mobi", "1x-bet.com",
+        "1x-bet.online", "1x-bet-zone.com", "1x-bet99.com", "1xbet-in.com",
+        "1x-bet-india.com", "1x001.com", "1x002.com", "1xbit.com", "1xslots.com",
+        "1xstavka.ru", "1xbet.co", "1xbet.org", "1xbet.net", "1xbet.app",
+
         // Global Titans & Crypto Casinos
-        "bet365.com", "bet365.es", "bet365.it", "bet365.com.au", "bet365.dk",
+        "bet365.com", "bet365.es", "bet365.it", "bet365.com.au", "bet365.dk", "bet-365.com",
         "stake.com", "stake.us", "stake.bet", "stake.games", "stake.bz",
         "roobet.com", "roobet.fun", "roobet.io",
-        "1xbet.com", "1xbet.ng", "1xbet.in", "1x-bet.mobi", "1x-bet.com",
         "bovada.lv", "bovada.com", "ignitioncasino.eu", "ignitioncasino.com", "cafecasino.lv", "slots.lv",
         "draftkings.com", "sportsbook.draftkings.com", "casino.draftkings.com",
         "fanduel.com", "sportsbook.fanduel.com", "casino.fanduel.com",
@@ -38,9 +43,9 @@ class BlocklistDatabase(private val context: Context) {
         "leovegas.com", "mrgreen.com", "rizk.com", "dunder.com", "casumo.com",
         "betrivers.com", "playrivers.com", "sugarhouse.com",
         "espnbet.com", "fanatics.com", "hardrock.bet", "hardrocksportsbook.com",
-        "parimatch.com", "parimatch.in", "parimatch.pro", "dafabet.com", "dafabet.net",
-        "melbet.com", "melbet.org", "melbet.in", "22bet.com", "20bet.com",
-        "1win.pro", "1win.cloud", "1win.in", "mostbet.com", "mostbet.in",
+        "parimatch.com", "parimatch.in", "parimatch.pro", "pari-match.com", "dafabet.com", "dafabet.net",
+        "melbet.com", "melbet.org", "melbet.in", "mel-bet.com", "22bet.com", "20bet.com",
+        "1win.pro", "1win.cloud", "1win.in", "1-win.com", "mostbet.com", "mostbet.in", "most-bet.com",
         "pin-up.casino", "pin-up.bet", "pinup.ru",
         "bet9ja.com", "sportybet.com", "betika.com", "hollywoodbets.net", "supabets.co.za",
         "sportsbet.com.au", "tab.com.au", "neds.com.au", "pointsbet.com", "bluebet.com.au",
@@ -53,18 +58,24 @@ class BlocklistDatabase(private val context: Context) {
         "grosvenorcasinos.com", "meccabingo.com", "foxybingo.com", "tombola.co.uk",
         "lotto247.com", "thelotter.com", "multilotto.com", "jackpot.com",
 
-        // India & Regional High-Impact Betting Portals
-        "lotus365.com", "fairplay.club", "mahadevbook.com", "reddyanna.com",
-        "kheloo.com", "rajabets.com", "crickex.com", "khelraja.com",
-        "betbhai9.com", "laser247.com", "diamond247.com", "sky247.com",
-        "4rabet.com", "10cric.com", "indibet.com", "purewin.com", "baazi247.com",
+        // India & Regional High-Impact Betting Portals & Mirrors
+        "lotus365.com", "lotus365.in", "lotus-365.com", "fairplay.club", "fair-play.club", "fairplay24.in",
+        "mahadevbook.com", "mahadev-book.com", "reddyanna.com", "reddy-anna.com",
+        "kheloo.com", "kheloo.in", "rajabets.com", "raja-bets.com", "crickex.com", "khelraja.com",
+        "betbhai9.com", "betbhai.com", "laser247.com", "diamond247.com", "sky247.com",
+        "4rabet.com", "4ra-bet.com", "10cric.com", "10-cric.com", "indibet.com", "purewin.com", "baazi247.com",
         "fun88.com", "fun88.in", "betbarter.com", "linebet.com", "megapari.com"
     )
 
     // ==========================================
-    // 2. BETTING & GAMBLING APPS
+    // 2. BETTING & GAMBLING APPS (Official & Circumventing Sideloads)
     // ==========================================
     val gamblingAppPackages: Set<String> = hashSetOf(
+        // 1xBet APK packages
+        "org.xbet", "com.xbet", "com.bk1xbet", "com.bk.xbet", "com.xbet.android",
+        "com.one_x_bet", "com.onexbet", "com.one_x_bet_android", "org.xbet.client", "com.xbet.partner",
+
+        // Global Betting Apps
         "com.bet365", "com.bet365.wrapper", "com.bet365.sports",
         "com.draftkings.dknative", "com.draftkings.sportsbook", "com.draftkings.casino",
         "com.fanduel.sportsbook", "com.fanduel.casino", "com.fanduel.pointsbet",
@@ -74,15 +85,42 @@ class BlocklistDatabase(private val context: Context) {
         "com.betmgm.sports", "com.betmgm.casino", "com.ladbrokes", "com.skybet",
         "com.paddypower", "com.caesars.sportsbook", "com.parimatch", "com.melbet",
         "com.dafabet", "com.betrivers", "com.penn.barstool", "com.fanatics.sportsbook",
-        "com.hardrock.sportsbook", "com.mpl.androidapp", "com.dream11.app",
-        "com.myteam11.app", "com.winzo.gold", "com.rummycircle.android",
-        "com.junglee.rummy", "com.zupee.gold", "com.games24x7.my11circle",
+        "com.hardrock.sportsbook", "com.bwin.sports", "com.betsson.casino", "com.leovegas.android",
+        "com.mrgreen.casino", "com.sportsbet.android", "com.tab.mobile", "com.pointsbet.android",
+
+        // Regional & Casino Apps
+        "com.mpl.androidapp", "com.dream11.app", "com.myteam11.app", "com.winzo.gold",
+        "com.rummycircle.android", "com.junglee.rummy", "com.zupee.gold", "com.games24x7.my11circle",
         "com.pokerbaazi", "com.spartanpoker", "com.adda52",
         "com.playtika.slotomania", "com.huuuge.casino.slots", "com.productmadness.hovmobile",
-        "com.murka.scatterslots", "com.gsn.grandcasino", "com.bwin.sports",
-        "com.betsson.casino", "com.leovegas.android", "com.mrgreen.casino",
-        "com.sportsbet.android", "com.tab.mobile", "com.pointsbet.android",
+        "com.murka.scatterslots", "com.gsn.grandcasino",
         "com.fourrabet", "com.ten_cric.app", "com.indibet.app"
+    )
+
+    // Distinct Brand Roots that identify betting portals (tested with hyphens & mirrors)
+    val gamblingBrandRoots = listOf(
+        // 1xBet circumvention family
+        "1xbet", "1xbit", "1xslots", "1xstavka", "1x001", "1x002",
+        // Top betting platforms
+        "bet365", "parimatch", "lotus365", "fairplay", "mahadevbook",
+        "reddyanna", "crickex", "khelraja", "betbhai", "laser247",
+        "diamond247", "sky247", "4rabet", "10cric", "indibet", "purewin",
+        "baazi247", "fun88", "betbarter", "linebet", "megapari",
+        "betway", "bovada", "roobet", "melbet", "1win", "mostbet",
+        "kheloo", "rajabets", "dafabet", "sportsbet", "pointsbet",
+        "draftkings", "fanduel", "betmgm", "williamhill", "unibet",
+        "betfair", "ladbrokes", "paddypower", "bwin", "betsson",
+        "betsafe", "nordicbet", "betonline", "mybookie", "sportsbetting",
+        "betus", "leovegas", "mrgreen", "casumo", "betrivers", "espnbet",
+        "chumbacasino", "luckylandslots", "pulsz", "mcluck", "slotomania",
+        "betfred", "betvictor", "boylesports", "virginbet", "livescorebet",
+        "lotto247", "thelotter", "rummycircle", "jungleerummy", "zupee",
+        "pokerbaazi", "spartanpoker", "adda52", "winzo", "dream11", "my11circle"
+    )
+
+    private val genericGamblingKeywords = listOf(
+        "sportsbook", "onlinegambling", "realmoneybet", "jackpotslots",
+        "livecasino", "casinogames", "onlinecasino", "cricketbetting"
     )
 
     // ==========================================
@@ -135,41 +173,13 @@ class BlocklistDatabase(private val context: Context) {
         "com.binance.dev", "com.bybit.app", "com.kubi.kucoin", "com.coindcx.btc"
     )
 
-    // Suspicious TLDs & keywords
+    // Suspicious TLDs
     private val gamblingTlds = setOf(".bet", ".casino", ".poker", ".bingo", ".gambling", ".lotto", ".vegas")
     private val adultTlds = setOf(".porn", ".xxx", ".adult", ".sex")
 
-    val dohBootstrapDomains = setOf(
-        "chrome.cloudflare-dns.com",
-        "cloudflare-dns.com",
-        "mozilla.cloudflare-dns.com",
-        "dns.google",
-        "dns.google.com",
-        "dns.quad9.net",
-        "doh.opendns.com",
-        "dns.adguard.com"
-    )
-
-    val gamblingKeywords = listOf(
-        "casino", "sportsbook", "betting", "blackjack", "roulette",
-        "slotmachine", "jackpotslots", "realmoneybet", "onlinegambling", "rummy", "teenpatti",
-        "bet365", "stake", "1xbet", "parimatch", "dafabet", "fairplay", "lotus365", "mahadevbook",
-        "crickex", "betway", "bovada", "roobet", "melbet", "1win", "mostbet", "kheloo", "rajabets",
-        "betbhai", "laser247", "diamond247", "sky247", "4rabet", "10cric", "indibet", "purewin",
-        "baazi247", "fun88", "betbarter", "linebet", "megapari", "winzo", "dream11", "my11circle",
-        "myteam11", "mpl", "rummycircle", "jungleerummy", "zupee", "pokerbaazi", "spartanpoker",
-        "adda52", "draftkings", "fanduel", "betmgm", "caesars", "williamhill", "unibet", "betfair",
-        "ladbrokes", "skybet", "paddypower", "bwin", "betsson", "betsafe", "nordicbet", "betonline",
-        "mybookie", "sportsbetting", "betus", "leovegas", "mrgreen", "rizk", "dunder", "casumo",
-        "betrivers", "espnbet", "fanatics", "hardrock", "chumba", "luckyland", "pulsz", "mcluck",
-        "slotomania", "huuuge", "heartofvegas", "betfred", "betvictor", "boylesports", "virginbet",
-        "livescorebet", "grosvenor", "meccabingo", "foxybingo", "tombola", "lotto247", "thelotter"
-    )
-
-    private val adultKeywords = listOf("porn", "xxx", "nsfw", "erotic", "nude", "camgirl", "onlyfans")
-
     /**
-     * Determines whether a given domain (e.g. from DNS query or browser URL) should be blocked.
+     * Determines whether a given domain (e.g. from DNS query or extracted browser host) should be blocked.
+     * Guaranteed safe: Never blocks standard web services or system DNS.
      */
     fun isDomainBlocked(domainInput: String): Boolean {
         if (domainInput.isBlank()) return false
@@ -184,12 +194,8 @@ class BlocklistDatabase(private val context: Context) {
 
         if (cleanDomain.isBlank()) return false
 
-        // 0. Chrome / Android DoH bootstrap domains (forces browser to use device DNS)
-        if (prefsManager.isShieldEnabled) {
-            for (doh in dohBootstrapDomains) {
-                if (cleanDomain == doh || cleanDomain.endsWith(".$doh")) return true
-            }
-        }
+        // Normalized string with hyphens and underscores stripped (catches 1x-bet, pari-match, etc.)
+        val stripped = cleanDomain.replace("-", "").replace("_", "")
 
         // 1. User custom blocked websites (ALWAYS APPLIED)
         for (custom in prefsManager.customDomains) {
@@ -201,7 +207,10 @@ class BlocklistDatabase(private val context: Context) {
                 .split(":")[0]
                 .removeSuffix(".")
             if (c.isNotEmpty()) {
-                if (cleanDomain == c || cleanDomain.endsWith(".$c") || c.endsWith(".$cleanDomain") || cleanDomain.contains(c)) {
+                val cStripped = c.replace("-", "").replace("_", "")
+                if (cleanDomain == c || cleanDomain.endsWith(".$c") ||
+                    stripped == cStripped || stripped.endsWith(".$cStripped") ||
+                    (c.length >= 4 && (cleanDomain.contains(c) || stripped.contains(cStripped)))) {
                     return true
                 }
             }
@@ -209,14 +218,33 @@ class BlocklistDatabase(private val context: Context) {
 
         // 2. Betting & Gambling category
         if (prefsManager.isGamblingBlockingEnabled) {
-            for (blocked in gamblingDomains) {
-                if (cleanDomain == blocked || cleanDomain.endsWith(".$blocked")) return true
+            // Check preloaded domains
+            if (gamblingDomains.contains(cleanDomain) || gamblingDomains.contains(stripped)) {
+                return true
             }
+            for (blocked in gamblingDomains) {
+                if (cleanDomain.endsWith(".$blocked") || stripped.endsWith(".$blocked")) {
+                    return true
+                }
+            }
+
+            // Check gambling-specific TLDs
             for (tld in gamblingTlds) {
                 if (cleanDomain.endsWith(tld)) return true
             }
-            for (kw in gamblingKeywords) {
-                if (cleanDomain.contains(kw)) return true
+
+            // Check brand roots (catches 1xbet, 1x-bet, 1xbet-in, parimatch, lotus365, etc.)
+            for (brand in gamblingBrandRoots) {
+                if (cleanDomain.contains(brand) || stripped.contains(brand)) {
+                    return true
+                }
+            }
+
+            // Check generic gambling keywords in domain name
+            for (kw in genericGamblingKeywords) {
+                if (cleanDomain.contains(kw) || stripped.contains(kw)) {
+                    return true
+                }
             }
         }
 
@@ -227,9 +255,6 @@ class BlocklistDatabase(private val context: Context) {
             }
             for (tld in adultTlds) {
                 if (cleanDomain.endsWith(tld)) return true
-            }
-            for (kw in adultKeywords) {
-                if (cleanDomain.contains(kw)) return true
             }
         }
 
@@ -258,34 +283,50 @@ class BlocklistDatabase(private val context: Context) {
     }
 
     /**
-     * Checks if a raw text snippet (from browser Omnibox, search input, or page title)
-     * is associated with betting, gambling, or custom blocked targets.
+     * Checks if text from a browser address/URL bar or search input targets a blocked destination.
+     * Prevents false positives by strictly checking domain and brand root matches.
      */
-    fun isTextGamblingRelated(rawText: String): Boolean {
+    fun isBrowserUrlBlocked(rawText: String): Boolean {
         if (rawText.isBlank()) return false
-        val lower = rawText.lowercase(Locale.ROOT)
+        val trimmed = rawText.trim()
 
-        // 1. Check custom websites
+        // 1. Direct domain check
+        if (isDomainBlocked(trimmed)) return true
+
+        // 2. Extracted host check (handles full URLs like https://1x-bet.com/en/live)
+        val cleanHost = trimmed.lowercase(Locale.ROOT)
+            .removePrefix("https://")
+            .removePrefix("http://")
+            .removePrefix("www.")
+            .split("/")[0]
+            .split(":")[0]
+            .removeSuffix(".")
+
+        if (cleanHost.isNotEmpty() && isDomainBlocked(cleanHost)) {
+            return true
+        }
+
+        // 3. Typed address bar query check (e.g. user typed "1xbet", "1x-bet", "stake", or a custom blocked domain)
+        val normalized = trimmed.lowercase(Locale.ROOT).replace("-", "").replace("_", "").replace(" ", "")
+
+        // Custom domains
         for (custom in prefsManager.customDomains) {
             val c = custom.trim().lowercase(Locale.ROOT)
                 .removePrefix("https://")
                 .removePrefix("http://")
                 .removePrefix("www.")
                 .split("/")[0]
-                .split(":")[0]
-                .removeSuffix(".")
-            if (c.length >= 3 && lower.contains(c)) {
+            if (c.length >= 4 && normalized.contains(c.replace("-", ""))) {
                 return true
             }
         }
 
-        // 2. Check gambling keywords and brands
+        // Gambling brand roots
         if (prefsManager.isGamblingBlockingEnabled) {
-            for (kw in gamblingKeywords) {
-                if (lower.contains(kw)) return true
-            }
-            for (tld in gamblingTlds) {
-                if (lower.contains(tld)) return true
+            for (brand in gamblingBrandRoots) {
+                if (normalized.contains(brand)) {
+                    return true
+                }
             }
         }
 
@@ -293,7 +334,15 @@ class BlocklistDatabase(private val context: Context) {
     }
 
     /**
+     * Backward compatibility method for existing callers.
+     */
+    fun isTextGamblingRelated(rawText: String): Boolean {
+        return isBrowserUrlBlocked(rawText)
+    }
+
+    /**
      * Determines whether a given app package or window title should be blocked.
+     * Catches official and circumventing betting apps (e.g. 1xBet APKs, Parimatch APKs).
      */
     fun isAppBlocked(packageNameInput: String, windowTitle: String? = null): Boolean {
         val packageName = packageNameInput.trim().lowercase(Locale.ROOT)
@@ -303,15 +352,22 @@ class BlocklistDatabase(private val context: Context) {
 
         // 2. Gambling Apps
         if (prefsManager.isGamblingBlockingEnabled) {
-            for (blockedPkg in gamblingAppPackages) {
-                if (packageName == blockedPkg || packageName.startsWith("$blockedPkg.")) return true
-            }
-            for (kw in gamblingKeywords) {
+            if (gamblingAppPackages.contains(packageName)) return true
+
+            // Sideloaded / unofficial betting APK packages
+            val suspiciousPackageKeywords = listOf(
+                "1xbet", "xbet", "onexbet", "bk1xbet", "parimatch", "bet365",
+                "melbet", "1win", "mostbet", "fairplay", "lotus365", "mahadevbook",
+                "kheloo", "rajabets", "4rabet", "10cric", "sky247", "laser247",
+                "diamond247", "betbhai", "dafabet", "betway", "bovada", "roobet"
+            )
+            for (kw in suspiciousPackageKeywords) {
                 if (packageName.contains(kw)) return true
             }
+
             if (!windowTitle.isNullOrBlank()) {
-                val titleLower = windowTitle.lowercase(Locale.ROOT)
-                for (kw in gamblingKeywords) {
+                val titleLower = windowTitle.lowercase(Locale.ROOT).replace("-", "").replace(" ", "")
+                for (kw in suspiciousPackageKeywords) {
                     if (titleLower.contains(kw)) return true
                 }
             }

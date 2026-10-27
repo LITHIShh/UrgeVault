@@ -98,35 +98,12 @@ class BetBlockerAccessibilityService : AccessibilityService() {
             }
         }
 
-        // 2. Real-time Browser URL & Content Inspection
+        // 2. Real-time Browser Address Bar & Navigation Inspection
         if (BROWSER_PACKAGES.contains(eventPackage)) {
-            // Fast check: inspect event text directly (typed URLs, search queries, page titles)
-            for (t in event.text) {
-                val str = t?.toString() ?: ""
-                if (str.isNotBlank()) {
-                    if (blocklist.isDomainBlocked(str) || blocklist.isTextGamblingRelated(str)) {
-                        triggerBlock(str)
-                        return
-                    }
-                }
-            }
-
-            val desc = event.contentDescription?.toString() ?: ""
-            if (desc.isNotBlank()) {
-                if (blocklist.isDomainBlocked(desc) || blocklist.isTextGamblingRelated(desc)) {
-                    triggerBlock(desc)
-                    return
-                }
-            }
-
-            // Deep check: inspect the window node hierarchy (address bar & page content)
-            val rootNode = rootInActiveWindow ?: event.source
-            if (rootNode != null) {
-                val detectedBlockedUrl = findBlockedUrlInBrowser(rootNode)
-                if (detectedBlockedUrl != null) {
-                    triggerBlock(detectedBlockedUrl)
-                    return
-                }
+            val detectedTarget = findBlockedUrlInBrowser(event)
+            if (detectedTarget != null) {
+                triggerBlock(detectedTarget)
+                return
             }
         }
 
@@ -166,89 +143,86 @@ class BetBlockerAccessibilityService : AccessibilityService() {
         startActivity(blockIntent)
     }
 
-    private fun findBlockedUrlInBrowser(rootNode: AccessibilityNodeInfo): String? {
+    /**
+     * Inspects only browser address bar nodes and typed inputs.
+     * Guaranteed zero false positives on standard webpage body content.
+     */
+    private fun findBlockedUrlInBrowser(event: AccessibilityEvent): String? {
         val app = BetShieldApplication.instance
         val blocklist = app.blocklistDatabase
 
-        // Phase 1: Check known address bar view IDs directly
+        // Check if event source directly belongs to an address/search bar
+        val source = event.source
+        if (source != null) {
+            val viewId = source.viewIdResourceName?.lowercase() ?: ""
+            if (isAddressBarNode(source, viewId)) {
+                val text = source.text?.toString()
+                if (!text.isNullOrBlank() && blocklist.isBrowserUrlBlocked(text)) {
+                    return text
+                }
+            }
+        }
+
+        // Check window hierarchy address bar nodes
+        val rootNode = rootInActiveWindow ?: source ?: return null
+
+        // Phase 1: Direct lookup by known address bar IDs
         for (viewId in ADDRESS_BAR_VIEW_IDS) {
             try {
                 val matches = rootNode.findAccessibilityNodeInfosByViewId(viewId)
                 if (!matches.isNullOrEmpty()) {
                     for (node in matches) {
                         val text = node.text?.toString()
-                        if (!text.isNullOrBlank()) {
-                            if (blocklist.isDomainBlocked(text) || blocklist.isTextGamblingRelated(text)) {
-                                return text
-                            }
-                            val clean = cleanUrl(text)
-                            if (clean != null && (blocklist.isDomainBlocked(clean) || blocklist.isTextGamblingRelated(clean))) {
-                                return clean
-                            }
+                        if (!text.isNullOrBlank() && blocklist.isBrowserUrlBlocked(text)) {
+                            return text
                         }
                     }
                 }
             } catch (_: Exception) {}
         }
 
-        // Phase 2: Recursive scan for any address node or blocked domain in the node tree
-        return scanNodeHierarchyForBlockedUrl(rootNode)
+        // Phase 2: Scan top toolbar elements (depth <= 5), strictly excluding WebViews
+        return scanToolbarForAddressBar(rootNode, 0)
     }
 
-    private fun scanNodeHierarchyForBlockedUrl(node: AccessibilityNodeInfo): String? {
+    private fun scanToolbarForAddressBar(node: AccessibilityNodeInfo, depth: Int): String? {
+        if (depth > 5) return null // Address bars reside in the top levels of browser UI
         val app = BetShieldApplication.instance
         val blocklist = app.blocklistDatabase
 
-        val text = node.text?.toString() ?: ""
-        val desc = node.contentDescription?.toString() ?: ""
-
-        if (text.isNotBlank()) {
-            if (blocklist.isDomainBlocked(text) || blocklist.isTextGamblingRelated(text)) {
-                return text
-            }
-            val clean = cleanUrl(text)
-            if (clean != null && (blocklist.isDomainBlocked(clean) || blocklist.isTextGamblingRelated(clean))) {
-                return clean
-            }
+        val className = node.className?.toString() ?: ""
+        // Crucial: NEVER inspect inside web content / webview DOM to prevent false positives
+        if (className.contains("WebView", ignoreCase = true)) {
+            return null
         }
 
-        if (desc.isNotBlank()) {
-            if (blocklist.isDomainBlocked(desc) || blocklist.isTextGamblingRelated(desc)) {
-                return desc
-            }
-            val clean = cleanUrl(desc)
-            if (clean != null && (blocklist.isDomainBlocked(clean) || blocklist.isTextGamblingRelated(clean))) {
-                return clean
+        val viewId = node.viewIdResourceName?.lowercase() ?: ""
+        if (isAddressBarNode(node, viewId)) {
+            val text = node.text?.toString()
+            if (!text.isNullOrBlank() && blocklist.isBrowserUrlBlocked(text)) {
+                return text
             }
         }
 
         for (i in 0 until node.childCount) {
             val child = node.getChild(i) ?: continue
-            val found = scanNodeHierarchyForBlockedUrl(child)
+            val found = scanToolbarForAddressBar(child, depth + 1)
             if (found != null) return found
         }
         return null
     }
 
-    private fun cleanUrl(raw: String): String? {
-        var str = raw.trim().lowercase()
-        if (str.startsWith("https://")) str = str.substring(8)
-        if (str.startsWith("http://")) str = str.substring(7)
-        if (str.startsWith("www.")) str = str.substring(4)
-
-        val slashIndex = str.indexOf('/')
-        if (slashIndex != -1) {
-            str = str.substring(0, slashIndex)
+    private fun isAddressBarNode(node: AccessibilityNodeInfo, viewId: String): Boolean {
+        if (ADDRESS_BAR_VIEW_IDS.contains(viewId)) return true
+        if (viewId.contains("url_bar") || viewId.contains("urlbar") ||
+            viewId.contains("location_bar") || viewId.contains("address_bar") ||
+            viewId.contains("omnibar") || viewId.contains("search_box_text")) {
+            return true
         }
-        val colonIndex = str.indexOf(':')
-        if (colonIndex != -1) {
-            str = str.substring(0, colonIndex)
+        if (node.isEditable && (viewId.contains("url") || viewId.contains("address") || viewId.contains("location"))) {
+            return true
         }
-
-        if (str.contains(".") && !str.contains(" ") && str.length > 3) {
-            return str
-        }
-        return null
+        return false
     }
 
     private fun extractEventText(event: AccessibilityEvent): String {
