@@ -216,9 +216,9 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
                         android:visibility="gone"
-                        app:cardBackgroundColor="#2A1B24"
+                        app:cardBackgroundColor="@color/adblocker_alert_bg"
                         app:cardCornerRadius="16dp"
-                        app:strokeColor="#FFB74D"
+                        app:strokeColor="@color/adblocker_alert_stroke"
                         app:strokeWidth="1dp">
 
                         <LinearLayout
@@ -239,9 +239,10 @@
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:text="Ad Blocker detected. UrgeVault relies on ads to keep betting filters 100% free. Tap to support."
-                                android:textColor="@color/text_primary"
-                                android:textSize="11sp" />
+                                android:text="Ad Blocker detected. UrgeVault relies on ads to keep website filters 100% free. Tap to support."
+                                android:textColor="@color/adblocker_alert_text"
+                                android:textSize="12sp"
+                                android:textStyle="bold" />
 
                             <TextView
                                 android:id="@+id/btnSupportRewardedAd"
@@ -249,7 +250,7 @@
                                 android:layout_height="wrap_content"
                                 android:text="Support →"
                                 android:textColor="@color/primary"
-                                android:textSize="11sp"
+                                android:textSize="12sp"
                                 android:textStyle="bold" />
                         </LinearLayout>
                     </com.google.android.material.card.MaterialCardView>
@@ -1013,7 +1014,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="App Appearance &amp; Liquid Glass"
+                                android:text="App Appearance"
                                 android:textColor="@color/text_primary"
                                 android:textSize="14sp"
                                 android:textStyle="bold" />
@@ -1022,7 +1023,7 @@
                                 android:id="@+id/tvSettingsCurrentTheme"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Auto (Time-based shift: Morning Light / Night Dark)"
+                                android:text="Auto (Time-based shift: Daylight / Dark)"
                                 android:textColor="@color/text_muted"
                                 android:textSize="12sp" />
                         </LinearLayout>

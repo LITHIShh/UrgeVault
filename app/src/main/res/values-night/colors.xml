@@ -21,7 +21,17 @@
     <color name="text_secondary">#CBD5E1</color>
     <color name="text_muted">#94A3B8</color>
 
-    <!-- Liquid Glass Elements (Dark Mode) -->
+    <!-- Breathing Exercise Circle (Obsidian Glowing Violet) -->
+    <color name="breathing_circle_bg">#231838</color>
+    <color name="breathing_circle_stroke">#A855F7</color>
+    <color name="breathing_circle_text">#A78BFA</color>
+
+    <!-- AdBlocker Alert Banner (Dark Mode) -->
+    <color name="adblocker_alert_bg">#2A1B24</color>
+    <color name="adblocker_alert_stroke">#FFB74D</color>
+    <color name="adblocker_alert_text">#FDE68A</color>
+
+    <!-- Dock & Gradients (Dark Mode) -->
     <color name="liquid_dock_bg">#E6141722</color>
     <color name="liquid_dock_stroke">#33A855F7</color>
     <color name="liquid_violet_gradient_start">#2A1B44</color>

@@ -270,7 +270,7 @@
                             android:layout_gravity="center"
                             android:gravity="center"
                             android:text="Tap Start"
-                            android:textColor="@color/text_primary"
+                            android:textColor="@color/breathing_circle_text"
                             android:textSize="15sp"
                             android:textStyle="bold" />
                     </FrameLayout>

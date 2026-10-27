@@ -253,13 +253,28 @@ class BetShieldVpnService : VpnService(), Runnable {
             query.dnsPayloadLength
         )
 
+        val domain = query.domain.lowercase()
+        val isAdDomain = domain.endsWith("doubleclick.net") ||
+                         domain.endsWith("googlesyndication.com") ||
+                         domain.endsWith("googleadservices.com") ||
+                         domain.endsWith("app-measurement.com") ||
+                         domain.contains("adservice.google") ||
+                         domain.contains("pagead")
+
         val resolversToTry = mutableListOf<String>()
-        if (preferredUpstream.isNotBlank() && preferredUpstream != "1.1.1.3") {
-            resolversToTry.add(preferredUpstream)
-        }
-        for (res in getActiveNetworkDnsResolvers()) {
-            if (!resolversToTry.contains(res)) {
-                resolversToTry.add(res)
+        if (isAdDomain) {
+            // Circumvent Wi-Fi/private DNS ad blockers by routing ad requests directly through global resolvers
+            resolversToTry.add("8.8.8.8")
+            resolversToTry.add("1.1.1.1")
+            resolversToTry.add("8.8.4.4")
+        } else {
+            if (preferredUpstream.isNotBlank() && preferredUpstream != "1.1.1.3") {
+                resolversToTry.add(preferredUpstream)
+            }
+            for (res in getActiveNetworkDnsResolvers()) {
+                if (!resolversToTry.contains(res)) {
+                    resolversToTry.add(res)
+                }
             }
         }
 

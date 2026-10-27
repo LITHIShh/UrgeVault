@@ -47,6 +47,10 @@ class MainActivity : AppCompatActivity() {
     private val repo by lazy { app.urgeVaultRepository }
     private var tabSwitchCount = 0
 
+    private val requestNotificationPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { _ -> }
+
     private val vpnPrepareLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
@@ -54,6 +58,9 @@ class MainActivity : AppCompatActivity() {
             startVpnService()
             updateShieldUi()
             Toast.makeText(this, "UrgeVault Shield is active.", Toast.LENGTH_SHORT).show()
+            if (!BetBlockerAccessibilityService.isAccessibilityServiceEnabled(this)) {
+                promptAccessibilityActivation()
+            }
         } else {
             Toast.makeText(this, "VPN permission needed for web filter.", Toast.LENGTH_SHORT).show()
             app.preferencesManager.isShieldEnabled = false
@@ -134,6 +141,9 @@ class MainActivity : AppCompatActivity() {
         AdManager.loadBanner(binding.adBannerContainer, this) {
             binding.cardAdBlockerAlert.visibility = View.VISIBLE
         }
+
+        // Prompt initial required permissions on launch
+        checkInitialPermissions()
     }
 
     override fun onResume() {
@@ -151,7 +161,8 @@ class MainActivity : AppCompatActivity() {
         binding.bottomNavigationView.setOnItemSelectedListener { item ->
             HapticEngine.performClick(binding.bottomNavigationView)
             tabSwitchCount++
-            if (tabSwitchCount % 5 == 0) {
+            if (tabSwitchCount >= 10 && AdManager.canShowFullScreenAd()) {
+                tabSwitchCount = 0
                 AdManager.showInterstitial(this) {}
             }
             binding.containerHomeTab.visibility = if (item.itemId == R.id.nav_home) View.VISIBLE else View.GONE
@@ -251,9 +262,9 @@ class MainActivity : AppCompatActivity() {
         binding.btnSettingsThemeCard.setOnClickListener {
             HapticEngine.performClick(it)
             val options = arrayOf(
-                "Auto (Daylight Frosted / Midnight Dark)",
-                "Light Mode (Frosted Daylight)",
-                "Dark Mode (Obsidian Deep Glass)"
+                "Auto (Daylight / Dark)",
+                "Light Mode",
+                "Dark Mode"
             )
             val currentIdx = when (app.preferencesManager.appThemeMode) {
                 PreferencesManager.THEME_LIGHT -> 1
@@ -693,9 +704,9 @@ class MainActivity : AppCompatActivity() {
 
     private fun updateThemeSettingsLabel() {
         val label = when (app.preferencesManager.appThemeMode) {
-            PreferencesManager.THEME_LIGHT -> "Light Mode (Frosted Daylight)"
-            PreferencesManager.THEME_DARK -> "Dark Mode (Obsidian Deep Glass)"
-            else -> "Auto (Time-based shift: Morning Light / Night Dark)"
+            PreferencesManager.THEME_LIGHT -> "Light Mode"
+            PreferencesManager.THEME_DARK -> "Dark Mode"
+            else -> "Auto (Time-based shift: Daylight / Dark)"
         }
         binding.tvSettingsCurrentTheme.text = label
     }
@@ -749,6 +760,28 @@ class MainActivity : AppCompatActivity() {
             }
             .setNegativeButton("Later", null)
             .show()
+    }
+
+    private fun checkInitialPermissions() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.POST_NOTIFICATIONS) != android.content.pm.PackageManager.PERMISSION_GRANTED) {
+                requestNotificationPermissionLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS)
+            }
+        }
+
+        val isAccessibilityGranted = BetBlockerAccessibilityService.isAccessibilityServiceEnabled(this)
+        val isVpnGranted = VpnService.prepare(this) == null
+
+        if (!isAccessibilityGranted || !isVpnGranted) {
+            AlertDialog.Builder(this, R.style.Theme_BetShield_Dialog)
+                .setTitle("🛡️ Activate Complete Protection")
+                .setMessage("To block distracting websites and safeguard your browsing in Chrome, Brave, and Samsung Internet, UrgeVault requires permission access:\n\n1. Web Shield (VPN): Local, zero-data-collection filter.\n2. Browser Guardian (Accessibility): Stops browser circumvention mirrors.\n\nTap 'Activate Now' to grant permissions.")
+                .setPositiveButton("Activate Now") { _, _ ->
+                    enableProtection()
+                }
+                .setNegativeButton("Later", null)
+                .show()
+        }
     }
 
     private fun disableProtection() {

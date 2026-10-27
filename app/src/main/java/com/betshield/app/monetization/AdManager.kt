@@ -26,6 +26,19 @@ object AdManager {
     private var appOpenAd: AppOpenAd? = null
     private var isShowingAppOpenAd = false
 
+    // Minimum 3 minutes delay between full-screen ads to prevent spamming
+    private var lastFullScreenAdTime: Long = System.currentTimeMillis()
+    private const val AD_COOLDOWN_MS = 3 * 60 * 1000L
+
+    fun canShowFullScreenAd(): Boolean {
+        val elapsed = System.currentTimeMillis() - lastFullScreenAdTime
+        return elapsed >= AD_COOLDOWN_MS
+    }
+
+    private fun markAdShown() {
+        lastFullScreenAdTime = System.currentTimeMillis()
+    }
+
     /**
      * Initialize MobileAds SDK.
      */
@@ -100,11 +113,16 @@ object AdManager {
      * Displays the preloaded Interstitial Ad if available.
      */
     fun showInterstitial(activity: Activity, onClosed: () -> Unit) {
+        if (!canShowFullScreenAd()) {
+            onClosed()
+            return
+        }
         val ad = interstitialAd
         if (ad != null) {
             ad.fullScreenContentCallback = object : FullScreenContentCallback() {
                 override fun onAdDismissedFullScreenContent() {
                     interstitialAd = null
+                    markAdShown()
                     loadInterstitial(activity) // Preload next
                     onClosed()
                 }
@@ -202,6 +220,9 @@ object AdManager {
      * Displays App Open Ad when app enters foreground.
      */
     fun showAppOpenAd(activity: Activity) {
+        if (!canShowFullScreenAd()) {
+            return
+        }
         val ad = appOpenAd
         if (ad != null && !isShowingAppOpenAd) {
             isShowingAppOpenAd = true
@@ -209,6 +230,7 @@ object AdManager {
                 override fun onAdDismissedFullScreenContent() {
                     appOpenAd = null
                     isShowingAppOpenAd = false
+                    markAdShown()
                     loadAppOpenAd(activity)
                 }
 
