@@ -81,13 +81,13 @@ class TutorialDialog(
 
         binding.btnTutorialNext.text = if (step == steps.size) "Get Started 🚀" else "Next →"
 
-        val activeColor = ContextCompat.getColor(context, R.color.primary)
-        val inactiveColor = ContextCompat.getColor(context, R.color.card_stroke)
+        val activeRes = R.color.primary
+        val inactiveRes = R.color.card_stroke
 
-        binding.dot1.backgroundTintList = ContextCompat.getColorStateList(context, if (step == 1) activeColor else inactiveColor)
-        binding.dot2.backgroundTintList = ContextCompat.getColorStateList(context, if (step == 2) activeColor else inactiveColor)
-        binding.dot3.backgroundTintList = ContextCompat.getColorStateList(context, if (step == 3) activeColor else inactiveColor)
-        binding.dot4.backgroundTintList = ContextCompat.getColorStateList(context, if (step == 4) activeColor else inactiveColor)
+        binding.dot1.backgroundTintList = ContextCompat.getColorStateList(context, if (step == 1) activeRes else inactiveRes)
+        binding.dot2.backgroundTintList = ContextCompat.getColorStateList(context, if (step == 2) activeRes else inactiveRes)
+        binding.dot3.backgroundTintList = ContextCompat.getColorStateList(context, if (step == 3) activeRes else inactiveRes)
+        binding.dot4.backgroundTintList = ContextCompat.getColorStateList(context, if (step == 4) activeRes else inactiveRes)
     }
 
     fun show() {
