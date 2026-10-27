@@ -7,6 +7,7 @@ import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import android.widget.CompoundButton
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
@@ -44,9 +45,38 @@ class MainActivity : AppCompatActivity() {
         if (result.resultCode == RESULT_OK) {
             startVpnService()
             updateShieldUi()
+            Toast.makeText(this, "UrgeVault Shield is active.", Toast.LENGTH_SHORT).show()
         } else {
             Toast.makeText(this, "VPN permission needed for web filter.", Toast.LENGTH_SHORT).show()
-            binding.switchProtectionShield.isChecked = false
+            app.preferencesManager.isShieldEnabled = false
+            updateShieldUi()
+        }
+    }
+
+    private val shieldSwitchListener = CompoundButton.OnCheckedChangeListener { _, isChecked ->
+        if (isChecked) {
+            app.preferencesManager.isShieldEnabled = true
+            enableProtection()
+            updateShieldUi()
+        } else {
+            if (app.passwordManager.isPasswordSet()) {
+                PasswordDialog(
+                    context = this,
+                    onSuccess = {
+                        app.preferencesManager.isShieldEnabled = false
+                        disableProtection()
+                        updateShieldUi()
+                        Toast.makeText(this, "Protection paused.", Toast.LENGTH_SHORT).show()
+                    },
+                    onCancel = {
+                        updateShieldUi()
+                    }
+                ).show()
+            } else {
+                app.preferencesManager.isShieldEnabled = false
+                disableProtection()
+                updateShieldUi()
+            }
         }
     }
 
@@ -104,32 +134,7 @@ class MainActivity : AppCompatActivity() {
         binding.btnAddSavingsGoal.setOnClickListener { showAddGoalDialog() }
 
         // Settings: Shield Toggle
-        binding.switchProtectionShield.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
-                app.preferencesManager.isShieldEnabled = true
-                enableProtection()
-                updateShieldUi()
-            } else {
-                if (app.passwordManager.isPasswordSet()) {
-                    PasswordDialog(
-                        context = this,
-                        onSuccess = {
-                            app.preferencesManager.isShieldEnabled = false
-                            disableProtection()
-                            updateShieldUi()
-                            Toast.makeText(this, "Protection paused.", Toast.LENGTH_SHORT).show()
-                        },
-                        onCancel = {
-                            binding.switchProtectionShield.isChecked = true
-                        }
-                    ).show()
-                } else {
-                    app.preferencesManager.isShieldEnabled = false
-                    disableProtection()
-                    updateShieldUi()
-                }
-            }
-        }
+        binding.switchProtectionShield.setOnCheckedChangeListener(shieldSwitchListener)
 
         // Settings navigation items
         binding.btnCustomBlocker.setOnClickListener {
@@ -519,7 +524,9 @@ class MainActivity : AppCompatActivity() {
 
     private fun updateShieldUi() {
         val isEnabled = app.preferencesManager.isShieldEnabled
+        binding.switchProtectionShield.setOnCheckedChangeListener(null)
         binding.switchProtectionShield.isChecked = isEnabled
+        binding.switchProtectionShield.setOnCheckedChangeListener(shieldSwitchListener)
 
         if (isEnabled) {
             binding.tvQuickShieldText.text = "Shield Active"
@@ -531,11 +538,16 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun enableProtection() {
-        val vpnIntent = VpnService.prepare(this)
-        if (vpnIntent != null) {
-            vpnPrepareLauncher.launch(vpnIntent)
-        } else {
-            startVpnService()
+        try {
+            val vpnIntent = VpnService.prepare(this)
+            if (vpnIntent != null) {
+                vpnPrepareLauncher.launch(vpnIntent)
+            } else {
+                startVpnService()
+            }
+        } catch (e: Exception) {
+            android.util.Log.e("MainActivity", "Error preparing VPN", e)
+            Toast.makeText(this, "VPN setup error: ${e.message}", Toast.LENGTH_SHORT).show()
         }
 
         if (!BetBlockerAccessibilityService.isAccessibilityServiceEnabled(this)) {
@@ -544,20 +556,29 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun disableProtection() {
-        val intent = Intent(this, BetShieldVpnService::class.java).apply {
-            action = BetShieldVpnService.ACTION_STOP
+        try {
+            val intent = Intent(this, BetShieldVpnService::class.java).apply {
+                action = BetShieldVpnService.ACTION_STOP
+            }
+            startService(intent)
+        } catch (e: Exception) {
+            android.util.Log.e("MainActivity", "Error stopping VPN service", e)
         }
-        startService(intent)
     }
 
     private fun startVpnService() {
-        val intent = Intent(this, BetShieldVpnService::class.java).apply {
-            action = BetShieldVpnService.ACTION_START
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            startForegroundService(intent)
-        } else {
-            startService(intent)
+        try {
+            val intent = Intent(this, BetShieldVpnService::class.java).apply {
+                action = BetShieldVpnService.ACTION_START
+            }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                startForegroundService(intent)
+            } else {
+                startService(intent)
+            }
+        } catch (e: Exception) {
+            android.util.Log.e("MainActivity", "Failed to start VPN foreground service", e)
+            Toast.makeText(this, "Unable to activate shield service: ${e.message}", Toast.LENGTH_LONG).show()
         }
     }
 

@@ -123,6 +123,9 @@ class DnsPacketParser {
      */
     fun createSinkholeResponsePacket(parsed: ParsedDnsQuery, rawPacket: ByteArray): ByteArray {
         val dnsQuestionLength = (parsed.dnsPayloadLength - 12) // includes QNAME + QTYPE + QCLASS
+        if (dnsQuestionLength <= 0 || parsed.dnsPayloadOffset + 12 + dnsQuestionLength > rawPacket.size) {
+            return ByteArray(0)
+        }
         val answerRecordLength = 16 // 2 (ptr) + 2 (type) + 2 (class) + 4 (ttl) + 2 (rdlen) + 4 (ip)
 
         val totalDnsLength = 12 + dnsQuestionLength + answerRecordLength
@@ -199,6 +202,9 @@ class DnsPacketParser {
         dnsResponsePayload: ByteArray,
         payloadLength: Int
     ): ByteArray {
+        if (payloadLength <= 0 || payloadLength > dnsResponsePayload.size) {
+            return ByteArray(0)
+        }
         val totalUdpLength = 8 + payloadLength
         val totalIpLength = 20 + totalUdpLength
 
@@ -238,10 +244,14 @@ class DnsPacketParser {
     private fun computeIpChecksum(data: ByteArray, offset: Int, length: Int): Int {
         var sum = 0
         var i = offset
-        while (i < offset + length) {
+        val end = offset + length
+        while (i < end - 1) {
             val word = ((data[i].toInt() and 0xFF) shl 8) or (data[i + 1].toInt() and 0xFF)
             sum += word
             i += 2
+        }
+        if (i < end) {
+            sum += (data[i].toInt() and 0xFF) shl 8
         }
         while ((sum ushr 16) != 0) {
             sum = (sum and 0xFFFF) + (sum ushr 16)

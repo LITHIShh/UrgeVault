@@ -96,13 +96,18 @@ class SetupPermissionsActivity : AppCompatActivity() {
     }
 
     private fun startVpnService() {
-        val intent = Intent(this, BetShieldVpnService::class.java).apply {
-            action = BetShieldVpnService.ACTION_START
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            startForegroundService(intent)
-        } else {
-            startService(intent)
+        try {
+            val intent = Intent(this, BetShieldVpnService::class.java).apply {
+                action = BetShieldVpnService.ACTION_START
+            }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                startForegroundService(intent)
+            } else {
+                startService(intent)
+            }
+        } catch (e: Exception) {
+            android.util.Log.e("SetupPermissions", "Failed to start VPN service", e)
+            Toast.makeText(this, "Could not start protection service: ${e.message}", Toast.LENGTH_LONG).show()
         }
     }
 
