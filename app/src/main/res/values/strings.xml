@@ -73,4 +73,7 @@
     <string name="settings_protection_mode_title">Shield Protection Mode</string>
     <string name="settings_ally_title">Emergency Support Ally</string>
     <string name="call_ally_default">Call Ally</string>
+    <string name="title_focus_timer">Mindful Focus &amp; Nature Sounds</string>
+    <string name="widget_title">UrgeVault Streak &amp; Protection</string>
+    <string name="widget_sos_btn">🚨 SOS</string>
 </resources>

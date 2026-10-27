@@ -148,6 +148,26 @@
             </intent-filter>
         </receiver>
 
+        <!-- Focus Timer & Relaxing Nature Sounds Activity -->
+        <activity
+            android:name=".ui.FocusTimerActivity"
+            android:exported="false"
+            android:label="@string/title_focus_timer"
+            android:theme="@style/Theme.BetShield" />
+
+        <!-- Home & Lock Screen Widget Provider -->
+        <receiver
+            android:name=".widget.UrgeVaultWidgetProvider"
+            android:label="@string/widget_title"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/urge_vault_widget_info" />
+        </receiver>
+
     </application>
 
 </manifest>

@@ -30,6 +30,8 @@ import com.betshield.app.monetization.AdSettingsDialog
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
 import com.betshield.app.data.PreferencesManager
+import com.betshield.app.data.QuoteManager
+import com.betshield.app.data.RecoveryQuote
 import com.betshield.app.monetization.AdBlockerDetector
 import com.betshield.app.service.BetBlockerAccessibilityService
 import com.betshield.app.service.BetShieldVpnService
@@ -39,6 +41,7 @@ import com.betshield.app.util.LocaleManager
 import com.betshield.app.util.ThemeHelper
 import com.betshield.app.util.TimeThemeManager
 import com.betshield.app.ui.AllyConfigDialog
+import com.betshield.app.widget.UrgeVaultWidgetProvider
 import com.google.android.material.card.MaterialCardView
 import java.time.LocalDate
 import java.util.UUID
@@ -49,6 +52,7 @@ class MainActivity : AppCompatActivity() {
     private val app = BetShieldApplication.instance
     private val repo by lazy { app.urgeVaultRepository }
     private var tabSwitchCount = 0
+    private var currentQuote: RecoveryQuote = QuoteManager.getTodayQuote()
 
     private val requestNotificationPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
@@ -237,6 +241,15 @@ class MainActivity : AppCompatActivity() {
             startActivity(Intent(this, UrgeSosActivity::class.java))
         }
 
+        // Mindful Focus & Nature Sounds Action
+        binding.btnLaunchFocusHub.setOnClickListener {
+            HapticEngine.performClick(it)
+            startActivity(Intent(this, FocusTimerActivity::class.java))
+        }
+
+        // Daily Motivational Quotes
+        setupQuoteCard()
+
         // Daily Check-In Action
         binding.btnDailyCheckIn.setOnClickListener {
             HapticEngine.performClick(it)
@@ -370,12 +383,43 @@ class MainActivity : AppCompatActivity() {
         binding.tvHeaderGreetingTitle.text = greeting.title
         binding.tvHeaderGreetingSubtitle.text = greeting.subtitle
 
-        // 1. Home Dashboard Metrics
-        binding.tvHomeDaysClean.text = summary.longestActiveDays.toString()
+        // 1. Home Dashboard Metrics & Enhanced Streak Experience
+        val days = summary.longestActiveDays
+        binding.tvHomeDaysClean.text = days.toString()
         binding.tvHomeMoneyProtected.text = CurrencyFormatter.format(summary.totalMoneyProtected)
         val hours = String.format("%.1f", summary.totalHoursReclaimed)
-        binding.tvHomeTimeReclaimed.text = "$hours Hours Reclaimed"
-        binding.tvHomeUrgesResisted.text = "${summary.urgesResisted} Urges Surfed"
+        binding.tvHomeTimeReclaimed.text = "${hours}h"
+        binding.tvHomeUrgesResisted.text = "${summary.urgesResisted} Urges"
+
+        // Streak Tier
+        val tier = when {
+            days >= 90 -> "🌸 Sanctuary of Freedom"
+            days >= 31 -> "💎 Diamond Clarity"
+            days >= 15 -> "⚡ Unbreakable Momentum"
+            days >= 8 -> "🛡️ Shield of Resilience"
+            days >= 4 -> "🔥 Ember of Discipline"
+            else -> "🌱 Seedling of Resolve"
+        }
+        binding.tvHomeStreakTier.text = tier
+
+        // Milestone Countdown & Progress Bar
+        val (targetDays, milestoneLabel) = when {
+            days < 3 -> Pair(3L, "3-Day Breakthrough")
+            days < 7 -> Pair(7L, "1 Week Clean")
+            days < 14 -> Pair(14L, "2 Weeks Grounded")
+            days < 30 -> Pair(30L, "1 Month Milestone")
+            days < 60 -> Pair(60L, "60 Days of Resilience")
+            days < 90 -> Pair(90L, "Season of Transformation")
+            else -> Pair(180L, "Half-Year Master")
+        }
+        val daysLeft = (targetDays - days).coerceAtLeast(1)
+        val pct = ((days.toDouble() / targetDays) * 100).toInt().coerceIn(1, 100)
+        binding.tvHomeNextMilestoneBadge.text = "Next: $milestoneLabel ($daysLeft days left)"
+        binding.tvHomeMilestonePct.text = "$pct%"
+        binding.progressStreakMilestone.progress = pct
+
+        // Render 7-Day Consistency Horizon Dots
+        renderWeeklyConsistencyDots(days, checkIns)
 
         // Render Active Habit cards in Home
         renderActiveHabitsList(summary.breakdowns)
@@ -389,6 +433,86 @@ class MainActivity : AppCompatActivity() {
 
         // 4. Settings & Shield State
         updateShieldUi()
+
+        // 5. Update Android Home Screen & Lock Screen Widget
+        UrgeVaultWidgetProvider.updateAllWidgets(this)
+    }
+
+    private fun setupQuoteCard() {
+        renderQuote(currentQuote)
+        binding.btnShuffleQuote.setOnClickListener {
+            HapticEngine.performClick(it)
+            currentQuote = QuoteManager.getRandomQuote(currentQuote)
+            renderQuote(currentQuote)
+        }
+        binding.btnShareQuote.setOnClickListener {
+            HapticEngine.performClick(it)
+            QuoteManager.shareQuote(this, currentQuote)
+        }
+    }
+
+    private fun renderQuote(quote: RecoveryQuote) {
+        binding.tvHomeQuoteText.text = "“${quote.quote}”"
+        binding.tvHomeQuoteAuthor.text = "— ${quote.author}"
+        binding.tvQuoteCategory.text = quote.category
+    }
+
+    private fun renderWeeklyConsistencyDots(days: Long, checkIns: List<com.betshield.app.model.DailyCheckIn>) {
+        val today = LocalDate.now()
+        val todayEpoch = today.toEpochDay()
+        val checkInMap = checkIns.associateBy { it.dateEpochDay }
+        val streakStartEpoch = todayEpoch - days + 1
+
+        val dotViews = listOf(
+            Pair(binding.dotDay1, binding.tvCheckDay1 to binding.tvDayLabel1),
+            Pair(binding.dotDay2, binding.tvCheckDay2 to binding.tvDayLabel2),
+            Pair(binding.dotDay3, binding.tvCheckDay3 to binding.tvDayLabel3),
+            Pair(binding.dotDay4, binding.tvCheckDay4 to binding.tvDayLabel4),
+            Pair(binding.dotDay5, binding.tvCheckDay5 to binding.tvDayLabel5),
+            Pair(binding.dotDay6, binding.tvCheckDay6 to binding.tvDayLabel6),
+            Pair(binding.dotDay7, binding.tvCheckDay7 to binding.tvDayLabel7)
+        )
+
+        for (i in 0..6) {
+            val targetDate = today.minusDays((6 - i).toLong())
+            val targetEpoch = targetDate.toEpochDay()
+            val (dotFrame, texts) = dotViews[i]
+            val (checkText, labelText) = texts
+
+            val isToday = (i == 6)
+            val hasCleanCheckIn = checkInMap[targetEpoch]?.let { !it.useRecorded } == true
+            val isCoveredByStreak = targetEpoch in streakStartEpoch..todayEpoch
+            val isClean = hasCleanCheckIn || isCoveredByStreak
+
+            val dayInitial = when (targetDate.dayOfWeek) {
+                java.time.DayOfWeek.MONDAY -> "M"
+                java.time.DayOfWeek.TUESDAY -> "T"
+                java.time.DayOfWeek.WEDNESDAY -> "W"
+                java.time.DayOfWeek.THURSDAY -> "T"
+                java.time.DayOfWeek.FRIDAY -> "F"
+                java.time.DayOfWeek.SATURDAY -> "S"
+                java.time.DayOfWeek.SUNDAY -> "S"
+            }
+
+            if (isToday) {
+                labelText.text = "Today"
+                labelText.setTextColor(ContextCompat.getColor(this, R.color.primary))
+                dotFrame.setBackgroundResource(R.drawable.bg_streak_dot_today)
+                checkText.text = if (isClean) "✓" else "★"
+                checkText.setTextColor(ContextCompat.getColor(this, R.color.primary))
+            } else {
+                labelText.text = dayInitial
+                labelText.setTextColor(ContextCompat.getColor(this, R.color.text_muted))
+                if (isClean) {
+                    dotFrame.setBackgroundResource(R.drawable.bg_streak_dot_active)
+                    checkText.text = "✓"
+                    checkText.setTextColor(0xFFFFFFFF.toInt())
+                } else {
+                    dotFrame.setBackgroundResource(R.drawable.bg_streak_dot_inactive)
+                    checkText.text = ""
+                }
+            }
+        }
     }
 
     private fun renderActiveHabitsList(breakdowns: List<com.betshield.app.data.HabitSavingsBreakdown>) {

@@ -45,6 +45,10 @@ class UrgeSosActivity : AppCompatActivity() {
         setupHelplines()
         setupLogVictory()
 
+        binding.btnOpenFocusSoundscapes.setOnClickListener {
+            startActivity(Intent(this, FocusTimerActivity::class.java))
+        }
+
         binding.btnCloseSos.setOnClickListener {
             finish()
         }
@@ -296,6 +300,7 @@ class UrgeSosActivity : AppCompatActivity() {
                 wasUrgeResisted = true
             )
             repo.recordUrgeSession(session)
+            com.betshield.app.widget.UrgeVaultWidgetProvider.updateAllWidgets(this)
             com.betshield.app.util.HapticEngine.performSuccess(context = this)
 
             Toast.makeText(

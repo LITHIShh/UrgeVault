@@ -294,6 +294,16 @@
                         android:textColor="@color/primary"
                         app:icon="@android:drawable/ic_media_play"
                         app:iconTint="@color/primary" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnOpenFocusSoundscapes"
+                        style="@style/Widget.Material3.Button.TextButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:text="🌿 Immersive Nature Sounds &amp; Focus Timer →"
+                        android:textColor="@color/primary"
+                        android:textSize="12sp" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 

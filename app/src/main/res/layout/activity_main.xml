@@ -318,13 +318,16 @@
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
-                <!-- High-Level Overview Metrics Card -->
+                <!-- Mindful Focus & Nature Sounds Quick Launcher Card -->
                 <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/btnLaunchFocusHub"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="20dp"
+                    android:clickable="true"
+                    android:focusable="true"
                     app:cardBackgroundColor="@color/surface"
-                    app:cardCornerRadius="22dp"
+                    app:cardCornerRadius="20dp"
                     app:cardElevation="2dp"
                     app:strokeColor="@color/card_stroke"
                     app:strokeWidth="1dp">
@@ -332,50 +335,465 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:padding="20dp">
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:padding="18dp">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="RECOVERY RECLAMATION"
-                            android:textColor="@color/text_muted"
-                            android:textSize="11sp"
-                            android:textStyle="bold"
-                            android:letterSpacing="0.05" />
+                            android:layout_marginEnd="14dp"
+                            android:text="🧘"
+                            android:textSize="28sp" />
 
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Mindful Focus &amp; Nature Sounds"
+                                android:textColor="@color/text_primary"
+                                android:textSize="15sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:text="Rain, Ocean, Zen frequencies with Pomodoro timer"
+                                android:textColor="@color/text_muted"
+                                android:textSize="12sp" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Open →"
+                            android:textColor="@color/primary"
+                            android:textSize="13sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- High-Impact Daily Streak Hero Card -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
+                    app:cardBackgroundColor="@color/surface"
+                    app:cardCornerRadius="24dp"
+                    app:cardElevation="3dp"
+                    app:strokeColor="@color/primary_dark"
+                    app:strokeWidth="1.5dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="20dp">
+
+                        <!-- Hero Streak Header -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <!-- Glowing Flame Emblem -->
+                            <FrameLayout
+                                android:layout_width="52dp"
+                                android:layout_height="52dp"
+                                android:background="@drawable/bg_streak_flame_glow">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:text="🔥"
+                                    android:textSize="26sp" />
+                            </FrameLayout>
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="14dp"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <LinearLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="baseline"
+                                    android:orientation="horizontal">
+
+                                    <TextView
+                                        android:id="@+id/tvHomeDaysClean"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="14"
+                                        android:textColor="@color/text_primary"
+                                        android:textSize="34sp"
+                                        android:textStyle="bold" />
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginStart="6dp"
+                                        android:text="Days Clean"
+                                        android:textColor="@color/primary"
+                                        android:textSize="14sp"
+                                        android:textStyle="bold" />
+                                </LinearLayout>
+
+                                <TextView
+                                    android:id="@+id/tvHomeStreakTier"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="🌱 Seedling of Resolve"
+                                    android:textColor="@color/text_secondary"
+                                    android:textSize="12sp"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+
+                            <TextView
+                                android:id="@+id/tvHomeStreakStatusPill"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/bg_shield_status_badge"
+                                android:paddingHorizontal="10dp"
+                                android:paddingVertical="4dp"
+                                android:text="Active 🔥"
+                                android:textColor="@color/primary"
+                                android:textSize="11sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+
+                        <!-- Next Milestone Countdown & Progress Bar -->
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="16dp"
-                            android:baselineAligned="false"
+                            android:orientation="vertical">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:id="@+id/tvHomeNextMilestoneBadge"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="Next: 30-Day Milestone (16 days left)"
+                                    android:textColor="@color/text_secondary"
+                                    android:textSize="12sp" />
+
+                                <TextView
+                                    android:id="@+id/tvHomeMilestonePct"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="46%"
+                                    android:textColor="@color/primary"
+                                    android:textSize="12sp"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+
+                            <ProgressBar
+                                android:id="@+id/progressStreakMilestone"
+                                style="?android:attr/progressBarStyleHorizontal"
+                                android:layout_width="match_parent"
+                                android:layout_height="8dp"
+                                android:layout_marginTop="8dp"
+                                android:max="100"
+                                android:progress="46"
+                                android:progressDrawable="@android:drawable/progress_horizontal"
+                                android:progressTint="@color/primary" />
+                        </LinearLayout>
+
+                        <!-- 7-Day Consistency Horizon Dots -->
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="16dp"
+                            android:text="LAST 7 DAYS CONSISTENCY"
+                            android:textColor="@color/text_muted"
+                            android:textSize="10sp"
+                            android:textStyle="bold"
+                            android:letterSpacing="0.05" />
+
+                        <LinearLayout
+                            android:id="@+id/layoutWeeklyDots"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:gravity="center"
                             android:orientation="horizontal">
 
-                            <!-- Days Clean -->
+                            <!-- Day 1 -->
                             <LinearLayout
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
+                                android:gravity="center"
                                 android:orientation="vertical">
 
-                                <TextView
-                                    android:id="@+id/tvHomeDaysClean"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="14"
-                                    android:textColor="@color/text_primary"
-                                    android:textSize="32sp"
-                                    android:textStyle="bold" />
+                                <FrameLayout
+                                    android:id="@+id/dotDay1"
+                                    android:layout_width="28dp"
+                                    android:layout_height="28dp"
+                                    android:background="@drawable/bg_streak_dot_active">
+
+                                    <TextView
+                                        android:id="@+id/tvCheckDay1"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="center"
+                                        android:text="✓"
+                                        android:textColor="#FFFFFF"
+                                        android:textSize="12sp"
+                                        android:textStyle="bold" />
+                                </FrameLayout>
 
                                 <TextView
+                                    android:id="@+id/tvDayLabel1"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="Days Protected"
-                                    android:textColor="@color/text_secondary"
-                                    android:textSize="12sp" />
+                                    android:layout_marginTop="4dp"
+                                    android:text="M"
+                                    android:textColor="@color/text_muted"
+                                    android:textSize="10sp" />
                             </LinearLayout>
 
-                            <!-- Money Protected -->
+                            <!-- Day 2 -->
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:orientation="vertical">
+
+                                <FrameLayout
+                                    android:id="@+id/dotDay2"
+                                    android:layout_width="28dp"
+                                    android:layout_height="28dp"
+                                    android:background="@drawable/bg_streak_dot_active">
+
+                                    <TextView
+                                        android:id="@+id/tvCheckDay2"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="center"
+                                        android:text="✓"
+                                        android:textColor="#FFFFFF"
+                                        android:textSize="12sp"
+                                        android:textStyle="bold" />
+                                </FrameLayout>
+
+                                <TextView
+                                    android:id="@+id/tvDayLabel2"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="4dp"
+                                    android:text="T"
+                                    android:textColor="@color/text_muted"
+                                    android:textSize="10sp" />
+                            </LinearLayout>
+
+                            <!-- Day 3 -->
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:orientation="vertical">
+
+                                <FrameLayout
+                                    android:id="@+id/dotDay3"
+                                    android:layout_width="28dp"
+                                    android:layout_height="28dp"
+                                    android:background="@drawable/bg_streak_dot_active">
+
+                                    <TextView
+                                        android:id="@+id/tvCheckDay3"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="center"
+                                        android:text="✓"
+                                        android:textColor="#FFFFFF"
+                                        android:textSize="12sp"
+                                        android:textStyle="bold" />
+                                </FrameLayout>
+
+                                <TextView
+                                    android:id="@+id/tvDayLabel3"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="4dp"
+                                    android:text="W"
+                                    android:textColor="@color/text_muted"
+                                    android:textSize="10sp" />
+                            </LinearLayout>
+
+                            <!-- Day 4 -->
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:orientation="vertical">
+
+                                <FrameLayout
+                                    android:id="@+id/dotDay4"
+                                    android:layout_width="28dp"
+                                    android:layout_height="28dp"
+                                    android:background="@drawable/bg_streak_dot_active">
+
+                                    <TextView
+                                        android:id="@+id/tvCheckDay4"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="center"
+                                        android:text="✓"
+                                        android:textColor="#FFFFFF"
+                                        android:textSize="12sp"
+                                        android:textStyle="bold" />
+                                </FrameLayout>
+
+                                <TextView
+                                    android:id="@+id/tvDayLabel4"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="4dp"
+                                    android:text="T"
+                                    android:textColor="@color/text_muted"
+                                    android:textSize="10sp" />
+                            </LinearLayout>
+
+                            <!-- Day 5 -->
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:orientation="vertical">
+
+                                <FrameLayout
+                                    android:id="@+id/dotDay5"
+                                    android:layout_width="28dp"
+                                    android:layout_height="28dp"
+                                    android:background="@drawable/bg_streak_dot_active">
+
+                                    <TextView
+                                        android:id="@+id/tvCheckDay5"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="center"
+                                        android:text="✓"
+                                        android:textColor="#FFFFFF"
+                                        android:textSize="12sp"
+                                        android:textStyle="bold" />
+                                </FrameLayout>
+
+                                <TextView
+                                    android:id="@+id/tvDayLabel5"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="4dp"
+                                    android:text="F"
+                                    android:textColor="@color/text_muted"
+                                    android:textSize="10sp" />
+                            </LinearLayout>
+
+                            <!-- Day 6 -->
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:orientation="vertical">
+
+                                <FrameLayout
+                                    android:id="@+id/dotDay6"
+                                    android:layout_width="28dp"
+                                    android:layout_height="28dp"
+                                    android:background="@drawable/bg_streak_dot_active">
+
+                                    <TextView
+                                        android:id="@+id/tvCheckDay6"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="center"
+                                        android:text="✓"
+                                        android:textColor="#FFFFFF"
+                                        android:textSize="12sp"
+                                        android:textStyle="bold" />
+                                </FrameLayout>
+
+                                <TextView
+                                    android:id="@+id/tvDayLabel6"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="4dp"
+                                    android:text="S"
+                                    android:textColor="@color/text_muted"
+                                    android:textSize="10sp" />
+                            </LinearLayout>
+
+                            <!-- Day 7 (Today) -->
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:orientation="vertical">
+
+                                <FrameLayout
+                                    android:id="@+id/dotDay7"
+                                    android:layout_width="28dp"
+                                    android:layout_height="28dp"
+                                    android:background="@drawable/bg_streak_dot_today">
+
+                                    <TextView
+                                        android:id="@+id/tvCheckDay7"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="center"
+                                        android:text="★"
+                                        android:textColor="@color/primary"
+                                        android:textSize="12sp"
+                                        android:textStyle="bold" />
+                                </FrameLayout>
+
+                                <TextView
+                                    android:id="@+id/tvDayLabel7"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="4dp"
+                                    android:text="Today"
+                                    android:textColor="@color/primary"
+                                    android:textSize="10sp"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+                        </LinearLayout>
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginVertical="16dp"
+                            android:background="@color/card_stroke" />
+
+                        <!-- Summary Saved / Time / Urges Row -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
                             <LinearLayout
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
@@ -388,55 +806,63 @@
                                     android:layout_height="wrap_content"
                                     android:text="$0"
                                     android:textColor="@color/primary"
-                                    android:textSize="32sp"
+                                    android:textSize="22sp"
                                     android:textStyle="bold" />
 
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="Est. Money Saved"
-                                    android:textColor="@color/text_secondary"
-                                    android:textSize="12sp" />
+                                    android:text="Money Saved"
+                                    android:textColor="@color/text_muted"
+                                    android:textSize="11sp" />
                             </LinearLayout>
-                        </LinearLayout>
 
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="1dp"
-                            android:layout_marginVertical="16dp"
-                            android:background="@color/card_stroke" />
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:gravity="center_vertical"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginEnd="8dp"
-                                android:text="⏱️"
-                                android:textSize="16sp" />
-
-                            <TextView
-                                android:id="@+id/tvHomeTimeReclaimed"
+                            <LinearLayout
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:text="10.5 Hours Reclaimed"
-                                android:textColor="@color/text_primary"
-                                android:textSize="14sp"
-                                android:textStyle="bold" />
+                                android:orientation="vertical">
 
-                            <TextView
-                                android:id="@+id/tvHomeUrgesResisted"
+                                <TextView
+                                    android:id="@+id/tvHomeTimeReclaimed"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="10.5h"
+                                    android:textColor="@color/text_primary"
+                                    android:textSize="18sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Time Reclaimed"
+                                    android:textColor="@color/text_muted"
+                                    android:textSize="11sp" />
+                            </LinearLayout>
+
+                            <LinearLayout
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="8 Urges Surfed"
-                                android:textColor="@color/text_muted"
-                                android:textSize="12sp" />
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/tvHomeUrgesResisted"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="8 Urges"
+                                    android:textColor="@color/text_primary"
+                                    android:textSize="18sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Surfed"
+                                    android:textColor="@color/text_muted"
+                                    android:textSize="11sp" />
+                            </LinearLayout>
                         </LinearLayout>
+
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
@@ -497,6 +923,114 @@
                             android:layout_height="wrap_content"
                             android:text="Log"
                             android:textColor="@color/primary" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- Daily Recovery Wisdom & Motivational Quotes Card -->
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/cardDailyQuote"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
+                    app:cardBackgroundColor="@color/surface"
+                    app:cardCornerRadius="20dp"
+                    app:cardElevation="2dp"
+                    app:strokeColor="@color/card_stroke"
+                    app:strokeWidth="1dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="20dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginEnd="8dp"
+                                android:text="💭"
+                                android:textSize="18sp" />
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="DAILY INSPIRATION"
+                                android:textColor="@color/text_muted"
+                                android:textSize="11sp"
+                                android:textStyle="bold"
+                                android:letterSpacing="0.05" />
+
+                            <TextView
+                                android:id="@+id/tvQuoteCategory"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/bg_shield_status_badge"
+                                android:paddingHorizontal="10dp"
+                                android:paddingVertical="3dp"
+                                android:text="Stoic Wisdom"
+                                android:textColor="@color/primary"
+                                android:textSize="11sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/tvHomeQuoteText"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="12dp"
+                            android:lineSpacingExtra="4dp"
+                            android:text="“You have power over your mind - not outside events. Realize this, and you will find strength.”"
+                            android:textColor="@color/text_primary"
+                            android:textSize="15sp"
+                            android:textStyle="italic" />
+
+                        <TextView
+                            android:id="@+id/tvHomeQuoteAuthor"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="end"
+                            android:layout_marginTop="8dp"
+                            android:text="— Marcus Aurelius"
+                            android:textColor="@color/primary"
+                            android:textSize="13sp"
+                            android:textStyle="bold" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="14dp"
+                            android:gravity="end"
+                            android:orientation="horizontal">
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnShuffleQuote"
+                                style="@style/Widget.Material3.Button.TonalButton"
+                                android:layout_width="wrap_content"
+                                android:layout_height="40dp"
+                                android:layout_marginEnd="8dp"
+                                android:text="🔀 New Quote"
+                                android:textColor="@color/text_primary"
+                                android:textSize="12sp"
+                                app:cornerRadius="12dp" />
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnShareQuote"
+                                style="@style/Widget.Material3.Button.TonalButton"
+                                android:layout_width="wrap_content"
+                                android:layout_height="40dp"
+                                android:text="📤 Share"
+                                android:textColor="@color/primary"
+                                android:textSize="12sp"
+                                app:cornerRadius="12dp" />
+                        </LinearLayout>
+
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
