@@ -55,7 +55,7 @@ $$\text{Estimated Time Reclaimed} = \text{Baseline minutes per day} \times \text
 
 UrgeVault includes an automated GitHub Actions CI/CD pipeline:
 1. Push the code to GitHub (`git push origin main` or double-click `push_to_github.bat`).
-2. GitHub Actions runs `.github/workflows/build-apk-aab.yml`:
+2. GitHub Actions runs `.github/workflows/main.yml`:
    - Builds debug APK (`app-debug.apk`)
    - Builds signed release bundle (`app-release.aab`) ready for Google Play Console upload.
-3. Download the built APK or AAB under the **Actions** tab on your GitHub repository!
+3. Download the built APK or AAB under the **Actions** tab on your GitHub repository (https://github.com/LITHIShh/UrgeVault/actions)!

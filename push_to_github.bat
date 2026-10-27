@@ -2,7 +2,7 @@
 cd /d "%~dp0"
 title Pushing UrgeVault to GitHub
 echo ========================================================
-echo   Pushing UrgeVault to GitHub (LITHIShh/BetShield)
+echo   Pushing UrgeVault to GitHub (LITHIShh/UrgeVault)
 echo ========================================================
 echo.
 echo Attempting push to origin main...
@@ -22,7 +22,7 @@ if "%USER_TOKEN%"=="" goto end
 
 echo.
 echo Pushing with your token...
-git push https://%USER_TOKEN%@github.com/LITHIShh/BetShield.git main
+git push https://%USER_TOKEN%@github.com/LITHIShh/UrgeVault.git main
 if %ERRORLEVEL% EQU 0 goto success
 goto error
 
@@ -34,7 +34,7 @@ echo ========================================================
 echo.
 echo GitHub Actions is now compiling your APK and Play Store AAB.
 echo Download your files here once the build finishes:
-echo https://github.com/LITHIShh/BetShield/actions
+echo https://github.com/LITHIShh/UrgeVault/actions
 echo.
 goto end
 
