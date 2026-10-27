@@ -196,34 +196,34 @@ class BlocklistDatabase(private val context: Context) {
         // 3. Adult Content category
         if (prefsManager.isAdultBlockingEnabled) {
             for (blocked in adultDomains) {
-                if (domain == blocked || domain.endsWith(".$blocked")) return true
+                if (cleanDomain == blocked || cleanDomain.endsWith(".$blocked")) return true
             }
             for (tld in adultTlds) {
-                if (domain.endsWith(tld)) return true
+                if (cleanDomain.endsWith(tld)) return true
             }
             for (kw in adultKeywords) {
-                if (domain.contains(kw)) return true
+                if (cleanDomain.contains(kw)) return true
             }
         }
 
         // 4. Social Media category
         if (prefsManager.isSocialMediaBlockingEnabled) {
             for (blocked in socialDomains) {
-                if (domain == blocked || domain.endsWith(".$blocked")) return true
+                if (cleanDomain == blocked || cleanDomain.endsWith(".$blocked")) return true
             }
         }
 
         // 5. Gaming category
         if (prefsManager.isGamingBlockingEnabled) {
             for (blocked in gamingDomains) {
-                if (domain == blocked || domain.endsWith(".$blocked")) return true
+                if (cleanDomain == blocked || cleanDomain.endsWith(".$blocked")) return true
             }
         }
 
         // 6. Crypto category
         if (prefsManager.isCryptoBlockingEnabled) {
             for (blocked in cryptoDomains) {
-                if (domain == blocked || domain.endsWith(".$blocked")) return true
+                if (cleanDomain == blocked || cleanDomain.endsWith(".$blocked")) return true
             }
         }
 
