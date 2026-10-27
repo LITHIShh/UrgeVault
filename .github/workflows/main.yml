@@ -48,15 +48,9 @@ jobs:
 
       - name: Build Debug APK
         run: |
+          set -o pipefail
           cd ${{ env.project_dir }}
           ./gradlew assembleDebug --stacktrace 2>&1 | tee gradle_debug.log
-
-      - name: Capture Gradle Build Failure
-        if: failure()
-        uses: actions/upload-artifact@v4
-        with:
-          name: Gradle-Error-Log
-          path: ${{ env.project_dir }}/gradle_debug.log
 
       - name: Dump Gradle Error to Job Summary
         if: failure()
@@ -68,6 +62,7 @@ jobs:
 
       - name: Build Release APK and Play Store AAB
         run: |
+          set -o pipefail
           cd ${{ env.project_dir }}
           ./gradlew assembleRelease bundleRelease --stacktrace 2>&1 | tee gradle_release.log
 
@@ -78,6 +73,17 @@ jobs:
           echo '```text' >> $GITHUB_STEP_SUMMARY
           tail -n 80 ${{ env.project_dir }}/gradle_release.log >> $GITHUB_STEP_SUMMARY
           echo '```' >> $GITHUB_STEP_SUMMARY
+
+      - name: Upload Build Logs Always
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Build-Logs
+          path: |
+            ${{ env.project_dir }}/gradle_debug.log
+            ${{ env.project_dir }}/gradle_release.log
+          if-no-files-found: ignore
+          retention-days: 7
 
       - name: Upload Debug & Release Installable APKs
         uses: actions/upload-artifact@v4
