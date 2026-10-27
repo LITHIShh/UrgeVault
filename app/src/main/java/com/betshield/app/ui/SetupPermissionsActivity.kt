@@ -87,6 +87,12 @@ class SetupPermissionsActivity : AppCompatActivity() {
                 startActivity(intent)
             }
         }
+
+        // 5. Notification Blocker
+        binding.btnGrantNotification.setOnClickListener {
+            Toast.makeText(this, "Enable 'QuitBet' under Notification Access", Toast.LENGTH_LONG).show()
+            startActivity(Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS"))
+        }
     }
 
     private fun startVpnService() {
@@ -137,6 +143,16 @@ class SetupPermissionsActivity : AppCompatActivity() {
                 binding.btnIgnoreBattery.text = "✓ Battery Exemption Active"
                 binding.btnIgnoreBattery.isEnabled = false
             }
+        }
+
+        // Check Notification Listener
+        val notificationActive = androidx.core.app.NotificationManagerCompat.getEnabledListenerPackages(this).contains(packageName)
+        if (notificationActive) {
+            binding.btnGrantNotification.text = "✓ Notification Blocker Active"
+            binding.btnGrantNotification.isEnabled = false
+        } else {
+            binding.btnGrantNotification.text = "Enable Notification Blocker"
+            binding.btnGrantNotification.isEnabled = true
         }
     }
 }

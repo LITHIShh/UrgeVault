@@ -14,6 +14,8 @@
     <string name="vpn_service_desc">Intercepts and drops connections to betting &amp; casino websites.</string>
     <string name="accessibility_service_title">Addiction Guardian</string>
     <string name="accessibility_service_desc">Instantly shuts down betting apps, browser tabs, and settings bypass.</string>
+    <string name="notification_service_title">Notification Blocker</string>
+    <string name="notification_service_desc">Silences betting promotions, bonus alerts, and custom app notifications.</string>
     <string name="device_admin_title">Anti-Relapse Uninstall Lock</string>
     <string name="device_admin_desc">Prevents bypassing your commitment by deleting the app.</string>
 

@@ -149,6 +149,10 @@ class MainActivity : AppCompatActivity() {
         binding.cardAccessibilityStatus.setOnClickListener {
             startActivity(Intent(this, SetupPermissionsActivity::class.java))
         }
+
+        binding.cardNotificationStatus.setOnClickListener {
+            startActivity(Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS"))
+        }
     }
 
     private fun enableProtection() {
@@ -250,6 +254,12 @@ class MainActivity : AppCompatActivity() {
         binding.tvAccessibilityBadge.text = if (accessibilityActive) "ACTIVE" else "SETUP NEEDED"
         binding.tvAccessibilityBadge.setTextColor(
             ContextCompat.getColor(this, if (accessibilityActive) R.color.shield_active else R.color.warning)
+        )
+
+        val notificationActive = androidx.core.app.NotificationManagerCompat.getEnabledListenerPackages(this).contains(packageName)
+        binding.tvNotificationBadge.text = if (notificationActive) "ACTIVE" else "SETUP NEEDED"
+        binding.tvNotificationBadge.setTextColor(
+            ContextCompat.getColor(this, if (notificationActive) R.color.shield_active else R.color.warning)
         )
     }
 }
