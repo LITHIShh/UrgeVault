@@ -34,117 +34,180 @@
                     android:orientation="vertical"
                     android:layout_marginBottom="16dp">
 
-                    <RelativeLayout
+                    <!-- Top Bar: Brand + Theme Toggle + Tutorial + Shield Pill -->
+                    <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:layout_height="44dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
 
+                        <!-- App Title & Tagline -->
                         <LinearLayout
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:gravity="center_vertical"
-                            android:orientation="horizontal">
+                            android:layout_weight="1"
+                            android:orientation="vertical">
 
                             <TextView
-                                android:id="@+id/tvHeaderGreetingEmoji"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginEnd="8dp"
-                                android:text="🛡️"
-                                android:textSize="24sp" />
+                                android:text="@string/app_name"
+                                android:textColor="@color/text_primary"
+                                android:textSize="20sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Digital Sanctuary"
+                                android:textColor="@color/primary"
+                                android:textSize="11sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+
+                        <!-- Theme Toggle Button (☀️ / 🌙) -->
+                        <com.google.android.material.card.MaterialCardView
+                            android:id="@+id/btnThemeToggle"
+                            android:layout_width="36dp"
+                            android:layout_height="36dp"
+                            android:layout_marginEnd="8dp"
+                            android:clickable="true"
+                            android:focusable="true"
+                            app:cardBackgroundColor="@color/chip_background"
+                            app:cardCornerRadius="18dp"
+                            app:strokeColor="@color/card_stroke"
+                            app:strokeWidth="1dp">
+
+                            <TextView
+                                android:id="@+id/tvThemeToggleIcon"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:text="🌙"
+                                android:textSize="14sp" />
+                        </com.google.android.material.card.MaterialCardView>
+
+                        <!-- Tutorial Help Button -->
+                        <com.google.android.material.card.MaterialCardView
+                            android:id="@+id/btnQuickTutorial"
+                            android:layout_width="36dp"
+                            android:layout_height="36dp"
+                            android:layout_marginEnd="8dp"
+                            android:clickable="true"
+                            android:focusable="true"
+                            app:cardBackgroundColor="@color/chip_background"
+                            app:cardCornerRadius="18dp"
+                            app:strokeColor="@color/card_stroke"
+                            app:strokeWidth="1dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:text="❓"
+                                android:textSize="14sp" />
+                        </com.google.android.material.card.MaterialCardView>
+
+                        <!-- Shield Quick Status Pill -->
+                        <com.google.android.material.card.MaterialCardView
+                            android:id="@+id/cardQuickShieldStatus"
+                            android:layout_width="wrap_content"
+                            android:layout_height="36dp"
+                            android:clickable="true"
+                            android:focusable="true"
+                            app:cardBackgroundColor="@color/surface"
+                            app:cardCornerRadius="18dp"
+                            app:strokeColor="@color/primary_dark"
+                            app:strokeWidth="1dp">
 
                             <LinearLayout
                                 android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal"
+                                android:paddingHorizontal="10dp">
+
+                                <View
+                                    android:id="@+id/viewShieldDot"
+                                    android:layout_width="8dp"
+                                    android:layout_height="8dp"
+                                    android:layout_marginEnd="6dp"
+                                    android:background="@drawable/bg_breathing_circle"
+                                    android:backgroundTint="@color/shield_active" />
+
+                                <TextView
+                                    android:id="@+id/tvQuickShieldText"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Active"
+                                    android:textColor="@color/text_primary"
+                                    android:textSize="11sp"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+                        </com.google.android.material.card.MaterialCardView>
+
+                    </LinearLayout>
+
+                    <!-- Dedicated Frosted Glass Hero Greeting Card (NO OVERLAP) -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/cardGreetingHero"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        app:cardBackgroundColor="@color/surface"
+                        app:cardCornerRadius="20dp"
+                        app:strokeColor="@color/card_stroke"
+                        app:strokeWidth="1dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:padding="14dp">
+
+                            <!-- Glowing Violet Icon Container -->
+                            <FrameLayout
+                                android:layout_width="44dp"
+                                android:layout_height="44dp"
+                                android:layout_marginEnd="12dp"
+                                android:background="@drawable/bg_liquid_glass_card_violet">
+
+                                <TextView
+                                    android:id="@+id/tvHeaderGreetingEmoji"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:text="🛡️"
+                                    android:textSize="22sp" />
+                            </FrameLayout>
+
+                            <LinearLayout
+                                android:layout_width="0dp"
                                 android:layout_height="wrap_content"
+                                android:layout_weight="1"
                                 android:orientation="vertical">
 
                                 <TextView
                                     android:id="@+id/tvHeaderGreetingTitle"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="@string/app_name"
+                                    android:text="Good Evening, Champion"
                                     android:textColor="@color/text_primary"
-                                    android:textSize="20sp"
+                                    android:textSize="16sp"
                                     android:textStyle="bold" />
 
                                 <TextView
                                     android:id="@+id/tvHeaderGreetingSubtitle"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="@string/tagline"
-                                    android:textColor="@color/primary"
-                                    android:textSize="12sp"
-                                    android:textStyle="bold" />
+                                    android:layout_marginTop="2dp"
+                                    android:text="Your digital sanctuary is protected."
+                                    android:textColor="@color/text_secondary"
+                                    android:textSize="12sp" />
                             </LinearLayout>
                         </LinearLayout>
-
-                        <!-- Quick Actions: Tutorial & Shield Status -->
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentEnd="true"
-                            android:layout_centerVertical="true"
-                            android:gravity="center_vertical"
-                            android:orientation="horizontal">
-
-                            <!-- Tutorial Help Button -->
-                            <com.google.android.material.card.MaterialCardView
-                                android:id="@+id/btnQuickTutorial"
-                                android:layout_width="36dp"
-                                android:layout_height="36dp"
-                                android:layout_marginEnd="8dp"
-                                android:clickable="true"
-                                android:focusable="true"
-                                app:cardBackgroundColor="@color/chip_background"
-                                app:cardCornerRadius="18dp"
-                                app:strokeColor="@color/card_stroke"
-                                app:strokeWidth="1dp">
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_gravity="center"
-                                    android:text="❓"
-                                    android:textSize="14sp" />
-                            </com.google.android.material.card.MaterialCardView>
-
-                            <!-- Shield Quick Status Pill -->
-                            <com.google.android.material.card.MaterialCardView
-                                android:id="@+id/cardQuickShieldStatus"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                app:cardBackgroundColor="@color/surface"
-                                app:cardCornerRadius="20dp"
-                                app:strokeColor="@color/primary_dark"
-                                app:strokeWidth="1dp">
-
-                                <LinearLayout
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:gravity="center_vertical"
-                                    android:orientation="horizontal"
-                                    android:paddingHorizontal="12dp"
-                                    android:paddingVertical="8dp">
-
-                                    <View
-                                        android:id="@+id/viewShieldDot"
-                                        android:layout_width="8dp"
-                                        android:layout_height="8dp"
-                                        android:layout_marginEnd="6dp"
-                                        android:background="@drawable/bg_breathing_circle"
-                                        android:backgroundTint="@color/shield_active" />
-
-                                    <TextView
-                                        android:id="@+id/tvQuickShieldText"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:text="Shield Active"
-                                        android:textColor="@color/text_primary"
-                                        android:textSize="12sp"
-                                        android:textStyle="bold" />
-                                </LinearLayout>
-                            </com.google.android.material.card.MaterialCardView>
-                        </LinearLayout>
-                    </RelativeLayout>
+                    </com.google.android.material.card.MaterialCardView>
 
                     <!-- AdBlocker Detected Notice Card (Initially GONE) -->
                     <com.google.android.material.card.MaterialCardView
@@ -914,6 +977,65 @@
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
+                <!-- Theme Mode Selector Card -->
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/btnSettingsThemeCard"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="14dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    app:cardBackgroundColor="@color/surface"
+                    app:cardCornerRadius="18dp"
+                    app:strokeColor="@color/card_stroke"
+                    app:strokeWidth="1dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:padding="16dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="12dp"
+                            android:text="🎨"
+                            android:textSize="22sp" />
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="App Appearance &amp; Liquid Glass"
+                                android:textColor="@color/text_primary"
+                                android:textSize="14sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/tvSettingsCurrentTheme"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Auto (Time-based shift: Morning Light / Night Dark)"
+                                android:textColor="@color/text_muted"
+                                android:textSize="12sp" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Change →"
+                            android:textColor="@color/primary"
+                            android:textSize="13sp" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
                 <!-- Master Password Card -->
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/btnSettingsPassword"
@@ -1114,8 +1236,10 @@
                 android:background="@drawable/bg_liquid_glass_dock"
                 android:elevation="8dp"
                 app:elevation="0dp"
-                app:itemIconTint="@color/primary"
-                app:itemTextColor="@color/text_secondary"
+                app:itemIconTint="@color/selector_nav_tint"
+                app:itemTextColor="@color/selector_nav_tint"
+                app:itemActiveIndicatorStyle="@null"
+                app:labelVisibilityMode="labeled"
                 app:menu="@menu/bottom_nav_menu" />
         </FrameLayout>
 

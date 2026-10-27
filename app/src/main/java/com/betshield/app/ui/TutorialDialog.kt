@@ -22,28 +22,28 @@ class TutorialDialog(
 
     private val steps = listOf(
         TutorialStep(
-            badge = "Step 1 of 4: Sanctuary",
+            badge = "Step 1 of 4: Digital Peace",
             emoji = "🛡️",
             title = "Welcome to UrgeVault",
-            desc = "Your private, offline-first fortress against betting urges and digital traps. Everything is stored locally on your device with zero tracking."
+            desc = "Your private, offline-first sanctuary. Protect your mind, build healthy streaks, and reclaim control with zero data collection and complete privacy."
         ),
         TutorialStep(
             badge = "Step 2 of 4: One-Tap Shield",
             emoji = "⚡",
-            title = "Fast One-Tap Defense",
-            desc = "Tap Shield ON to engage our local DNS filter. It instantly locks 500+ betting domains & custom apps with zero slowdown on your regular internet."
+            title = "Fast Website & App Protection",
+            desc = "Turn Shield ON to block distracting websites and impulsive apps at the DNS level. Enjoy lightning-fast browsing with zero slowdown on your normal internet."
         ),
         TutorialStep(
-            badge = "Step 3 of 4: Browser Guardian",
-            emoji = "👁️",
-            title = "Browser Guardian & 1xBet Block",
-            desc = "Enable Browser Guardian in Accessibility. It monitors the address bar in Chrome, Brave, and Samsung Internet to stop 1xBet and circumvention mirrors."
+            badge = "Step 3 of 4: Smart Guardian",
+            emoji = "🌐",
+            title = "Smart Browser Guardian",
+            desc = "Enable Browser Guardian to keep all major browsers clean. It detects bypass links and tricky redirect mirrors in real-time to keep your space safe."
         ),
         TutorialStep(
             badge = "Step 4 of 4: Urge SOS",
             emoji = "🧘",
-            title = "Urge SOS Panic Button",
-            desc = "When a craving or impulse strikes, tap the red Urge SOS button for 60 seconds of tactical 4-7-8 haptic breathing, self-talk, and emergency support."
+            title = "Tactile Urge SOS",
+            desc = "When an impulse strikes, tap the Urge SOS button for 60 seconds of gentle guided 4-7-8 breathing vibrations, grounding affirmations, and relief."
         )
     )
 

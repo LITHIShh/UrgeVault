@@ -23,6 +23,10 @@ class PreferencesManager(context: Context) {
         private const val KEY_BLOCK_GAMING = "key_block_gaming"
         private const val KEY_BLOCK_CRYPTO = "key_block_crypto"
 
+        const val THEME_AUTO = "auto"
+        const val THEME_LIGHT = "light"
+        const val THEME_DARK = "dark"
+
         // Default: Cloudflare Family (1.1.1.3 blocks malware and adult/gambling)
         const val DEFAULT_DNS_PRIMARY = "1.1.1.3"
         const val DEFAULT_DNS_SECONDARY = "1.0.0.3"
@@ -115,4 +119,8 @@ class PreferencesManager(context: Context) {
     var isTutorialCompleted: Boolean
         get() = prefs.getBoolean("key_tutorial_completed", false)
         set(value) = prefs.edit().putBoolean("key_tutorial_completed", value).apply()
+
+    var appThemeMode: String
+        get() = prefs.getString("key_app_theme_mode", THEME_AUTO) ?: THEME_AUTO
+        set(value) = prefs.edit().putString("key_app_theme_mode", value).apply()
 }

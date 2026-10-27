@@ -27,9 +27,14 @@ import com.betshield.app.model.HabitType
 import com.betshield.app.model.SavingsGoal
 import com.betshield.app.monetization.AdManager
 import com.betshield.app.monetization.AdSettingsDialog
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.launch
+import com.betshield.app.data.PreferencesManager
+import com.betshield.app.monetization.AdBlockerDetector
 import com.betshield.app.service.BetBlockerAccessibilityService
 import com.betshield.app.service.BetShieldVpnService
 import com.betshield.app.util.HapticEngine
+import com.betshield.app.util.ThemeHelper
 import com.betshield.app.util.TimeThemeManager
 import com.google.android.material.card.MaterialCardView
 import java.time.LocalDate
@@ -40,6 +45,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private val app = BetShieldApplication.instance
     private val repo by lazy { app.urgeVaultRepository }
+    private var tabSwitchCount = 0
 
     private val vpnPrepareLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
@@ -92,6 +98,9 @@ class MainActivity : AppCompatActivity() {
             return
         }
 
+        // Apply selected theme mode (Auto/Light/Dark)
+        ThemeHelper.applyTheme(app.preferencesManager.appThemeMode)
+
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -99,9 +108,20 @@ class MainActivity : AppCompatActivity() {
         AdManager.initialize(this)
         AdManager.loadInterstitial(this)
         AdManager.loadRewardedAd(this)
+        AdManager.loadAppOpenAd(this)
 
         setupBottomNavigation()
         setupListeners()
+        updateThemeToggleUi()
+        updateShieldUi()
+        refreshAllData()
+
+        // Probe for active ad blocker sinkholes
+        lifecycleScope.launch {
+            if (AdBlockerDetector.checkAdBlockerActive()) {
+                binding.cardAdBlockerAlert.visibility = View.VISIBLE
+            }
+        }
 
         // Check if tutorial should be shown to new users
         if (!app.preferencesManager.isTutorialCompleted) {
@@ -118,12 +138,22 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+        if (app.preferencesManager.appThemeMode == PreferencesManager.THEME_AUTO) {
+            ThemeHelper.applyTheme(PreferencesManager.THEME_AUTO)
+        }
+        updateThemeToggleUi()
+        updateShieldUi()
         refreshAllData()
+        AdManager.showAppOpenAd(this)
     }
 
     private fun setupBottomNavigation() {
         binding.bottomNavigationView.setOnItemSelectedListener { item ->
             HapticEngine.performClick(binding.bottomNavigationView)
+            tabSwitchCount++
+            if (tabSwitchCount % 5 == 0) {
+                AdManager.showInterstitial(this) {}
+            }
             binding.containerHomeTab.visibility = if (item.itemId == R.id.nav_home) View.VISIBLE else View.GONE
             binding.containerVaultTab.visibility = if (item.itemId == R.id.nav_vault) View.VISIBLE else View.GONE
             binding.containerProgressTab.visibility = if (item.itemId == R.id.nav_progress) View.VISIBLE else View.GONE
@@ -133,6 +163,22 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupListeners() {
+        // Theme Toggle Button (☀️ / 🌙)
+        binding.btnThemeToggle.setOnClickListener {
+            HapticEngine.performClick(it)
+            val currentMode = app.preferencesManager.appThemeMode
+            val newMode = if (ThemeHelper.isDarkActive(currentMode)) {
+                PreferencesManager.THEME_LIGHT
+            } else {
+                PreferencesManager.THEME_DARK
+            }
+            app.preferencesManager.appThemeMode = newMode
+            ThemeHelper.applyTheme(newMode)
+            updateThemeToggleUi()
+            val label = if (newMode == PreferencesManager.THEME_LIGHT) "Light Mode active ☀️" else "Dark Mode active 🌙"
+            Toast.makeText(this, label, Toast.LENGTH_SHORT).show()
+        }
+
         // Top Bar Quick Tutorial Button
         binding.btnQuickTutorial.setOnClickListener {
             HapticEngine.performClick(it)
@@ -153,6 +199,11 @@ class MainActivity : AppCompatActivity() {
                     Toast.makeText(this, "Rewarded ad closed.", Toast.LENGTH_SHORT).show()
                 }
             )
+        }
+
+        binding.cardAdBlockerAlert.setOnClickListener {
+            HapticEngine.performClick(it)
+            showAdBlockerHelpDialog()
         }
 
         // Hero Urge SOS Action
@@ -195,6 +246,35 @@ class MainActivity : AppCompatActivity() {
         binding.btnPermissionsGuide.setOnClickListener {
             HapticEngine.performClick(it)
             startActivity(Intent(this, SetupPermissionsActivity::class.java))
+        }
+
+        binding.btnSettingsThemeCard.setOnClickListener {
+            HapticEngine.performClick(it)
+            val options = arrayOf(
+                "Auto (Daylight Frosted / Midnight Dark)",
+                "Light Mode (Frosted Daylight)",
+                "Dark Mode (Obsidian Deep Glass)"
+            )
+            val currentIdx = when (app.preferencesManager.appThemeMode) {
+                PreferencesManager.THEME_LIGHT -> 1
+                PreferencesManager.THEME_DARK -> 2
+                else -> 0
+            }
+            AlertDialog.Builder(this, R.style.Theme_BetShield_Dialog)
+                .setTitle("Select Appearance")
+                .setSingleChoiceItems(options, currentIdx) { dialog, which ->
+                    val chosen = when (which) {
+                        1 -> PreferencesManager.THEME_LIGHT
+                        2 -> PreferencesManager.THEME_DARK
+                        else -> PreferencesManager.THEME_AUTO
+                    }
+                    app.preferencesManager.appThemeMode = chosen
+                    ThemeHelper.applyTheme(chosen)
+                    updateThemeToggleUi()
+                    dialog.dismiss()
+                }
+                .setNegativeButton("Cancel", null)
+                .show()
         }
 
         binding.btnSettingsPassword.setOnClickListener {
@@ -594,6 +674,32 @@ class MainActivity : AppCompatActivity() {
             .show()
     }
 
+    private fun showAdBlockerHelpDialog() {
+        AlertDialog.Builder(this, R.style.Theme_BetShield_Dialog)
+            .setTitle("🛡️ Ad Blocker Detected")
+            .setMessage("UrgeVault is 100% free with no paywalls or subscriptions. Non-intrusive ads keep our website protection filters free for everyone.\n\nTo ensure all features work smoothly:\n1. Whitelist UrgeVault in your Ad Blocker or Private DNS settings.\n2. Or tap 'Support with 1 Ad' to support our servers.")
+            .setPositiveButton("Support with 1 Ad") { _, _ ->
+                binding.btnSupportRewardedAd.performClick()
+            }
+            .setNegativeButton("I Understand", null)
+            .show()
+    }
+
+    private fun updateThemeToggleUi() {
+        val isDark = ThemeHelper.isDarkActive(app.preferencesManager.appThemeMode)
+        binding.tvThemeToggleIcon.text = if (isDark) "☀️" else "🌙"
+        updateThemeSettingsLabel()
+    }
+
+    private fun updateThemeSettingsLabel() {
+        val label = when (app.preferencesManager.appThemeMode) {
+            PreferencesManager.THEME_LIGHT -> "Light Mode (Frosted Daylight)"
+            PreferencesManager.THEME_DARK -> "Dark Mode (Obsidian Deep Glass)"
+            else -> "Auto (Time-based shift: Morning Light / Night Dark)"
+        }
+        binding.tvSettingsCurrentTheme.text = label
+    }
+
     private fun updateShieldUi() {
         val isEnabled = app.preferencesManager.isShieldEnabled
         binding.switchProtectionShield.setOnCheckedChangeListener(null)
@@ -604,14 +710,14 @@ class MainActivity : AppCompatActivity() {
 
         if (isEnabled) {
             if (isAccessibilityOn) {
-                binding.tvQuickShieldText.text = "Shield Active (Full Defense)"
+                binding.tvQuickShieldText.text = "Active"
                 binding.viewShieldDot.backgroundTintList = ContextCompat.getColorStateList(this, R.color.shield_active)
             } else {
-                binding.tvQuickShieldText.text = "Shield Active (Tap for Browser Shield)"
+                binding.tvQuickShieldText.text = "Shield On"
                 binding.viewShieldDot.backgroundTintList = ContextCompat.getColorStateList(this, R.color.warning)
             }
         } else {
-            binding.tvQuickShieldText.text = "Shield Paused"
+            binding.tvQuickShieldText.text = "Paused"
             binding.viewShieldDot.backgroundTintList = ContextCompat.getColorStateList(this, R.color.shield_inactive)
         }
     }

@@ -40,25 +40,25 @@ object TimeThemeManager {
         return when (slot) {
             TimeSlot.MORNING -> PersonalizedGreeting(
                 title = "Good Morning, Champion",
-                subtitle = "Start clear. Protect your peace and your wallet today.",
+                subtitle = if (soberDays > 0) "Day $soberDays Clean • Protect your peace today." else "Start fresh. Your focus and freedom are protected.",
                 iconEmoji = "🌅",
                 badgeText = streakText
             )
             TimeSlot.AFTERNOON -> PersonalizedGreeting(
                 title = "Good Afternoon, Stay Strong",
-                subtitle = "Midday resilience check. Defense shields are on guard.",
+                subtitle = if (soberDays > 0) "Day $soberDays Clean • Midday momentum is strong." else "Midday resilience check. Defense shields are on guard.",
                 iconEmoji = "☀️",
                 badgeText = streakText
             )
             TimeSlot.EVENING -> PersonalizedGreeting(
                 title = "Good Evening, Unwind Safely",
-                subtitle = "Evening urge peak neutralized. Relax, you are in control.",
-                iconEmoji = "🛡️",
+                subtitle = if (soberDays > 0) "Day $soberDays Clean • Evening peak secured. Relax in peace." else "Evening urge peak neutralized. You are in control.",
+                iconEmoji = "🌆",
                 badgeText = streakText
             )
             TimeSlot.MIDNIGHT -> PersonalizedGreeting(
                 title = "Late Night Vigil, Stand Firm",
-                subtitle = "High-risk vulnerability window. Guardian actively locking traps.",
+                subtitle = if (soberDays > 0) "Day $soberDays Clean • Guardian actively locking all traps." else "High-risk night window. Guardian actively locking traps.",
                 iconEmoji = "🌙",
                 badgeText = "Max Shield 🔒"
             )
