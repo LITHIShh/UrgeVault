@@ -111,4 +111,8 @@ class PreferencesManager(context: Context) {
     var upstreamDns: String
         get() = prefs.getString(KEY_UPSTREAM_DNS, DEFAULT_DNS_PRIMARY) ?: DEFAULT_DNS_PRIMARY
         set(value) = prefs.edit().putString(KEY_UPSTREAM_DNS, value).apply()
+
+    var isTutorialCompleted: Boolean
+        get() = prefs.getBoolean("key_tutorial_completed", false)
+        set(value) = prefs.edit().putBoolean("key_tutorial_completed", value).apply()
 }

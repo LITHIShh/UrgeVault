@@ -29,6 +29,8 @@ import com.betshield.app.monetization.AdManager
 import com.betshield.app.monetization.AdSettingsDialog
 import com.betshield.app.service.BetBlockerAccessibilityService
 import com.betshield.app.service.BetShieldVpnService
+import com.betshield.app.util.HapticEngine
+import com.betshield.app.util.TimeThemeManager
 import com.google.android.material.card.MaterialCardView
 import java.time.LocalDate
 import java.util.UUID
@@ -93,11 +95,25 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // Initialize AdMob and preload ads
+        AdManager.initialize(this)
+        AdManager.loadInterstitial(this)
+        AdManager.loadRewardedAd(this)
+
         setupBottomNavigation()
         setupListeners()
 
-        // Load AdMob banner into bottom container
-        AdManager.loadBanner(binding.adBannerContainer, this)
+        // Check if tutorial should be shown to new users
+        if (!app.preferencesManager.isTutorialCompleted) {
+            TutorialDialog(this) {
+                app.preferencesManager.isTutorialCompleted = true
+            }.show()
+        }
+
+        // Load AdMob banner into bottom container and detect ad blocker
+        AdManager.loadBanner(binding.adBannerContainer, this) {
+            binding.cardAdBlockerAlert.visibility = View.VISIBLE
+        }
     }
 
     override fun onResume() {
@@ -107,6 +123,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupBottomNavigation() {
         binding.bottomNavigationView.setOnItemSelectedListener { item ->
+            HapticEngine.performClick(binding.bottomNavigationView)
             binding.containerHomeTab.visibility = if (item.itemId == R.id.nav_home) View.VISIBLE else View.GONE
             binding.containerVaultTab.visibility = if (item.itemId == R.id.nav_vault) View.VISIBLE else View.GONE
             binding.containerProgressTab.visibility = if (item.itemId == R.id.nav_progress) View.VISIBLE else View.GONE
@@ -116,36 +133,72 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupListeners() {
+        // Top Bar Quick Tutorial Button
+        binding.btnQuickTutorial.setOnClickListener {
+            HapticEngine.performClick(it)
+            TutorialDialog(this).show()
+        }
+
+        // AdBlocker Support Rewarded Ad Action
+        binding.btnSupportRewardedAd.setOnClickListener {
+            HapticEngine.performClick(it)
+            AdManager.showRewardedAd(
+                this,
+                onRewardEarned = {
+                    HapticEngine.performSuccess(context = this)
+                    binding.cardAdBlockerAlert.visibility = View.GONE
+                    Toast.makeText(this, "Thank you for supporting UrgeVault! 🌟", Toast.LENGTH_LONG).show()
+                },
+                onFailedOrDismissed = {
+                    Toast.makeText(this, "Rewarded ad closed.", Toast.LENGTH_SHORT).show()
+                }
+            )
+        }
+
         // Hero Urge SOS Action
         binding.btnTriggerUrgeSos.setOnClickListener {
+            HapticEngine.performWarning(it)
             startActivity(Intent(this, UrgeSosActivity::class.java))
         }
 
         // Daily Check-In Action
-        binding.btnDailyCheckIn.setOnClickListener { showDailyCheckInDialog() }
-        binding.btnQuickCheckIn.setOnClickListener { showDailyCheckInDialog() }
+        binding.btnDailyCheckIn.setOnClickListener {
+            HapticEngine.performClick(it)
+            showDailyCheckInDialog()
+        }
+        binding.btnQuickCheckIn.setOnClickListener {
+            HapticEngine.performClick(it)
+            showDailyCheckInDialog()
+        }
 
         // Home Direct Custom Blocker Action
         binding.btnHomeCustomBlocker.setOnClickListener {
+            HapticEngine.performClick(it)
             startActivity(Intent(this, CustomBlockerActivity::class.java))
         }
 
         // Vault Add Goal
-        binding.btnAddSavingsGoal.setOnClickListener { showAddGoalDialog() }
+        binding.btnAddSavingsGoal.setOnClickListener {
+            HapticEngine.performClick(it)
+            showAddGoalDialog()
+        }
 
         // Settings: Shield Toggle
         binding.switchProtectionShield.setOnCheckedChangeListener(shieldSwitchListener)
 
         // Settings navigation items
         binding.btnCustomBlocker.setOnClickListener {
+            HapticEngine.performClick(it)
             startActivity(Intent(this, CustomBlockerActivity::class.java))
         }
 
         binding.btnPermissionsGuide.setOnClickListener {
+            HapticEngine.performClick(it)
             startActivity(Intent(this, SetupPermissionsActivity::class.java))
         }
 
         binding.btnSettingsPassword.setOnClickListener {
+            HapticEngine.performClick(it)
             if (app.passwordManager.isPasswordSet()) {
                 PasswordDialog(
                     context = this,
@@ -157,16 +210,21 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.btnMedicalAdvisory.setOnClickListener {
+            HapticEngine.performClick(it)
             showMedicalAdvisoryDialog()
         }
 
         binding.btnAdSettingsCard.setOnClickListener {
+            HapticEngine.performClick(it)
             AdSettingsDialog(this) {
-                AdManager.loadBanner(binding.adBannerContainer, this)
+                AdManager.loadBanner(binding.adBannerContainer, this) {
+                    binding.cardAdBlockerAlert.visibility = View.VISIBLE
+                }
             }.show()
         }
 
         binding.cardQuickShieldStatus.setOnClickListener {
+            HapticEngine.performClick(it)
             if (app.preferencesManager.isShieldEnabled && !BetBlockerAccessibilityService.isAccessibilityServiceEnabled(this)) {
                 promptAccessibilityActivation()
             } else {
@@ -180,6 +238,12 @@ class MainActivity : AppCompatActivity() {
         val checkIns = repo.getDailyCheckIns()
         val urgeSessions = repo.getUrgeSessions()
         val summary = VaultCalculator.calculateVaultSummary(profiles, checkIns, urgeSessions)
+
+        // 0. Time-Based Liquid Glass Dynamic Greeting
+        val greeting = TimeThemeManager.getPersonalizedGreeting(summary.longestActiveDays)
+        binding.tvHeaderGreetingEmoji.text = greeting.iconEmoji
+        binding.tvHeaderGreetingTitle.text = greeting.title
+        binding.tvHeaderGreetingSubtitle.text = greeting.subtitle
 
         // 1. Home Dashboard Metrics
         binding.tvHomeDaysClean.text = summary.longestActiveDays.toString()
@@ -481,6 +545,10 @@ class MainActivity : AppCompatActivity() {
                 )
                 repo.recordCheckIn(checkIn)
                 refreshAllData()
+                HapticEngine.performSuccess(context = this)
+
+                // Show Interstitial on milestone check-in
+                AdManager.showInterstitial(this) {}
 
                 val msg = if (isClean) "Great work! Daily streak protected." else "Lapse logged without shame. Progress is never lost."
                 Toast.makeText(this, msg, Toast.LENGTH_LONG).show()
@@ -507,6 +575,7 @@ class MainActivity : AppCompatActivity() {
                     current.add(SavingsGoal(UUID.randomUUID().toString(), name, amt, "🎯"))
                     repo.saveSavingsGoals(current)
                     refreshAllData()
+                    HapticEngine.performSuccess(context = this)
                     Toast.makeText(this, "New goal created!", Toast.LENGTH_SHORT).show()
                 }
             }

@@ -23,6 +23,9 @@ class BlockedActivity : AppCompatActivity() {
         val target = intent.getStringExtra(EXTRA_TARGET) ?: "Gambling Platform"
         val isApp = intent.getBooleanExtra(EXTRA_IS_APP, false)
 
+        // Haptic warning feedback on block encounter
+        com.betshield.app.util.HapticEngine.performWarning(context = this)
+
         binding.tvBlockedTarget.text = if (isApp) "App: $target" else "Domain: $target"
 
         // Helpline Phone Call Intent

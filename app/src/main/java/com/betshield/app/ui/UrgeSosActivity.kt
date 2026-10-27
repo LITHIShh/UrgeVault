@@ -138,7 +138,8 @@ class UrgeSosActivity : AppCompatActivity() {
     private fun runBreathingCycle() {
         if (!isBreathingRunning) return
 
-        // 4s Inhale: Expand circle
+        // 4s Inhale: Expand circle + Haptic pulse
+        com.betshield.app.util.HapticEngine.performBreathingPulse(this, isInhale = true)
         binding.tvBreathingPhase.text = "Inhale (4s)..."
         val scaleUpX = PropertyValuesHolder.ofFloat(View.SCALE_X, 0.8f, 1.25f)
         val scaleUpY = PropertyValuesHolder.ofFloat(View.SCALE_Y, 0.8f, 1.25f)
@@ -154,7 +155,8 @@ class UrgeSosActivity : AppCompatActivity() {
 
             binding.root.postDelayed({
                 if (!isBreathingRunning) return@postDelayed
-                // 8s Exhale: Shrink circle
+                // 8s Exhale: Shrink circle + Haptic release
+                com.betshield.app.util.HapticEngine.performBreathingPulse(this, isInhale = false)
                 binding.tvBreathingPhase.text = "Exhale (8s)..."
                 val scaleDownX = PropertyValuesHolder.ofFloat(View.SCALE_X, 1.25f, 0.8f)
                 val scaleDownY = PropertyValuesHolder.ofFloat(View.SCALE_Y, 1.25f, 0.8f)
@@ -266,6 +268,7 @@ class UrgeSosActivity : AppCompatActivity() {
                 wasUrgeResisted = true
             )
             repo.recordUrgeSession(session)
+            com.betshield.app.util.HapticEngine.performSuccess(context = this)
 
             Toast.makeText(
                 this,

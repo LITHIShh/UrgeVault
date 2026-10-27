@@ -23,6 +23,7 @@ import com.betshield.app.databinding.ActivityCustomBlockerBinding
 import com.betshield.app.databinding.ItemBlocklistEntryBinding
 import com.betshield.app.databinding.ItemInstalledAppBinding
 import com.betshield.app.monetization.AdManager
+import com.betshield.app.util.HapticEngine
 import com.google.android.material.materialswitch.MaterialSwitch
 import com.google.android.material.tabs.TabLayout
 import kotlinx.coroutines.Dispatchers
@@ -74,6 +75,7 @@ class CustomBlockerActivity : AppCompatActivity() {
     private fun setupTabs() {
         binding.tabLayoutBlocker.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
+                HapticEngine.performClick(binding.tabLayoutBlocker)
                 binding.containerTabCategories.visibility = if (tab?.position == 0) View.VISIBLE else View.GONE
                 binding.containerTabWebsites.visibility = if (tab?.position == 1) View.VISIBLE else View.GONE
                 binding.containerTabApps.visibility = if (tab?.position == 2) View.VISIBLE else View.GONE

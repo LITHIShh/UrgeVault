@@ -38,13 +38,28 @@ object AdManager {
     /**
      * Attaches and loads a real or test AdMob Adaptive Banner into the provided container.
      */
-    fun loadBanner(container: ViewGroup, context: Context) {
+    fun loadBanner(container: ViewGroup, context: Context, onAdBlockerDetected: (() -> Unit)? = null) {
         try {
             val adUnitId = AdConfig.getBannerAdUnitId(context)
             val adView = AdView(context).apply {
                 setAdSize(AdSize.BANNER)
                 this.adUnitId = adUnitId
             }
+            adView.adListener = object : com.google.android.gms.ads.AdListener() {
+                override fun onAdLoaded() {
+                    AdBlockerDetector.markAdLoadSucceeded()
+                    Log.i(TAG, "Banner Ad loaded successfully")
+                }
+
+                override fun onAdFailedToLoad(error: LoadAdError) {
+                    AdBlockerDetector.markAdLoadFailed()
+                    Log.w(TAG, "Banner Ad failed to load: ${error.message} (code ${error.code})")
+                    if (error.code == com.google.android.gms.ads.AdRequest.ERROR_CODE_NETWORK_ERROR) {
+                        onAdBlockerDetected?.invoke()
+                    }
+                }
+            }
+
             container.removeAllViews()
             container.addView(adView)
 

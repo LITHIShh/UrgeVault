@@ -1,28 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- UrgeVault Emerald Visual System -->
-    <color name="primary">#54C995</color> <!-- UrgeVault Primary Emerald Accent -->
-    <color name="primary_dark">#3DA776</color>
-    <color name="primary_light">#7CE4B5</color>
-    <color name="accent">#54C995</color>
+    <!-- UrgeVault Emerald Legacy Compatibility -->
+    <color name="primary">#8B5CF6</color> <!-- iOS Liquid Purple (HabitBe Inspired) -->
+    <color name="primary_dark">#7C3AED</color>
+    <color name="primary_light">#A78BFA</color>
+    <color name="accent">#A855F7</color>
 
-    <color name="shield_active">#54C995</color> <!-- Emerald Active -->
-    <color name="shield_inactive">#EF5350</color> <!-- Calming Red -->
+    <color name="shield_active">#10B981</color> <!-- Liquid Emerald Active -->
+    <color name="shield_inactive">#EF4444</color> <!-- Crimson Red Inactive -->
 
-    <color name="background">#101411</color> <!-- UrgeVault Deep Background -->
-    <color name="surface">#1A211C</color> <!-- UrgeVault Card & Surface -->
-    <color name="surface_variant">#242E27</color>
-    <color name="card_stroke">#2E3D34</color>
-    <color name="chip_background">#1F2922</color>
+    <!-- iOS Liquid Glass Core Palette (Dark / Night Obsidian) -->
+    <color name="liquid_bg_dark">#0B0D13</color> <!-- Deep Obsidian Background -->
+    <color name="liquid_surface_dark">#141722</color> <!-- Frosted Glass Dark Card -->
+    <color name="liquid_surface_dark_elevated">#1C2130</color>
+    <color name="liquid_glass_stroke_dark">#2A3245</color> <!-- Translucent Glass Edge -->
+    <color name="liquid_glass_glow">#408B5CF6</color> <!-- Radiant Ambient Violet Aura -->
 
-    <color name="text_primary">#F4FBF7</color>
-    <color name="text_secondary">#D5E5DC</color> <!-- UrgeVault Secondary Text -->
-    <color name="text_muted">#8B9E93</color>
+    <!-- iOS Liquid Glass Core Palette (Light Mode) -->
+    <color name="liquid_bg_light">#F5F7FB</color> <!-- Pure Frosted Daylight Canvas -->
+    <color name="liquid_surface_light">#FFFFFF</color> <!-- Crisp Milk Glass -->
+    <color name="liquid_surface_light_elevated">#EDF2F7</color>
+    <color name="liquid_glass_stroke_light">#E2E8F0</color>
+    <color name="liquid_text_primary_light">#0F172A</color>
+    <color name="liquid_text_secondary_light">#475569</color>
 
-    <color name="danger">#EF5350</color>
+    <!-- Liquid Midnight / Pure Black OLED -->
+    <color name="liquid_bg_midnight">#000000</color>
+    <color name="liquid_surface_midnight">#0A0B0E</color>
+    <color name="liquid_glass_stroke_midnight">#181B22</color>
+
+    <!-- Liquid Neon Accents -->
+    <color name="liquid_neon_violet">#A855F7</color>
+    <color name="liquid_neon_indigo">#6366F1</color>
+    <color name="liquid_neon_cyan">#06B6D4</color>
+    <color name="liquid_neon_emerald">#10B981</color>
+    <color name="liquid_neon_amber">#F59E0B</color>
+
+    <!-- Standard Aliases for Active Theme -->
+    <color name="background">#0B0D13</color>
+    <color name="surface">#141722</color>
+    <color name="surface_variant">#1C2130</color>
+    <color name="card_stroke">#2A3245</color>
+    <color name="chip_background">#1B202D</color>
+
+    <color name="text_primary">#F8FAFC</color>
+    <color name="text_secondary">#CBD5E1</color>
+    <color name="text_muted">#8291A5</color>
+
+    <color name="danger">#EF4444</color>
     <color name="warning">#FFB74D</color>
-    <color name="success">#54C995</color>
-    <color name="milestone_gold">#FFD166</color>
+    <color name="success">#10B981</color>
+    <color name="milestone_gold">#FBBF24</color>
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
+    <color name="glass_translucent_white">#1FFFFFFF</color>
 </resources>
