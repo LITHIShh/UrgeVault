@@ -282,8 +282,7 @@ class CustomBlockerActivity : AppCompatActivity() {
     }
 
     override fun onDestroy() {
-        // Show interstitial ad on exit for monetization
-        AdManager.showInterstitial(this) {}
+        // Keep user experience clean and uncluttered (no intrusive popups)
         super.onDestroy()
     }
 }

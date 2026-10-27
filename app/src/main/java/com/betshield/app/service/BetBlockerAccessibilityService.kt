@@ -50,7 +50,8 @@ class BetBlockerAccessibilityService : AccessibilityService() {
         // 1. Check for Anti-Tampering (Attempting to Force Stop, Uninstall, or Disable in Settings)
         if (eventPackage == "com.android.settings") {
             val textContent = extractEventText(event)
-            val isTamperingAttempt = textContent.contains("betshield", ignoreCase = true) ||
+            val isTamperingAttempt = textContent.contains("quitbet", ignoreCase = true) ||
+                    textContent.contains("betshield", ignoreCase = true) ||
                     textContent.contains("uninstall", ignoreCase = true) ||
                     textContent.contains("force stop", ignoreCase = true)
 
