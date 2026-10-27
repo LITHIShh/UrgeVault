@@ -52,13 +52,21 @@ jobs:
           cd ${{ env.project_dir }}
           ./gradlew assembleDebug --stacktrace 2>&1 | tee gradle_debug.log
 
-      - name: Dump Gradle Error to Job Summary
+      - name: Dump Gradle Error to Annotations and Job Summary
         if: failure()
         run: |
-          echo "### ❌ Gradle Compilation Error" >> $GITHUB_STEP_SUMMARY
-          echo '```text' >> $GITHUB_STEP_SUMMARY
-          tail -n 80 ${{ env.project_dir }}/gradle_debug.log >> $GITHUB_STEP_SUMMARY
-          echo '```' >> $GITHUB_STEP_SUMMARY
+          if [ -f "${{ env.project_dir }}/gradle_debug.log" ]; then
+            echo "### ❌ Gradle Debug Error" >> $GITHUB_STEP_SUMMARY
+            echo '```text' >> $GITHUB_STEP_SUMMARY
+            tail -n 80 ${{ env.project_dir }}/gradle_debug.log >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+            grep -E "(^e: |^w: |FAILURE:|Execution failed|What went wrong:)" ${{ env.project_dir }}/gradle_debug.log | head -n 40 | while IFS= read -r line; do
+              echo "::error title=DebugBuildError::$line"
+            done
+            tail -n 25 ${{ env.project_dir }}/gradle_debug.log | while IFS= read -r line; do
+              echo "::warning title=TailLog::$line"
+            done
+          fi
 
       - name: Build Release APK and Play Store AAB
         run: |
@@ -66,13 +74,18 @@ jobs:
           cd ${{ env.project_dir }}
           ./gradlew assembleRelease bundleRelease --stacktrace 2>&1 | tee gradle_release.log
 
-      - name: Dump Release Error to Job Summary
+      - name: Dump Release Error to Annotations and Job Summary
         if: failure()
         run: |
-          echo "### ❌ Release Build Error" >> $GITHUB_STEP_SUMMARY
-          echo '```text' >> $GITHUB_STEP_SUMMARY
-          tail -n 80 ${{ env.project_dir }}/gradle_release.log >> $GITHUB_STEP_SUMMARY
-          echo '```' >> $GITHUB_STEP_SUMMARY
+          if [ -f "${{ env.project_dir }}/gradle_release.log" ]; then
+            echo "### ❌ Release Build Error" >> $GITHUB_STEP_SUMMARY
+            echo '```text' >> $GITHUB_STEP_SUMMARY
+            tail -n 80 ${{ env.project_dir }}/gradle_release.log >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+            grep -E "(^e: |^w: |FAILURE:|Execution failed|What went wrong:)" ${{ env.project_dir }}/gradle_release.log | head -n 40 | while IFS= read -r line; do
+              echo "::error title=ReleaseBuildError::$line"
+            done
+          fi
 
       - name: Upload Build Logs Always
         if: always()

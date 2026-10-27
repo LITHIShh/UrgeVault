@@ -32,9 +32,9 @@ object HapticEngine {
     /**
      * Subtle, crisp tap feedback for buttons, switches, and tab switches.
      */
-    fun performClick(view: View? = null, context: Context? = view?.context) {
+    fun performClick(view: View? = null, context: Context? = null) {
         view?.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
-        val ctx = context ?: return
+        val ctx = context ?: view?.context ?: return
         val v = getVibrator(ctx) ?: return
         if (!v.hasVibrator()) return
 
@@ -53,9 +53,9 @@ object HapticEngine {
     /**
      * Celebratory tactile pattern for check-ins, goal completion, and SOS recovery.
      */
-    fun performSuccess(view: View? = null, context: Context? = view?.context) {
+    fun performSuccess(view: View? = null, context: Context? = null) {
         view?.performHapticFeedback(HapticFeedbackConstants.CONFIRM)
-        val ctx = context ?: return
+        val ctx = context ?: view?.context ?: return
         val v = getVibrator(ctx) ?: return
         if (!v.hasVibrator()) return
 
@@ -74,9 +74,9 @@ object HapticEngine {
     /**
      * Sharp double-pulse warning for blocked access, tamper attempts, or security unlock.
      */
-    fun performWarning(view: View? = null, context: Context? = view?.context) {
+    fun performWarning(view: View? = null, context: Context? = null) {
         view?.performHapticFeedback(HapticFeedbackConstants.REJECT)
-        val ctx = context ?: return
+        val ctx = context ?: view?.context ?: return
         val v = getVibrator(ctx) ?: return
         if (!v.hasVibrator()) return
 
