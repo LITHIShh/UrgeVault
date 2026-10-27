@@ -34,7 +34,7 @@ class BootReceiver : BroadcastReceiver() {
                 // If VPN permission was previously granted, prepare() returns null
                 if (VpnService.prepare(context) == null) {
                     val vpnIntent = Intent(context, BetShieldVpnService::class.java).apply {
-                        action = BetShieldVpnService.ACTION_START
+                        this.action = BetShieldVpnService.ACTION_START
                     }
                     try {
                         ContextCompat.startForegroundService(context, vpnIntent)

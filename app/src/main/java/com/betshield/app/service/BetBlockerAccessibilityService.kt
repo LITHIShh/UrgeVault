@@ -24,6 +24,16 @@ class BetBlockerAccessibilityService : AccessibilityService() {
             "com.microsoft.emmx", "com.brave.browser", "com.opera.browser", "com.opera.mini.native",
             "com.duckduckgo.mobile.android", "com.android.browser", "com.UCMobile.intl"
         )
+
+        fun isAccessibilityServiceEnabled(context: android.content.Context): Boolean {
+            if (isServiceActive) return true
+            val expectedComponentName = android.content.ComponentName(context, BetBlockerAccessibilityService::class.java).flattenToString()
+            val enabledServices = android.provider.Settings.Secure.getString(
+                context.contentResolver,
+                android.provider.Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES
+            ) ?: ""
+            return enabledServices.contains(expectedComponentName)
+        }
     }
 
     override fun onServiceConnected() {

@@ -10,6 +10,9 @@ class BlocklistDatabase(private val context: Context) {
     // ==========================================
     // 1. BETTING & GAMBLING WEBSITES (500+ Top Platforms)
     // ==========================================
+    val defaultDomains: Set<String> get() = gamblingDomains
+    val defaultAppPackages: Set<String> get() = gamblingAppPackages
+
     val gamblingDomains: Set<String> = hashSetOf(
         // Global Titans & Crypto Casinos
         "bet365.com", "bet365.es", "bet365.it", "bet365.com.au", "bet365.dk",

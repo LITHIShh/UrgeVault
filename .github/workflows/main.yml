@@ -23,12 +23,21 @@ jobs:
           distribution: 'temurin'
           cache: gradle
 
+      - name: Locate Android Project Directory
+        id: locate-project
+        run: |
+          if [ -f "./BetShield/gradlew" ]; then
+            echo "project_dir=BetShield" >> $GITHUB_ENV
+          else
+            echo "project_dir=." >> $GITHUB_ENV
+          fi
+
       - name: Grant Execute Permission to Gradlew
-        run: chmod +x ./gradlew
+        run: chmod +x ./${{ env.project_dir }}/gradlew
 
       - name: Generate Production Signing Keystore
         run: |
-          keytool -genkey -v -keystore app/release.jks \
+          keytool -genkey -v -keystore ${{ env.project_dir }}/app/release.jks \
             -alias betshield \
             -keyalg RSA \
             -keysize 2048 \
@@ -38,10 +47,13 @@ jobs:
             -dname "CN=UrgeVault, OU=Mobile, O=UrgeVault, L=SanFrancisco, S=CA, C=US"
 
       - name: Build Debug APK
-        run: ./gradlew assembleDebug --stacktrace
+        run: |
+          cd ${{ env.project_dir }}
+          ./gradlew assembleDebug --stacktrace
 
       - name: Build Release APK and Play Store AAB
         run: |
+          cd ${{ env.project_dir }}
           ./gradlew assembleRelease --stacktrace
           ./gradlew bundleRelease --stacktrace
 
@@ -49,14 +61,14 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: UrgeVault-Installable-APKs
-          path: app/build/outputs/apk/**/*.apk
+          path: ${{ env.project_dir }}/app/build/outputs/apk/**/*.apk
           retention-days: 30
 
       - name: Upload Signed Play Store AAB (Bundle)
         uses: actions/upload-artifact@v4
         with:
           name: UrgeVault-GooglePlay-AAB
-          path: app/build/outputs/bundle/release/*.aab
+          path: ${{ env.project_dir }}/app/build/outputs/bundle/release/*.aab
           retention-days: 30
 
       - name: Write GitHub Actions Job Summary

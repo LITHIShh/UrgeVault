@@ -60,6 +60,7 @@ class UrgeSosActivity : AppCompatActivity() {
             HabitType.BETTING -> binding.chipBetting.isChecked = true
             HabitType.ALCOHOL -> binding.chipAlcohol.isChecked = true
             HabitType.SMOKING -> binding.chipSmoking.isChecked = true
+            else -> binding.chipBetting.isChecked = true
         }
 
         binding.chipGroupSosHabit.setOnCheckedStateChangeListener { _, checkedIds ->

@@ -54,13 +54,19 @@ class BlocklistActivity : AppCompatActivity() {
     private fun loadBlocklistData() {
         allEntries.clear()
 
-        // Curated Domains
-        for (domain in app.blocklistDatabase.defaultDomains) {
+        // Curated Domains (Gambling, Adult, Social, Gaming, Crypto)
+        for (domain in app.blocklistDatabase.gamblingDomains) {
+            allEntries.add(BlockItem(domain, ItemType.WEBSITE))
+        }
+        for (domain in app.blocklistDatabase.adultDomains) {
             allEntries.add(BlockItem(domain, ItemType.WEBSITE))
         }
 
         // Curated Apps
-        for (appPkg in app.blocklistDatabase.defaultAppPackages) {
+        for (appPkg in app.blocklistDatabase.gamblingAppPackages) {
+            allEntries.add(BlockItem(appPkg, ItemType.APP))
+        }
+        for (appPkg in app.blocklistDatabase.socialAppPackages) {
             allEntries.add(BlockItem(appPkg, ItemType.APP))
         }
 
