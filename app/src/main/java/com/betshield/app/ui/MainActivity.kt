@@ -539,7 +539,7 @@ class MainActivity : AppCompatActivity() {
                 binding.viewShieldDot.backgroundTintList = ContextCompat.getColorStateList(this, R.color.shield_active)
             } else {
                 binding.tvQuickShieldText.text = "Shield Active (Tap for Browser Shield)"
-                binding.viewShieldDot.backgroundTintList = ContextCompat.getColorStateList(this, R.color.warning_accent)
+                binding.viewShieldDot.backgroundTintList = ContextCompat.getColorStateList(this, R.color.warning)
             }
         } else {
             binding.tvQuickShieldText.text = "Shield Paused"
