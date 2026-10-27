@@ -388,7 +388,7 @@
                     app:cardCornerRadius="24dp"
                     app:cardElevation="3dp"
                     app:strokeColor="@color/primary_dark"
-                    app:strokeWidth="1.5dp">
+                    app:strokeWidth="2dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -427,7 +427,7 @@
                                 <LinearLayout
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:gravity="baseline"
+                                    android:gravity="bottom"
                                     android:orientation="horizontal">
 
                                     <TextView
