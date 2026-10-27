@@ -55,7 +55,7 @@ class BetShieldVpnService : VpnService(), Runnable {
             isStopping.set(false)
 
             val builder = Builder()
-                .setSession("QuitBet")
+                .setSession("UrgeVault")
                 .addAddress("10.1.10.1", 32)
                 .addDnsServer("10.1.10.1")
                 // Route DNS traffic through our local sinkhole tunnel
@@ -191,7 +191,7 @@ class BetShieldVpnService : VpnService(), Runnable {
 
         return NotificationCompat.Builder(this, BetShieldApplication.VPN_NOTIFICATION_CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_shield_check)
-            .setContentTitle("QuitBet Protection Active")
+            .setContentTitle("UrgeVault Shield Active")
             .setContentText("Gambling platforms and custom blocked apps are locked.")
             .setOngoing(true)
             .setContentIntent(pendingIntent)
