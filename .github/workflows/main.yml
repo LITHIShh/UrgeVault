@@ -69,8 +69,15 @@ jobs:
       - name: Build Release APK and Play Store AAB
         run: |
           cd ${{ env.project_dir }}
-          ./gradlew assembleRelease --stacktrace
-          ./gradlew bundleRelease --stacktrace
+          ./gradlew assembleRelease bundleRelease --stacktrace 2>&1 | tee gradle_release.log
+
+      - name: Dump Release Error to Job Summary
+        if: failure()
+        run: |
+          echo "### ❌ Release Build Error" >> $GITHUB_STEP_SUMMARY
+          echo '```text' >> $GITHUB_STEP_SUMMARY
+          tail -n 80 ${{ env.project_dir }}/gradle_release.log >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
 
       - name: Upload Debug & Release Installable APKs
         uses: actions/upload-artifact@v4
