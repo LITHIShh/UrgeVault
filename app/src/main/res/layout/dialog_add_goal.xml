@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/surface"
+    android:orientation="vertical"
+    android:padding="20dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New Savings Goal"
+        android:textColor="@color/text_primary"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="Assign a meaningful target for the money you are protecting."
+        android:textColor="@color/text_secondary"
+        android:textSize="13sp" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        app:boxBackgroundColor="@color/background"
+        app:boxCornerRadiusBottomEnd="10dp"
+        app:boxCornerRadiusBottomStart="10dp"
+        app:boxCornerRadiusTopEnd="10dp"
+        app:boxCornerRadiusTopStart="10dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etGoalTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Goal Name (e.g. Weekend Trip, Tech Upgrade)"
+            android:textColor="@color/text_primary" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        app:boxBackgroundColor="@color/background"
+        app:boxCornerRadiusBottomEnd="10dp"
+        app:boxCornerRadiusBottomStart="10dp"
+        app:boxCornerRadiusTopEnd="10dp"
+        app:boxCornerRadiusTopStart="10dp"
+        app:prefixText="₹ ">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etGoalAmount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Target Amount"
+            android:inputType="numberDecimal"
+            android:textColor="@color/text_primary" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+</LinearLayout>

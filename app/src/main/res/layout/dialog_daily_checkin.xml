@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/surface"
+    android:orientation="vertical"
+    android:padding="20dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Daily Reflection &amp; Check-In"
+        android:textColor="@color/text_primary"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="Honesty over perfection. Every check-in strengthens your progress."
+        android:textColor="@color/text_secondary"
+        android:textSize="13sp" />
+
+    <!-- Clean Status Toggle -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Did you maintain your freedom today?"
+        android:textColor="@color/text_primary"
+        android:textSize="14sp"
+        android:textStyle="bold" />
+
+    <RadioGroup
+        android:id="@+id/rgCleanStatus"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp">
+
+        <RadioButton
+            android:id="@+id/rbCleanYes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="Yes, stayed clean and resisted urges ✨"
+            android:textColor="@color/primary"
+            app:buttonTint="@color/primary" />
+
+        <RadioButton
+            android:id="@+id/rbCleanLapse"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Had a lapse / Slip-up (Compassionate Reset)"
+            android:textColor="@color/text_secondary"
+            app:buttonTint="@color/warning" />
+    </RadioGroup>
+
+    <!-- Urge Intensity -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="14dp"
+        android:text="Average craving intensity today (1–10)"
+        android:textColor="@color/text_primary"
+        android:textSize="14sp"
+        android:textStyle="bold" />
+
+    <com.google.android.material.slider.Slider
+        android:id="@+id/sliderCheckInUrge"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:stepSize="1"
+        android:value="4"
+        android:valueFrom="1"
+        android:valueTo="10"
+        app:thumbColor="@color/primary"
+        app:trackColorActive="@color/primary"
+        app:trackColorInactive="@color/surface_variant" />
+
+    <!-- Trigger Reason -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Primary trigger noticed (optional):"
+        android:textColor="@color/text_muted"
+        android:textSize="12sp" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        app:boxBackgroundColor="@color/background"
+        app:boxCornerRadiusBottomEnd="10dp"
+        app:boxCornerRadiusBottomStart="10dp"
+        app:boxCornerRadiusTopEnd="10dp"
+        app:boxCornerRadiusTopStart="10dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etCheckInTrigger"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="e.g. Work stress, boredom, betting promo"
+            android:textColor="@color/text_primary"
+            android:textSize="13sp" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Lapsed Spend Input (only shown if lapse selected) -->
+    <LinearLayout
+        android:id="@+id/layoutLapseSpend"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Amount spent during lapse (to adjust savings accurately):"
+            android:textColor="@color/warning"
+            android:textSize="12sp" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            app:boxBackgroundColor="@color/background"
+            app:boxCornerRadiusBottomEnd="10dp"
+            app:boxCornerRadiusBottomStart="10dp"
+            app:boxCornerRadiusTopEnd="10dp"
+            app:boxCornerRadiusTopStart="10dp"
+            app:prefixText="₹ ">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etLapseSpend"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="numberDecimal"
+                android:text="0"
+                android:textColor="@color/text_primary" />
+        </com.google.android.material.textfield.TextInputLayout>
+    </LinearLayout>
+
+</LinearLayout>

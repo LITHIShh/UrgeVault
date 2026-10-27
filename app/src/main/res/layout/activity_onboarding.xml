@@ -1,0 +1,616 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background">
+
+    <ViewFlipper
+        android:id="@+id/viewFlipperOnboarding"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <!-- STEP 1: WELCOME SCREEN -->
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:padding="28dp">
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+
+                <!-- Logo Icon -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="88dp"
+                    android:layout_height="88dp"
+                    android:layout_marginBottom="24dp"
+                    app:cardBackgroundColor="@color/surface"
+                    app:cardCornerRadius="24dp"
+                    app:strokeColor="@color/primary"
+                    app:strokeWidth="1.5dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="🛡️"
+                        android:textSize="40sp" />
+                </com.google.android.material.card.MaterialCardView>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="UrgeVault"
+                    android:textColor="@color/text_primary"
+                    android:textSize="32sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:text="Protect your progress."
+                    android:textColor="@color/primary"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:gravity="center"
+                    android:lineSpacingExtra="3dp"
+                    android:text="Build healthier habits, one decision at a time.\nPrivate, offline-first recovery for Betting, Alcohol, and Smoking."
+                    android:textColor="@color/text_secondary"
+                    android:textSize="14sp" />
+
+                <!-- Value Props Pill Grid -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="32dp"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="12dp"
+                        android:background="@drawable/bg_breathing_circle"
+                        android:backgroundTint="@color/surface"
+                        android:gravity="center_vertical"
+                        android:padding="14dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="12dp"
+                            android:text="🚨"
+                            android:textSize="20sp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Immediate Urge SOS when cravings spike"
+                            android:textColor="@color/text_primary"
+                            android:textSize="13sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="12dp"
+                        android:background="@drawable/bg_breathing_circle"
+                        android:backgroundTint="@color/surface"
+                        android:gravity="center_vertical"
+                        android:padding="14dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="12dp"
+                            android:text="💰"
+                            android:textSize="20sp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Real Money &amp; Time Vault savings tracking"
+                            android:textColor="@color/text_primary"
+                            android:textSize="13sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_breathing_circle"
+                        android:backgroundTint="@color/surface"
+                        android:gravity="center_vertical"
+                        android:padding="14dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="12dp"
+                            android:text="🔒"
+                            android:textSize="20sp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="100% Private: No account, no cloud data leaks"
+                            android:textColor="@color/text_primary"
+                            android:textSize="13sp" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+
+                <!-- Action Button -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnStartPrivately"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:layout_marginTop="24dp"
+                    android:backgroundTint="@color/primary"
+                    android:text="Start Privately"
+                    android:textColor="#101411"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:cornerRadius="16dp" />
+
+                <TextView
+                    android:id="@+id/tvPrivacySafetyLink"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="14dp"
+                    android:text="Privacy &amp; Medical Safety Notice"
+                    android:textColor="@color/text_muted"
+                    android:textSize="12sp" />
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+
+        <!-- STEP 2: CHOOSE HABITS SCREEN -->
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="24dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Step 1 of 2"
+                    android:textColor="@color/primary"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:text="Choose your focus habits"
+                    android:textColor="@color/text_primary"
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="Select one, two, or all three. You can customize them anytime."
+                    android:textColor="@color/text_secondary"
+                    android:textSize="14sp" />
+
+                <!-- Betting Option -->
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/cardHabitBetting"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    app:cardBackgroundColor="@color/surface"
+                    app:cardCornerRadius="18dp"
+                    app:strokeColor="@color/primary"
+                    app:strokeWidth="2dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:padding="18dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="16dp"
+                            android:text="🎲"
+                            android:textSize="28sp" />
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Betting &amp; Gambling"
+                                android:textColor="@color/text_primary"
+                                android:textSize="16sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Casino, sports betting, trading speculation"
+                                android:textColor="@color/text_muted"
+                                android:textSize="12sp" />
+                        </LinearLayout>
+
+                        <CheckBox
+                            android:id="@+id/cbHabitBetting"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:checked="true"
+                            app:buttonTint="@color/primary" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- Alcohol Option -->
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/cardHabitAlcohol"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="14dp"
+                    app:cardBackgroundColor="@color/surface"
+                    app:cardCornerRadius="18dp"
+                    app:strokeColor="@color/card_stroke"
+                    app:strokeWidth="1dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:padding="18dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="16dp"
+                            android:text="🍷"
+                            android:textSize="28sp" />
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Alcohol"
+                                android:textColor="@color/text_primary"
+                                android:textSize="16sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Drinking reduction, sobriety, health tracking"
+                                android:textColor="@color/text_muted"
+                                android:textSize="12sp" />
+                        </LinearLayout>
+
+                        <CheckBox
+                            android:id="@+id/cbHabitAlcohol"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:checked="false"
+                            app:buttonTint="@color/primary" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- Smoking Option -->
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/cardHabitSmoking"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="14dp"
+                    app:cardBackgroundColor="@color/surface"
+                    app:cardCornerRadius="18dp"
+                    app:strokeColor="@color/card_stroke"
+                    app:strokeWidth="1dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:padding="18dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="16dp"
+                            android:text="🚭"
+                            android:textSize="28sp" />
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Smoking &amp; Nicotine"
+                                android:textColor="@color/text_primary"
+                                android:textSize="16sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Cigarettes, vaping, chewing tobacco"
+                                android:textColor="@color/text_muted"
+                                android:textSize="12sp" />
+                        </LinearLayout>
+
+                        <CheckBox
+                            android:id="@+id/cbHabitSmoking"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:checked="false"
+                            app:buttonTint="@color/primary" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- Medical note if alcohol is checked -->
+                <TextView
+                    android:id="@+id/tvAlcoholNoticeInOnboarding"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:background="@color/surface_variant"
+                    android:padding="12dp"
+                    android:text="⚠️ Medical Notice: For severe alcohol dependence, abrupt cessation without medical guidance can be dangerous. Consult a physician."
+                    android:textColor="@color/warning"
+                    android:textSize="12sp"
+                    android:visibility="gone" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnContinueToBaseline"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:layout_marginTop="32dp"
+                    android:backgroundTint="@color/primary"
+                    android:text="Continue to Baseline"
+                    android:textColor="#101411"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:cornerRadius="16dp" />
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+
+        <!-- STEP 3: SET PERSONAL BASELINE -->
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="24dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Step 2 of 2"
+                    android:textColor="@color/primary"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:text="Set your personal baseline"
+                    android:textColor="@color/text_primary"
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="Savings and reclaimed hours are transparent estimates derived from your numbers."
+                    android:textColor="@color/text_secondary"
+                    android:textSize="14sp" />
+
+                <!-- Spending Input -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    app:cardBackgroundColor="@color/surface"
+                    app:cardCornerRadius="18dp"
+                    app:strokeColor="@color/card_stroke"
+                    app:strokeWidth="1dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Typical daily spending (₹ / $)"
+                            android:textColor="@color/text_primary"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            app:boxBackgroundColor="@color/background"
+                            app:boxCornerRadiusBottomEnd="12dp"
+                            app:boxCornerRadiusBottomStart="12dp"
+                            app:boxCornerRadiusTopEnd="12dp"
+                            app:boxCornerRadiusTopStart="12dp"
+                            app:boxStrokeColor="@color/primary"
+                            app:prefixText="₹ ">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/etDailySpend"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="numberDecimal"
+                                android:text="350"
+                                android:textColor="@color/text_primary" />
+                        </com.google.android.material.textfield.TextInputLayout>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- Time Spent Input -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="14dp"
+                    app:cardBackgroundColor="@color/surface"
+                    app:cardCornerRadius="18dp"
+                    app:strokeColor="@color/card_stroke"
+                    app:strokeWidth="1dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Typical time spent per day (minutes)"
+                            android:textColor="@color/text_primary"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            app:boxBackgroundColor="@color/background"
+                            app:boxCornerRadiusBottomEnd="12dp"
+                            app:boxCornerRadiusBottomStart="12dp"
+                            app:boxCornerRadiusTopEnd="12dp"
+                            app:boxCornerRadiusTopStart="12dp"
+                            app:boxStrokeColor="@color/primary"
+                            app:suffixText="min">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/etDailyMinutes"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="number"
+                                android:text="45"
+                                android:textColor="@color/text_primary" />
+                        </com.google.android.material.textfield.TextInputLayout>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- Goal Selection -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="14dp"
+                    app:cardBackgroundColor="@color/surface"
+                    app:cardCornerRadius="18dp"
+                    app:strokeColor="@color/card_stroke"
+                    app:strokeWidth="1dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Your intended journey"
+                            android:textColor="@color/text_primary"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+
+                        <RadioGroup
+                            android:id="@+id/rgGoalType"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp">
+
+                            <RadioButton
+                                android:id="@+id/rbQuitCompletely"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:checked="true"
+                                android:text="Quit completely (Zero tolerance)"
+                                android:textColor="@color/text_primary"
+                                app:buttonTint="@color/primary" />
+
+                            <RadioButton
+                                android:id="@+id/rbReduceUse"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Reduce consumption &amp; harm reduction"
+                                android:textColor="@color/text_primary"
+                                app:buttonTint="@color/primary" />
+                        </RadioGroup>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnCompleteOnboarding"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:layout_marginTop="28dp"
+                    android:layout_marginBottom="24dp"
+                    android:backgroundTint="@color/primary"
+                    android:text="Enter UrgeVault"
+                    android:textColor="#101411"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:cornerRadius="16dp" />
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+
+    </ViewFlipper>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

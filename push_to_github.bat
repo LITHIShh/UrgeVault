@@ -1,16 +1,16 @@
 @echo off
 cd /d "%~dp0"
 echo ========================================================
-echo   Pushing QuitBet to GitHub (LITHIShh/BetShield)
+echo   Pushing UrgeVault to GitHub (LITHIShh/BetShield)
 echo ========================================================
 echo.
 git push -u origin main
 echo.
 if %ERRORLEVEL% EQU 0 (
-    echo [SUCCESS] QuitBet has been pushed to GitHub!
+    echo [SUCCESS] UrgeVault has been pushed to GitHub!
     echo.
     echo GitHub Actions will now automatically build your APK and AAB.
-    echo Check your build progress and download the files here:
+    echo Check your build progress and download the installable files here:
     echo https://github.com/LITHIShh/BetShield/actions
 ) else (
     echo [ACTION NEEDED] Authentication required.

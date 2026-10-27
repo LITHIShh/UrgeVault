@@ -1,25 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="primary">#0D9488</color> <!-- Deep Teal / Emerald -->
-    <color name="primary_dark">#0F766E</color>
-    <color name="primary_light">#2DD4BF</color>
-    <color name="accent">#14B8A6</color>
+    <!-- UrgeVault Emerald Visual System -->
+    <color name="primary">#54C995</color> <!-- UrgeVault Primary Emerald Accent -->
+    <color name="primary_dark">#3DA776</color>
+    <color name="primary_light">#7CE4B5</color>
+    <color name="accent">#54C995</color>
 
-    <color name="shield_active">#10B981</color> <!-- Green -->
-    <color name="shield_inactive">#EF4444</color> <!-- Red / Warning -->
+    <color name="shield_active">#54C995</color> <!-- Emerald Active -->
+    <color name="shield_inactive">#EF5350</color> <!-- Calming Red -->
 
-    <color name="background">#0F172A</color> <!-- Deep Slate / Midnight Navy -->
-    <color name="surface">#1E293B</color> <!-- Card surface -->
-    <color name="surface_variant">#334155</color>
-    <color name="card_stroke">#475569</color>
+    <color name="background">#101411</color> <!-- UrgeVault Deep Background -->
+    <color name="surface">#1A211C</color> <!-- UrgeVault Card & Surface -->
+    <color name="surface_variant">#242E27</color>
+    <color name="card_stroke">#2E3D34</color>
+    <color name="chip_background">#1F2922</color>
 
-    <color name="text_primary">#F8FAFC</color>
-    <color name="text_secondary">#94A3B8</color>
-    <color name="text_muted">#64748B</color>
+    <color name="text_primary">#F4FBF7</color>
+    <color name="text_secondary">#D5E5DC</color> <!-- UrgeVault Secondary Text -->
+    <color name="text_muted">#8B9E93</color>
 
-    <color name="danger">#F43F5E</color>
-    <color name="warning">#F59E0B</color>
-    <color name="success">#10B981</color>
+    <color name="danger">#EF5350</color>
+    <color name="warning">#FFB74D</color>
+    <color name="success">#54C995</color>
+    <color name="milestone_gold">#FFD166</color>
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
 </resources>

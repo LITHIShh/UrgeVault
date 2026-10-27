@@ -1,4 +1,4 @@
-name: Build APK and Play Store AAB
+name: Build UrgeVault APK and Play Store AAB
 
 on:
   push:
@@ -28,7 +28,7 @@ jobs:
 
       - name: Generate Release Signing Keystore
         run: |
-          keytool -genkey -v -keystore app/release.jks -alias betshield -keyalg RSA -keysize 2048 -validity 10000 -storepass BetShield@2026 -keypass BetShield@2026 -dname "CN=BetShield, OU=Mobile, O=BetShield, L=City, S=State, C=US"
+          keytool -genkey -v -keystore app/release.jks -alias betshield -keyalg RSA -keysize 2048 -validity 10000 -storepass BetShield@2026 -keypass BetShield@2026 -dname "CN=UrgeVault, OU=Mobile, O=UrgeVault, L=City, S=State, C=US"
 
       - name: Build Debug APK
         run: ./gradlew assembleDebug --stacktrace
@@ -41,13 +41,13 @@ jobs:
       - name: Upload Debug and Release APKs
         uses: actions/upload-artifact@v4
         with:
-          name: BetShield-Installable-APKs
+          name: UrgeVault-Installable-APKs
           path: app/build/outputs/apk/**/*.apk
           retention-days: 30
 
       - name: Upload Signed Play Store AAB
         uses: actions/upload-artifact@v4
         with:
-          name: BetShield-GooglePlay-AAB
+          name: UrgeVault-GooglePlay-AAB
           path: app/build/outputs/bundle/release/*.aab
           retention-days: 30

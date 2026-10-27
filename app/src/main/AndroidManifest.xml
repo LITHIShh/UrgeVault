@@ -36,6 +36,18 @@
         </activity>
 
         <activity
+            android:name=".ui.OnboardingActivity"
+            android:exported="false"
+            android:theme="@style/Theme.BetShield" />
+
+        <activity
+            android:name=".ui.UrgeSosActivity"
+            android:exported="false"
+            android:label="Urge SOS"
+            android:theme="@style/Theme.BetShield.UrgeSos"
+            android:parentActivityName=".ui.MainActivity" />
+
+        <activity
             android:name=".ui.CustomBlockerActivity"
             android:exported="false"
             android:label="Custom App &amp; Website Blocker"

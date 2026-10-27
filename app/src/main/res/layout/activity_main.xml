@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout 
+<androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -7,501 +7,962 @@
     android:layout_height="match_parent"
     android:background="@color/background">
 
-    <androidx.core.widget.NestedScrollView
+    <!-- Main Content Container with 4 Destination Tabs -->
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fillViewport="true">
+        android:layout_marginBottom="128dp">
 
-        <LinearLayout
+        <!-- ================= TAB 1: HOME DESTINATION ================= -->
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/containerHomeTab"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="20dp">
+            android:layout_height="match_parent"
+            android:fillViewport="true"
+            android:visibility="visible">
 
-            <!-- Top Header -->
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="24dp">
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/tvAppTitle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/app_name"
-                        android:textColor="@color/text_primary"
-                        android:textSize="26sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/tvSubtitle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Betting &amp; Addiction Blocker"
-                        android:textColor="@color/text_secondary"
-                        android:textSize="13sp" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:orientation="horizontal">
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnAdSettings"
-                        style="@style/Widget.Material3.Button.IconButton.Filled.Tonal"
-                        android:layout_width="44dp"
-                        android:layout_height="44dp"
-                        android:layout_marginEnd="6dp"
-                        app:icon="@drawable/ic_monetization"
-                        app:iconTint="@color/warning" />
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnPasswordSettings"
-                        style="@style/Widget.Material3.Button.IconButton.Filled.Tonal"
-                        android:layout_width="44dp"
-                        android:layout_height="44dp"
-                        app:icon="@drawable/ic_lock"
-                        app:iconTint="@color/accent" />
-                </LinearLayout>
-            </RelativeLayout>
-
-            <!-- Hero Shield Card -->
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cardShieldStatus"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
-                app:cardBackgroundColor="@color/surface"
-                app:cardCornerRadius="24dp"
-                app:cardElevation="6dp"
-                app:strokeColor="@color/card_stroke"
-                app:strokeWidth="1dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
-                    android:orientation="vertical"
-                    android:padding="24dp">
-
-                    <ImageView
-                        android:id="@+id/ivShieldIcon"
-                        android:layout_width="100dp"
-                        android:layout_height="100dp"
-                        android:layout_marginBottom="16dp"
-                        android:contentDescription="Shield Status"
-                        android:src="@drawable/ic_shield_check" />
-
-                    <TextView
-                        android:id="@+id/tvShieldState"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/status_protected"
-                        android:textColor="@color/text_primary"
-                        android:textSize="22sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/tvShieldStateDesc"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="6dp"
-                        android:gravity="center"
-                        android:text="@string/status_protected_desc"
-                        android:textColor="@color/text_secondary"
-                        android:textSize="14sp" />
-
-                    <com.google.android.material.materialswitch.MaterialSwitch
-                        android:id="@+id/switchProtection"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="20dp"
-                        android:scaleX="1.3"
-                        android:scaleY="1.3"
-                        android:checked="true" />
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <!-- Real-Time Stats Grid -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
-                android:orientation="horizontal"
-                android:weightSum="3">
+                android:orientation="vertical"
+                android:padding="20dp">
 
-                <!-- Blocked Domains Stat -->
-                <com.google.android.material.card.MaterialCardView
-                    android:layout_width="0dp"
+                <!-- Top App Bar -->
+                <RelativeLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="6dp"
-                    android:layout_weight="1"
+                    android:layout_marginBottom="20dp">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/app_name"
+                            android:textColor="@color/text_primary"
+                            android:textSize="26sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/tagline"
+                            android:textColor="@color/primary"
+                            android:textSize="13sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <!-- Shield Quick Status Pill -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/cardQuickShieldStatus"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        app:cardBackgroundColor="@color/surface"
+                        app:cardCornerRadius="20dp"
+                        app:strokeColor="@color/primary_dark"
+                        app:strokeWidth="1dp">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:paddingHorizontal="12dp"
+                            android:paddingVertical="8dp">
+
+                            <View
+                                android:id="@+id/viewShieldDot"
+                                android:layout_width="8dp"
+                                android:layout_height="8dp"
+                                android:layout_marginEnd="6dp"
+                                android:background="@drawable/bg_breathing_circle"
+                                android:backgroundTint="@color/shield_active" />
+
+                            <TextView
+                                android:id="@+id/tvQuickShieldText"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Shield Active"
+                                android:textColor="@color/text_primary"
+                                android:textSize="12sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+                </RelativeLayout>
+
+                <!-- Signature Urge SOS Hero Action Button -->
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/btnTriggerUrgeSos"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    app:cardBackgroundColor="#1A2B21"
+                    app:cardCornerRadius="22dp"
+                    app:cardElevation="4dp"
+                    app:strokeColor="@color/primary"
+                    app:strokeWidth="2dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:padding="20dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="16dp"
+                            android:text="🚨"
+                            android:textSize="32sp" />
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="URGE SOS"
+                                android:textColor="@color/primary"
+                                android:textSize="19sp"
+                                android:textStyle="bold"
+                                android:letterSpacing="0.05" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:text="Feeling a craving? Tap for immediate pause &amp; grounding."
+                                android:textColor="@color/text_secondary"
+                                android:textSize="12sp" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="OPEN →"
+                            android:textColor="@color/primary"
+                            android:textSize="13sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- High-Level Overview Metrics Card -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
                     app:cardBackgroundColor="@color/surface"
-                    app:cardCornerRadius="16dp"
+                    app:cardCornerRadius="22dp"
+                    app:cardElevation="2dp"
                     app:strokeColor="@color/card_stroke"
                     app:strokeWidth="1dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:gravity="center"
                         android:orientation="vertical"
-                        android:padding="12dp">
-
-                        <TextView
-                            android:id="@+id/tvStatDomains"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="500+"
-                            android:textColor="@color/primary_light"
-                            android:textSize="18sp"
-                            android:textStyle="bold" />
+                        android:padding="20dp">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="4dp"
-                            android:gravity="center"
-                            android:text="Sites"
-                            android:textColor="@color/text_secondary"
-                            android:textSize="11sp" />
+                            android:text="RECOVERY RECLAMATION"
+                            android:textColor="@color/text_muted"
+                            android:textSize="11sp"
+                            android:textStyle="bold"
+                            android:letterSpacing="0.05" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="16dp"
+                            android:baselineAligned="false"
+                            android:orientation="horizontal">
+
+                            <!-- Days Clean -->
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/tvHomeDaysClean"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="14"
+                                    android:textColor="@color/text_primary"
+                                    android:textSize="32sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Days Protected"
+                                    android:textColor="@color/text_secondary"
+                                    android:textSize="12sp" />
+                            </LinearLayout>
+
+                            <!-- Money Protected -->
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/tvHomeMoneyProtected"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="₹4,900"
+                                    android:textColor="@color/primary"
+                                    android:textSize="32sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Est. Money Saved"
+                                    android:textColor="@color/text_secondary"
+                                    android:textSize="12sp" />
+                            </LinearLayout>
+                        </LinearLayout>
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginVertical="16dp"
+                            android:background="@color/card_stroke" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginEnd="8dp"
+                                android:text="⏱️"
+                                android:textSize="16sp" />
+
+                            <TextView
+                                android:id="@+id/tvHomeTimeReclaimed"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="10.5 Hours Reclaimed"
+                                android:textColor="@color/text_primary"
+                                android:textSize="14sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/tvHomeUrgesResisted"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="8 Urges Surfed"
+                                android:textColor="@color/text_muted"
+                                android:textSize="12sp" />
+                        </LinearLayout>
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
-                <!-- Blocked Apps Stat -->
+                <!-- Daily Check-In Action Card -->
                 <com.google.android.material.card.MaterialCardView
-                    android:layout_width="0dp"
+                    android:id="@+id/btnDailyCheckIn"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="3dp"
-                    android:layout_weight="1"
+                    android:layout_marginBottom="20dp"
+                    android:clickable="true"
+                    android:focusable="true"
                     app:cardBackgroundColor="@color/surface"
-                    app:cardCornerRadius="16dp"
+                    app:cardCornerRadius="18dp"
                     app:strokeColor="@color/card_stroke"
                     app:strokeWidth="1dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:orientation="vertical"
-                        android:padding="12dp">
-
-                        <TextView
-                            android:id="@+id/tvStatApps"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="60+"
-                            android:textColor="@color/primary_light"
-                            android:textSize="18sp"
-                            android:textStyle="bold" />
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:padding="16dp">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="4dp"
-                            android:gravity="center"
-                            android:text="Apps"
-                            android:textColor="@color/text_secondary"
-                            android:textSize="11sp" />
+                            android:layout_marginEnd="14dp"
+                            android:text="📝"
+                            android:textSize="24sp" />
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Check In Today"
+                                android:textColor="@color/text_primary"
+                                android:textSize="15sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/tvCheckInSubtext"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Record today\'s mood, urges, and victory."
+                                android:textColor="@color/text_secondary"
+                                android:textSize="12sp" />
+                        </LinearLayout>
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnQuickCheckIn"
+                            style="@style/Widget.Material3.Button.TonalButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Log"
+                            android:textColor="@color/primary" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
-                <!-- Interceptions Stat -->
-                <com.google.android.material.card.MaterialCardView
-                    android:layout_width="0dp"
+                <!-- Active Habits List Section -->
+                <TextView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="6dp"
-                    android:layout_weight="1"
-                    app:cardBackgroundColor="@color/surface"
-                    app:cardCornerRadius="16dp"
-                    app:strokeColor="@color/card_stroke"
-                    app:strokeWidth="1dp">
+                    android:layout_marginBottom="12dp"
+                    android:text="ACTIVE HABIT TRACKERS"
+                    android:textColor="@color/text_muted"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:letterSpacing="0.05" />
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:orientation="vertical"
-                        android:padding="12dp">
+                <LinearLayout
+                    android:id="@+id/layoutActiveHabitsList"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" />
 
-                        <TextView
-                            android:id="@+id/tvStatInterceptions"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="0"
-                            android:textColor="@color/warning"
-                            android:textSize="18sp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="4dp"
-                            android:gravity="center"
-                            android:text="Blocked"
-                            android:textColor="@color/text_secondary"
-                            android:textSize="11sp" />
-                    </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
             </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
 
-            <!-- Protection Modules Section -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                android:text="Protection Engines"
-                android:textColor="@color/text_primary"
-                android:textSize="16sp"
-                android:textStyle="bold" />
 
-            <!-- VPN Filter Row -->
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cardVpnStatus"
+        <!-- ================= TAB 2: VAULT DESTINATION ================= -->
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/containerVaultTab"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true"
+            android:visibility="gone">
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                app:cardBackgroundColor="@color/surface"
-                app:cardCornerRadius="16dp"
-                app:strokeColor="@color/card_stroke"
-                app:strokeWidth="1dp">
+                android:orientation="vertical"
+                android:padding="20dp">
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Money &amp; Time Vault"
+                    android:textColor="@color/text_primary"
+                    android:textSize="26sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="Transparent baseline estimates of your preserved wealth and living hours."
+                    android:textColor="@color/text_secondary"
+                    android:textSize="13sp" />
+
+                <!-- Transparency Note -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="16dp"
+                    app:cardBackgroundColor="@color/surface"
+                    app:cardCornerRadius="16dp"
+                    app:strokeColor="@color/card_stroke"
+                    app:strokeWidth="1dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="14dp"
+                        android:text="ℹ️ Estimates are calculated as: Daily Baseline × Eligible Days − Recorded Lapses. UrgeVault never connects to bank accounts."
+                        android:textColor="@color/text_muted"
+                        android:textSize="12sp" />
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- Vault Detailed Breakdowns Container -->
+                <LinearLayout
+                    android:id="@+id/layoutVaultBreakdowns"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" />
+
+                <!-- Savings Goals Section -->
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="16dp">
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentStart="true"
-                        android:layout_toStartOf="@+id/tvVpnBadge"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/vpn_service_title"
-                            android:textColor="@color/text_primary"
-                            android:textSize="15sp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="2dp"
-                            android:text="@string/vpn_service_desc"
-                            android:textColor="@color/text_secondary"
-                            android:textSize="12sp" />
-                    </LinearLayout>
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="12dp">
 
                     <TextView
-                        android:id="@+id/tvVpnBadge"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="SAVINGS GOALS"
+                        android:textColor="@color/text_muted"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        android:letterSpacing="0.05" />
+
+                    <TextView
+                        android:id="@+id/btnAddSavingsGoal"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
-                        android:layout_centerVertical="true"
-                        android:background="@drawable/ic_shield_check"
-                        android:backgroundTint="@color/shield_active"
-                        android:paddingHorizontal="10dp"
-                        android:paddingVertical="4dp"
-                        android:text="ACTIVE"
-                        android:textColor="@color/white"
-                        android:textSize="11sp"
+                        android:text="+ Add Goal"
+                        android:textColor="@color/primary"
+                        android:textSize="13sp"
                         android:textStyle="bold" />
                 </RelativeLayout>
-            </com.google.android.material.card.MaterialCardView>
 
-            <!-- Accessibility App Guardian Row -->
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cardAccessibilityStatus"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
-                app:cardBackgroundColor="@color/surface"
-                app:cardCornerRadius="16dp"
-                app:strokeColor="@color/card_stroke"
-                app:strokeWidth="1dp">
-
-                <RelativeLayout
+                <LinearLayout
+                    android:id="@+id/layoutSavingsGoalsList"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="16dp">
+                    android:orientation="vertical" />
 
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentStart="true"
-                        android:layout_toStartOf="@+id/tvAccessibilityBadge"
-                        android:orientation="vertical">
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/accessibility_service_title"
-                            android:textColor="@color/text_primary"
-                            android:textSize="15sp"
-                            android:textStyle="bold" />
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="2dp"
-                            android:text="@string/accessibility_service_desc"
-                            android:textColor="@color/text_secondary"
-                            android:textSize="12sp" />
-                    </LinearLayout>
+        <!-- ================= TAB 3: PROGRESS DESTINATION ================= -->
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/containerProgressTab"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true"
+            android:visibility="gone">
 
-                    <TextView
-                        android:id="@+id/tvAccessibilityBadge"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
-                        android:layout_centerVertical="true"
-                        android:background="@drawable/ic_shield_check"
-                        android:backgroundTint="@color/shield_active"
-                        android:paddingHorizontal="10dp"
-                        android:paddingVertical="4dp"
-                        android:text="ACTIVE"
-                        android:textColor="@color/white"
-                        android:textSize="11sp"
-                        android:textStyle="bold" />
-                </RelativeLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <!-- Notification Blocker Row -->
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cardNotificationStatus"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
-                app:cardBackgroundColor="@color/surface"
-                app:cardCornerRadius="16dp"
-                app:strokeColor="@color/card_stroke"
-                app:strokeWidth="1dp">
+                android:orientation="vertical"
+                android:padding="20dp">
 
-                <RelativeLayout
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Progress Sanctuary"
+                    android:textColor="@color/text_primary"
+                    android:textSize="26sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="Celebrate milestones and cultivate resilience without shame."
+                    android:textColor="@color/text_secondary"
+                    android:textSize="13sp" />
+
+                <!-- Progress Garden Sanctuary Card -->
+                <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="16dp">
+                    android:layout_marginTop="18dp"
+                    android:layout_marginBottom="18dp"
+                    app:cardBackgroundColor="@color/surface"
+                    app:cardCornerRadius="22dp"
+                    app:strokeColor="@color/primary_dark"
+                    app:strokeWidth="1.5dp">
 
                     <LinearLayout
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentStart="true"
-                        android:layout_toStartOf="@+id/tvNotificationBadge"
-                        android:orientation="vertical">
+                        android:gravity="center_horizontal"
+                        android:orientation="vertical"
+                        android:padding="24dp">
 
                         <TextView
+                            android:id="@+id/tvGardenEmoji"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/notification_service_title"
-                            android:textColor="@color/text_primary"
-                            android:textSize="15sp"
+                            android:text="🌿"
+                            android:textSize="56sp" />
+
+                        <TextView
+                            android:id="@+id/tvGardenStageTitle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:text="Emerging Sprout"
+                            android:textColor="@color/primary"
+                            android:textSize="20sp"
                             android:textStyle="bold" />
 
                         <TextView
+                            android:id="@+id/tvGardenStageSubtitle"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="2dp"
-                            android:text="@string/notification_service_desc"
+                            android:layout_marginTop="4dp"
+                            android:gravity="center"
+                            android:lineSpacingExtra="3dp"
+                            android:text="Roots are forming. You are taking your power back with each conscious choice."
                             android:textColor="@color/text_secondary"
-                            android:textSize="12sp" />
+                            android:textSize="13sp" />
                     </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
 
-                    <TextView
-                        android:id="@+id/tvNotificationBadge"
-                        android:layout_width="wrap_content"
+                <!-- Trigger & Coping Insights -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
+                    app:cardBackgroundColor="@color/surface"
+                    app:cardCornerRadius="18dp"
+                    app:strokeColor="@color/card_stroke"
+                    app:strokeWidth="1dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
-                        android:layout_centerVertical="true"
-                        android:background="@drawable/ic_shield_check"
-                        android:backgroundTint="@color/shield_active"
-                        android:paddingHorizontal="10dp"
-                        android:paddingVertical="4dp"
-                        android:text="ACTIVE"
-                        android:textColor="@color/white"
-                        android:textSize="11sp"
-                        android:textStyle="bold" />
-                </RelativeLayout>
-            </com.google.android.material.card.MaterialCardView>
+                        android:orientation="vertical"
+                        android:padding="18dp">
 
-            <!-- Quick Action Buttons -->
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnCustomBlocker"
-                style="@style/Widget.Material3.Button"
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="WEEKLY RECOVERY INSIGHTS"
+                            android:textColor="@color/text_muted"
+                            android:textSize="11sp"
+                            android:textStyle="bold"
+                            android:letterSpacing="0.05" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="12dp"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Primary Trigger: "
+                                android:textColor="@color/text_secondary"
+                                android:textSize="13sp" />
+
+                            <TextView
+                                android:id="@+id/tvInsightTopTrigger"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Evening downtime / stress"
+                                android:textColor="@color/text_primary"
+                                android:textSize="13sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Most Effective Tool: "
+                                android:textColor="@color/text_secondary"
+                                android:textSize="13sp" />
+
+                            <TextView
+                                android:id="@+id/tvInsightTopCoping"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="60s Grounding breath"
+                                android:textColor="@color/primary"
+                                android:textSize="13sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- Milestones Section -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="12dp"
+                    android:text="MILESTONE BADGES"
+                    android:textColor="@color/text_muted"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:letterSpacing="0.05" />
+
+                <LinearLayout
+                    android:id="@+id/layoutMilestonesList"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" />
+
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+
+
+        <!-- ================= TAB 4: SETTINGS DESTINATION ================= -->
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/containerSettingsTab"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true"
+            android:visibility="gone">
+
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="54dp"
-                android:layout_marginBottom="12dp"
-                android:text="Custom App &amp; Website Blocker"
-                android:textColor="@color/white"
-                android:textSize="15sp"
-                android:textStyle="bold"
-                app:cornerRadius="14dp"
-                app:icon="@drawable/ic_block" />
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="20dp">
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnPermissionsSetup"
-                style="@style/Widget.Material3.Button.TonalButton"
-                android:layout_width="match_parent"
-                android:layout_height="52dp"
-                android:layout_marginBottom="12dp"
-                android:text="Permission &amp; Anti-Bypass Setup"
-                app:cornerRadius="14dp"
-                app:icon="@drawable/ic_settings" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Settings &amp; Shield"
+                    android:textColor="@color/text_primary"
+                    android:textSize="26sp"
+                    android:textStyle="bold" />
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnManageBlocklist"
-                style="@style/Widget.Material3.Button.OutlinedButton"
-                android:layout_width="match_parent"
-                android:layout_height="52dp"
-                android:layout_marginBottom="12dp"
-                android:text="View Blocked Database (500+)"
-                android:textColor="@color/text_primary"
-                app:cornerRadius="14dp"
-                app:icon="@drawable/ic_list"
-                app:strokeColor="@color/card_stroke" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="Configure habits, hardware protection, and safety boundaries."
+                    android:textColor="@color/text_secondary"
+                    android:textSize="13sp" />
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnMonetizationSettings"
-                style="@style/Widget.Material3.Button.TonalButton"
-                android:layout_width="match_parent"
-                android:layout_height="52dp"
-                android:layout_marginBottom="12dp"
-                android:text="AdMob Monetization &amp; Real Ad IDs"
-                android:textColor="@color/warning"
-                app:cornerRadius="14dp"
-                app:icon="@drawable/ic_monetization"
-                app:iconTint="@color/warning" />
+                <!-- Vault Shield (VPN / Accessibility / Notifications Blocker) -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="10dp"
+                    android:text="HARDWARE TRIGGER SHIELD"
+                    android:textColor="@color/text_muted"
+                    android:textSize="11sp"
+                    android:textStyle="bold"
+                    android:letterSpacing="0.05" />
 
-            <!-- Rewarded Ad Monetization Button -->
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnEmergencyBypass"
-                style="@style/Widget.Material3.Button.TextButton"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:layout_marginBottom="16dp"
-                android:text="Emergency 10-Min Access (Watch Short Ad)"
-                android:textColor="@color/warning"
-                android:textSize="12sp" />
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="14dp"
+                    app:cardBackgroundColor="@color/surface"
+                    app:cardCornerRadius="18dp"
+                    app:strokeColor="@color/card_stroke"
+                    app:strokeWidth="1dp">
 
-        </LinearLayout>
-    </androidx.core.widget.NestedScrollView>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp">
 
-    <!-- AdMob Banner Container (Monetization: Free for User, Earn from Ads) -->
-    <FrameLayout
-        android:id="@+id/adBannerContainer"
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginEnd="12dp"
+                                android:text="🛡️"
+                                android:textSize="24sp" />
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Vault Protection Shield"
+                                    android:textColor="@color/text_primary"
+                                    android:textSize="15sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Blocks 500+ betting sites &amp; apps"
+                                    android:textColor="@color/text_muted"
+                                    android:textSize="12sp" />
+                            </LinearLayout>
+
+                            <com.google.android.material.materialswitch.MaterialSwitch
+                                android:id="@+id/switchProtectionShield"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content" />
+                        </LinearLayout>
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginVertical="12dp"
+                            android:background="@color/card_stroke" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnCustomBlocker"
+                                style="@style/Widget.Material3.Button.TonalButton"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginEnd="6dp"
+                                android:layout_weight="1"
+                                android:text="Custom Apps"
+                                android:textColor="@color/text_primary" />
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnPermissionsGuide"
+                                style="@style/Widget.Material3.Button.TonalButton"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="6dp"
+                                android:layout_weight="1"
+                                android:text="Shield Setup"
+                                android:textColor="@color/text_primary" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- Master Password Card -->
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/btnSettingsPassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="14dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    app:cardBackgroundColor="@color/surface"
+                    app:cardCornerRadius="18dp"
+                    app:strokeColor="@color/card_stroke"
+                    app:strokeWidth="1dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:padding="16dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="12dp"
+                            android:text="🔒"
+                            android:textSize="22sp" />
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Master Security PIN / Password"
+                                android:textColor="@color/text_primary"
+                                android:textSize="14sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Protects against impulsive bypass"
+                                android:textColor="@color/text_muted"
+                                android:textSize="12sp" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Edit →"
+                            android:textColor="@color/primary"
+                            android:textSize="13sp" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- Medical Safety Advisory Card -->
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/btnMedicalAdvisory"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="14dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    app:cardBackgroundColor="@color/surface"
+                    app:cardCornerRadius="18dp"
+                    app:strokeColor="@color/warning"
+                    app:strokeWidth="1dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:padding="16dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="12dp"
+                            android:text="⚠️"
+                            android:textSize="22sp" />
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Alcohol Safety &amp; Medical Boundaries"
+                                android:textColor="@color/warning"
+                                android:textSize="14sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Critical health notice regarding withdrawal"
+                                android:textColor="@color/text_muted"
+                                android:textSize="12sp" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Read →"
+                            android:textColor="@color/warning"
+                            android:textSize="13sp" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- Monetization / AdMob Settings Card -->
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/btnAdSettingsCard"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="24dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    app:cardBackgroundColor="@color/surface"
+                    app:cardCornerRadius="18dp"
+                    app:strokeColor="@color/card_stroke"
+                    app:strokeWidth="1dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:padding="16dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="12dp"
+                            android:text="🪙"
+                            android:textSize="22sp" />
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Google AdMob &amp; Monetization"
+                                android:textColor="@color/text_primary"
+                                android:textSize="14sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Non-intrusive bottom banner &amp; real ad units"
+                                android:textColor="@color/text_muted"
+                                android:textSize="12sp" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Configure →"
+                            android:textColor="@color/primary"
+                            android:textSize="13sp" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+
+    </FrameLayout>
+
+    <!-- Fixed Bottom Bar Container: Bottom Nav + Sticky AdMob Banner -->
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:background="@color/surface" />
+        android:background="@color/surface"
+        android:elevation="12dp"
+        android:orientation="vertical">
+
+        <!-- Bottom Navigation Bar -->
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/bottomNavigationView"
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:background="@color/surface"
+            app:itemIconTint="@color/primary"
+            app:itemTextColor="@color/text_secondary"
+            app:menu="@menu/bottom_nav_menu" />
+
+        <!-- Ethical Sticky AdMob Banner -->
+        <FrameLayout
+            android:id="@+id/adBannerContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/background"
+            android:minHeight="50dp" />
+
+    </LinearLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

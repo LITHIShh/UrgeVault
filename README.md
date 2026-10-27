@@ -1,99 +1,61 @@
-# BetShield - Gambling & Betting Blocker for Android
+# UrgeVault — Protect Your Progress (Betting · Alcohol · Smoking)
 
-**BetShield** is a complete, self-contained Android application designed to protect users from gambling addiction by blocking gambling websites, betting applications, and preventing bypass attempts via a secure master password lock.
-
----
-
-## Key Features
-
-1. **Website Blocking (Local DNS Sinkhole VPN):**
-   - Implements Android's `VpnService` to capture outbound DNS requests locally on the device (port 53 UDP).
-   - Zero external proxy lag: checks queried domains against a database of 500+ top gambling portals (Bet365, Stake, Roobet, DraftKings, FanDuel, Bovada, 888, 1xBet, etc.).
-   - Drops/sinkholes betting domains immediately by synthesizing a `0.0.0.0` response.
-   - Clean traffic is securely resolved via high-privacy upstream family DNS (`1.1.1.3` / Cloudflare Family, blocking adult/gambling malware).
-
-2. **App Blocking (Accessibility Guardian):**
-   - Implements `AccessibilityService` (`BetBlockerAccessibilityService`) to detect foreground window switches in real time.
-   - Intercepts known gambling apps (60+ top betting and casino packages) and keyword heuristics (`casino`, `sportsbook`, `slots`, `blackjack`, etc.).
-   - Automatically kicks the user back to the Home screen and displays a high-priority, motivational `BlockedActivity` screen.
-
-3. **Master Password Lock & Anti-Bypass:**
-   - Hashed using **PBKDF2/SHA-256** with a cryptographic 16-byte salt and 10,000 iterations.
-   - **Protection Toggle Lock:** Users cannot turn off the shield without entering the master password.
-   - **Settings Lock:** Accessibility guardian detects attempts to open Android Settings (`com.android.settings`) -> BetShield -> "Force Stop" or "Uninstall" and locks access until authorized.
-   - **Device Admin Receiver:** Integrates `DevicePolicyManager` to prevent instant uninstallation.
-
-4. **Motivational Intervention & Crisis Support:**
-   - Full-screen intervention overlay (`BlockedActivity`) providing inspirational self-reflection quotes and instant one-tap emergency calling to 24/7 gambling helplines (e.g. `1-800-GAMBLER`).
-
-5. **Custom App & Website Blocker:**
-   - Block **ANY installed application** on the phone (Instagram, TikTok, YouTube, Reddit, Games, etc.) via an interactive app selector with icons.
-   - Block **ANY custom domain** (subdomains automatically protected).
-   - Unblocking custom apps or websites requires the Master Password.
-
-6. **AdMob Monetization (100% Free for Users, Passive Revenue for You):**
-   - Integrates Google Mobile Ads SDK (`play-services-ads`).
-   - **Adaptive Banner Ads:** Displayed unobtrusively at the bottom of the dashboard and blocker screen.
-   - **Interstitial Ads:** Non-intrusive full-screen ads on rule edits or screen transitions.
-   - **Rewarded Video Ads:** Users can watch a sponsor video ad to earn an optional "10-Minute Emergency Access", generating high-eCPM rewarded revenue while keeping the app completely free!
-   - Configured with official Google sample test ad units out-of-the-box (no account ban risk during testing).
+**UrgeVault** is an Android-first, offline-first recovery companion and habit-change sanctuary. It combines a compassionate crisis-response toolkit (**Urge SOS**), transparent financial and time reclamation (**Money & Time Vault**), milestone-driven growth without shame (**Progress Garden**), and device-level hardware protection (**Vault Shield**).
 
 ---
 
-## Project Structure
+## 🌟 Core Architecture & Feature Pillars
 
-```
-BetShield/
-├── app/
-│   ├── src/main/
-│   │   ├── AndroidManifest.xml
-│   │   ├── java/com/betshield/app/
-│   │   │   ├── BetShieldApplication.kt
-│   │   │   ├── data/
-│   │   │   │   ├── BlocklistDatabase.kt       # 500+ domains, 60+ apps, keyword heuristics
-│   │   │   │   ├── PasswordManager.kt         # Salted SHA-256 password hash & session lock
-│   │   │   │   └── PreferencesManager.kt      # Configuration & interception stats
-│   │   │   ├── service/
-│   │   │   │   ├── BetShieldVpnService.kt     # Local DNS sinkhole tunnel
-│   │   │   │   ├── BetBlockerAccessibilityService.kt # Real-time app blocker & anti-tamper
-│   │   │   │   └── DnsPacketParser.kt         # IPv4/UDP/DNS packet parser & response generator
-│   │   │   ├── receiver/
-│   │   │   │   ├── BootReceiver.kt            # Auto-restart on device reboot
-│   │   │   │   └── BetShieldDeviceAdminReceiver.kt # Device Admin uninstall protection
-│   │   │   └── ui/
-│   │   │       ├── MainActivity.kt            # Dashboard, master switch with password lock
-│   │   │       ├── BlockedActivity.kt         # Fullscreen blocking overlay
-│   │   │       ├── PasswordDialog.kt          # PIN/Password setup & verification dialog
-│   │   │       ├── PasswordUnlockActivity.kt  # Standalone unlock activity
-│   │   │       ├── BlocklistActivity.kt       # Searchable list & custom rule manager
-│   │   │       └── SetupPermissionsActivity.kt# Guided permissions onboarding
-│   │   └── res/
-│   │       ├── layout/                        # Material 3 responsive layouts
-│   │       ├── values/                        # Dark slate & emerald palette, strings
-│   │       └── xml/                           # Accessibility config & Device Admin spec
-│   └── build.gradle.kts
-├── build.gradle.kts
-├── settings.gradle.kts
-└── gradle.properties
-```
+### 1. Urge SOS (Guided Crisis Intervention)
+- **1-Tap Accessibility:** Prominently featured on the main dashboard for immediate craving response.
+- **Urge Intensity Scale (1–10):** Real-time subjective intensity tracking to reflect neurochemical craving waves.
+- **60-Second Grounding Exercise:** Interactive 4-7-8 breathing circle animation (4s Inhale, 7s Hold, 8s Exhale) that stimulates parasympathetic vagal tone and restores prefrontal cortex control.
+- **15-Minute Craving Delay Timer:** Craving spikes peak and decline within 15 minutes. The timer holds the pause.
+- **Why I Started:** Dynamic personal motivations for the specific habit to reinforce identity-level commitment.
+- **Support & Crisis Line:** 1-tap ally speed dial and 24/7 confidential helplines (1-800-522-4700 / Tele-MANAS 14416).
+- **Strictly Ad-Free:** Zero ads, zero notifications, zero forced navigation during Urge SOS flows.
+
+### 2. Money & Time Vault (Tangible Reclamation)
+Transparent calculations based on user baselines:
+$$\text{Estimated Money Protected} = (\text{Baseline spend per day} \times \text{eligible days}) - \text{recorded lapses}$$
+$$\text{Estimated Time Reclaimed} = \text{Baseline minutes per day} \times \text{eligible days}$$
+- **Multi-Habit Support:**
+  - **Betting & Gambling:** Tracks net money protected, bets avoided, and hours salvaged from chasing cycles.
+  - **Alcohol:** Tracks money avoided, standard drinks avoided, and health milestone reclamation.
+  - **Smoking & Nicotine:** Tracks money avoided, cigarettes not smoked, and lung stamina indicators.
+- **Savings Goals:** Visual progress bars for target allocations (Emergency Fund, Weekend Trip, New Tech/Camera).
+
+### 3. Progress Sanctuary & Reflection
+- **Progress Garden:** Visual living environment that evolves through 5 stages based on check-in consistency and resilience:
+  - 🌱 *Planted Seed* → 🌿 *Emerging Sprout* → 🪴 *Growing Sapling* → 🌳 *Resilient Grove* → 🌸 *Blooming Sanctuary*
+- **Milestone Badges:** First Step, 3-Day Breakthrough, 1 Week Clean, 2 Weeks Grounded, 1 Month Milestone, 60 Days Resilience, Season of Transformation.
+- **Compassionate Relapse Plan:** Lapses never erase historical progress. Slip-ups are treated as data, allowing net financial adjustments without shame.
+- **Trigger & Coping Insights:** Aggregates top craving triggers (e.g., evening boredom, work stress) and most effective tools.
+
+### 4. Vault Shield (Device-Level Trigger Protection)
+- **Local DNS Sinkhole VPN:** Port 53 UDP interception blocking 500+ top gambling and betting domains at `0.0.0.0` with family-safe Cloudflare DNS upstream.
+- **Accessibility Guardian:** Real-time foreground app and browser URL inspector (Chrome, Edge, Firefox, Brave) shutting down betting platforms immediately.
+- **Promotional Notification Blocker:** Suppresses push notifications containing gambling keywords ("free bet", "spins", "deposit bonus").
+- **Master PIN / Password Anti-Bypass:** PBKDF2/SHA-256 hashed master lock guarding shield deactivation and system settings.
+- **Boot Persistence:** `directBootAware` receiver restarting protection seamlessly across device reboots.
+
+### 5. Ethical Monetization (AdMob)
+- **Non-Intrusive Bottom Banner:** Fixed neatly at the bottom of the screen away from recovery tools.
+- **In-App Real Ad Unit Setup:** Easily switch between Google official test IDs and your live AdMob Ad Unit IDs right inside the app settings.
 
 ---
 
-## How to Build and Run in Android Studio
+## 🔒 Privacy & Health Notice
+- **100% Offline-First:** No accounts, no cloud sync, no tracking. All data is encrypted and stored locally in app sandboxed storage.
+- **Medical Boundary:** Alcohol withdrawal can be dangerous for individuals with severe physical alcohol dependence. UrgeVault includes prominent medical notices guiding users to professional clinical consultation.
 
-1. **Open the Project:**
-   - Launch **Android Studio**.
-   - Select **Open an existing Android Studio Project**.
-   - Choose the directory: `C:\Users\Lithish r\.gemini\antigravity\scratch\BetShield`.
+---
 
-2. **Sync and Build:**
-   - Allow Gradle to sync dependencies (AndroidX Core, Material 3, Coroutines).
-   - Click **Run** (`Shift + F10`) or select **Build > Build Bundle(s) / APK(s) > Build APK(s)** to generate the `.apk`.
+## 📦 Building APK & Play Store AAB
 
-3. **First-Time Setup on Device / Emulator:**
-   - **Step 1:** On launch, set your **Master Password** (e.g. 4-8 digit PIN).
-   - **Step 2:** Tap **Permission & Anti-Bypass Setup**:
-     - Enable **Web Filter**: Approve Android's VPN connection prompt.
-     - Enable **App Guardian**: Enable BetShield under Android Accessibility settings.
-     - Activate **Device Admin**: Protects the app from uninstallation without the password.
-   - **Step 3:** Try visiting a betting website (e.g. `bet365.com` or `stake.com`) in any browser or launching a gambling app to see the instant blocking in action!
+UrgeVault includes an automated GitHub Actions CI/CD pipeline:
+1. Push the code to GitHub (`git push origin main` or double-click `push_to_github.bat`).
+2. GitHub Actions runs `.github/workflows/build-apk-aab.yml`:
+   - Builds debug APK (`app-debug.apk`)
+   - Builds signed release bundle (`app-release.aab`) ready for Google Play Console upload.
+3. Download the built APK or AAB under the **Actions** tab on your GitHub repository!
