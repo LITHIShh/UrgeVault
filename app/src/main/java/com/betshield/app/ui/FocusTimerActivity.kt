@@ -140,7 +140,7 @@ class FocusTimerActivity : AppCompatActivity() {
                 binding.btnToggleFocusTimer.text = "▶ Start Focus"
                 binding.tvFocusStateBadge.text = "Complete"
                 binding.tvFocusPhaseNotice.text = "Focus completed! Urge successfully diffused."
-                HapticEngine.performSuccess(this@FocusTimerActivity)
+                HapticEngine.performSuccess(context = this@FocusTimerActivity)
                 Toast.makeText(this@FocusTimerActivity, "Mindful session completed! Craving diffused.", Toast.LENGTH_LONG).show()
             }
         }.start()
