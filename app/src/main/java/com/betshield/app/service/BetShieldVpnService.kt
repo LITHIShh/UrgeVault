@@ -6,6 +6,7 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Intent
 import android.content.pm.ServiceInfo
+import android.net.ConnectivityManager
 import android.net.VpnService
 import android.os.Build
 import android.os.ParcelFileDescriptor
@@ -18,6 +19,7 @@ import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.net.DatagramPacket
 import java.net.DatagramSocket
+import java.net.Inet4Address
 import java.net.InetAddress
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
@@ -101,11 +103,40 @@ class BetShieldVpnService : VpnService(), Runnable {
                 .setMtu(1500)
                 // Virtual TUN address
                 .addAddress(VPN_INTERFACE_IP, 24)
-                // Set the virtual DNS server to 10.0.0.1 (different from interface IP 10.0.0.2 to avoid martian packet drops)
+                // Set the virtual DNS server to 10.0.0.1
                 .addDnsServer(VPN_DNS_SERVER_IP)
-                // Route ONLY the virtual DNS server IP through the TUN interface.
-                // All regular web traffic (HTTP, HTTPS, video, games) goes directly to the physical network!
                 .addRoute(VPN_DNS_SERVER_IP, 32)
+
+            // Dynamically discover and route active network DNS servers so system lookups enter TUN
+            val cm = getSystemService(ConnectivityManager::class.java)
+            if (cm != null) {
+                try {
+                    val activeNetwork = cm.activeNetwork
+                    if (activeNetwork != null) {
+                        val lp = cm.getLinkProperties(activeNetwork)
+                        if (lp != null) {
+                            for (dns in lp.dnsServers) {
+                                if (dns is Inet4Address) {
+                                    val ip = dns.hostAddress
+                                    if (ip != null && ip != VPN_INTERFACE_IP) {
+                                        try {
+                                            builder.addRoute(ip, 32)
+                                        } catch (_: Exception) {}
+                                    }
+                                }
+                            }
+                        }
+                    }
+                } catch (e: Exception) {
+                    Log.w(TAG, "Could not discover active network DNS", e)
+                }
+            }
+
+            // Allow applications to bypass the VPN for non-VPN web destinations
+            builder.allowBypass()
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                builder.setMetered(false)
+            }
 
             // Exclude our own app package so that upstream queries never loop
             try {

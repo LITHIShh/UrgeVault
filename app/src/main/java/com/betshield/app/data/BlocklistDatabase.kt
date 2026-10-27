@@ -141,39 +141,55 @@ class BlocklistDatabase(private val context: Context) {
 
     private val gamblingKeywords = listOf(
         "casino", "sportsbook", "betting", "blackjack", "roulette",
-        "slotmachine", "jackpotslots", "realmoneybet", "onlinegambling", "rummy", "teenpatti"
+        "slotmachine", "jackpotslots", "realmoneybet", "onlinegambling", "rummy", "teenpatti",
+        "bet365", "stake", "1xbet", "parimatch", "dafabet", "fairplay", "lotus365", "mahadevbook",
+        "crickex", "betway", "bovada", "roobet", "melbet", "1win", "mostbet", "kheloo", "rajabets"
     )
 
-    private val adultKeywords = listOf("porn", "xxx", "nsfw", "erotic", "nude", "camgirl")
+    private val adultKeywords = listOf("porn", "xxx", "nsfw", "erotic", "nude", "camgirl", "onlyfans")
 
     /**
      * Determines whether a given domain (e.g. from DNS query or browser URL) should be blocked.
      */
     fun isDomainBlocked(domainInput: String): Boolean {
-        val domain = domainInput.trim().lowercase(Locale.ROOT)
+        if (domainInput.isBlank()) return false
+
+        val cleanDomain = domainInput.trim().lowercase(Locale.ROOT)
             .removePrefix("https://")
             .removePrefix("http://")
             .removePrefix("www.")
             .split("/")[0]
+            .split(":")[0]
             .removeSuffix(".")
+
+        if (cleanDomain.isBlank()) return false
 
         // 1. User custom blocked websites (ALWAYS APPLIED)
         for (custom in prefsManager.customDomains) {
-            if (domain == custom || domain.endsWith(".$custom")) {
-                return true
+            val c = custom.trim().lowercase(Locale.ROOT)
+                .removePrefix("https://")
+                .removePrefix("http://")
+                .removePrefix("www.")
+                .split("/")[0]
+                .split(":")[0]
+                .removeSuffix(".")
+            if (c.isNotEmpty()) {
+                if (cleanDomain == c || cleanDomain.endsWith(".$c") || c.endsWith(".$cleanDomain") || cleanDomain.contains(c)) {
+                    return true
+                }
             }
         }
 
         // 2. Betting & Gambling category
         if (prefsManager.isGamblingBlockingEnabled) {
             for (blocked in gamblingDomains) {
-                if (domain == blocked || domain.endsWith(".$blocked")) return true
+                if (cleanDomain == blocked || cleanDomain.endsWith(".$blocked")) return true
             }
             for (tld in gamblingTlds) {
-                if (domain.endsWith(tld)) return true
+                if (cleanDomain.endsWith(tld)) return true
             }
             for (kw in gamblingKeywords) {
-                if (domain.contains(kw)) return true
+                if (cleanDomain.contains(kw)) return true
             }
         }
 

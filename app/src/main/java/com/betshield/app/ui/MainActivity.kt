@@ -551,7 +551,14 @@ class MainActivity : AppCompatActivity() {
         }
 
         if (!BetBlockerAccessibilityService.isAccessibilityServiceEnabled(this)) {
-            Toast.makeText(this, "Enable UrgeVault Accessibility Service for full app protection.", Toast.LENGTH_LONG).show()
+            AlertDialog.Builder(this, R.style.Theme_BetShield_Dialog)
+                .setTitle("Enable Browser Protection")
+                .setMessage("To block betting websites and custom blocked URLs inside Chrome, Firefox, and other browsers, UrgeVault needs Accessibility Permission.\n\nTap 'Enable Now' -> Look for 'BetShield' or 'UrgeVault' under Installed Apps -> Switch it ON.")
+                .setPositiveButton("Enable Now") { _, _ ->
+                    startActivity(Intent(android.provider.Settings.ACTION_ACCESSIBILITY_SETTINGS))
+                }
+                .setNegativeButton("Later", null)
+                .show()
         }
     }
 
