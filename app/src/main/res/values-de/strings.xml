@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">UrgeVault</string>
+    <string name="tagline">Schütze deinen Fortschritt.</string>
+    <string name="sub_tagline">Baue gesunde Gewohnheiten auf, Entscheidung für Entscheidung.</string>
+    <string name="habits_subtitle">Glücksspiel · Alkohol · Rauchen</string>
+
+    <string name="title_blocklist">Blockierte Elemente</string>
+    <string name="title_permissions">Schutzeinstellungen</string>
+    <string name="accessibility_description">Überwacht und blockiert Glücksspiel-Apps und suchtauslösende Webseiten.</string>
+    <string name="device_admin_description">Verhindert die voreilige Deinstallation von UrgeVault ohne Ihren Master-PIN.</string>
+
+    <string name="status_protected">Schutz Aktiv</string>
+    <string name="status_unprotected">Schutz Inaktiv</string>
+    <string name="status_protected_desc">Alle Glücksspiel-Webseiten und Apps sind aktiv blockiert.</string>
+    <string name="status_unprotected_desc">Der Schutz ist pausiert.</string>
+
+    <string name="vpn_service_title">Webfilter</string>
+    <string name="vpn_service_desc">Fängt Verbindungen zu Casino- und Wettseiten ab.</string>
+    <string name="accessibility_service_title">Sucht-Wächter</string>
+    <string name="accessibility_service_desc">Schließt Wett-Apps und Browser-Tabs unmittelbar.</string>
+    <string name="notification_service_title">Benachrichtigungsblocker</string>
+    <string name="notification_service_desc">Blockiert Benachrichtigungen von Wettanbietern.</string>
+    <string name="device_admin_title">Deinstallationsschutz</string>
+    <string name="device_admin_desc">Verhindert impulsive App-Löschung.</string>
+
+    <!-- Urge SOS Strings -->
+    <string name="sos_title">Urge SOS</string>
+    <string name="sos_subtitle">Halte inne, bevor du handelst. Du musst jetzt nicht alles auf einmal lösen.</string>
+    <string name="sos_slider_title">Wie stark ist der Drang gerade?</string>
+    <string name="sos_breathe_title">60-Sekunden Erdungsatmung</string>
+    <string name="sos_breathe_desc">Folge dem Kreis: 4s Einatmen, 7s Halten, 8s Ausatmen.</string>
+    <string name="sos_delay_title">15-Minuten Verzögerungstimer</string>
+    <string name="sos_delay_desc">Dopaminspitzen klingen nach 15 Minuten ab. Schenke dir diese Pause.</string>
+    <string name="sos_why_title">Warum ich diesen Weg begonnen habe</string>
+    <string name="sos_contact_trusted">Vertrauensperson kontaktieren</string>
+    <string name="sos_crisis_helpline">Kostenlose 24/7 Suchtberatung</string>
+    <string name="sos_helpline_number">0800 1 37 27 00 / 112</string>
+    <string name="sos_complete_button">Drang erfolgreich gemeistert • Sieg erfassen</string>
+
+    <!-- Medical Advisory -->
+    <string name="alcohol_medical_warning_title">Wichtiger medizinischer Hinweis</string>
+    <string name="alcohol_medical_warning">UrgeVault ist ein persönlicher Begleiter und ersetzt keine medizinische Therapie. Ein abrupter Alkoholentzug kann lebensgefährlich sein. Bitte wenden Sie sich bei körperlichen Entzugserscheinungen sofort an einen Arzt.</string>
+
+    <!-- Blocked Screen -->
+    <string name="blocked_title">Zugriff Blockiert</string>
+    <string name="blocked_subtitle">UrgeVault hat diesen Auslöser gestoppt.</string>
+    <string name="blocked_quote">"Der erste und beste Sieg ist es, sich selbst zu besiegen."</string>
+    <string name="blocked_helpline_text">Kostenlose vertrauliche Hilfe rund um die Uhr:</string>
+    <string name="blocked_helpline_number">0800 1 37 27 00 / 112</string>
+    <string name="btn_return_home">Zurück zur Startseite</string>
+
+    <!-- Password / Lock Strings -->
+    <string name="password_title_setup">Master-Passwort festlegen</string>
+    <string name="password_title_unlock">Master-Passwort eingeben</string>
+    <string name="password_desc_setup">Wähle eine sichere PIN zum Schutz der Einstellungen.</string>
+    <string name="password_desc_unlock">Gib dein Passwort ein, um Änderungen vorzunehmen.</string>
+    <string name="password_hint">PIN / Passwort eingeben</string>
+    <string name="password_confirm_hint">PIN / Passwort bestätigen</string>
+    <string name="btn_confirm">Bestätigen</string>
+    <string name="btn_cancel">Abbrechen</string>
+    <string name="btn_unlock">Entsperren</string>
+    <string name="error_password_mismatch">Passwörter stimmen nicht überein.</string>
+    <string name="error_password_incorrect">Falsches Passwort. Zugriff verweigert.</string>
+    <string name="error_password_short">Das Passwort muss mindestens 4 Zeichen lang sein.</string>
+
+    <!-- Stats -->
+    <string name="stats_domains_blocked">Blockierte Domains</string>
+    <string name="stats_apps_blocked">Blockierte Apps</string>
+    <string name="stats_events_intercepted">Interventionen</string>
+
+    <string name="settings_language_currency_title">Sprache und Währung</string>
+    <string name="settings_protection_mode_title">Schutzmodus</string>
+    <string name="settings_ally_title">Notfall-Verbündeter</string>
+    <string name="call_ally_default">Verbündeten anrufen</string>
+</resources>

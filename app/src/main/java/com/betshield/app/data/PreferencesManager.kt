@@ -123,4 +123,35 @@ class PreferencesManager(context: Context) {
     var appThemeMode: String
         get() = prefs.getString("key_app_theme_mode", THEME_AUTO) ?: THEME_AUTO
         set(value) = prefs.edit().putString("key_app_theme_mode", value).apply()
+
+    // Global Internationalization & Dynamic Currency
+    var isRegionSetupCompleted: Boolean
+        get() = prefs.getBoolean("key_region_setup_completed", false)
+        set(value) = prefs.edit().putBoolean("key_region_setup_completed", value).apply()
+
+    var selectedLanguageTag: String
+        get() = prefs.getString("key_selected_language_tag", "en-US") ?: "en-US"
+        set(value) = prefs.edit().putString("key_selected_language_tag", value).apply()
+
+    var selectedCurrencySymbol: String
+        get() = prefs.getString("key_selected_currency_symbol", "$") ?: "$"
+        set(value) = prefs.edit().putString("key_selected_currency_symbol", value).apply()
+
+    var selectedCurrencyCode: String
+        get() = prefs.getString("key_selected_currency_code", "USD") ?: "USD"
+        set(value) = prefs.edit().putString("key_selected_currency_code", value).apply()
+
+    // Emergency Support Ally
+    var allyName: String
+        get() = prefs.getString("key_ally_name", "") ?: ""
+        set(value) = prefs.edit().putString("key_ally_name", value).apply()
+
+    var allyPhone: String
+        get() = prefs.getString("key_ally_phone", "") ?: ""
+        set(value) = prefs.edit().putString("key_ally_phone", value).apply()
+
+    // Optional VPN Protection (false = Browser Guardian Only, true = Browser + VPN Sinkhole)
+    var isVpnProtectionEnabled: Boolean
+        get() = prefs.getBoolean("key_vpn_protection_enabled", false)
+        set(value) = prefs.edit().putBoolean("key_vpn_protection_enabled", value).apply()
 }

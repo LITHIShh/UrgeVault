@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">UrgeVault</string>
+    <string name="tagline">अपनी प्रगति को सुरक्षित रखें।</string>
+    <string name="sub_tagline">एक समय में एक सही निर्णय लेकर स्वस्थ आदतें बनाएं।</string>
+    <string name="habits_subtitle">सट्टेबाजी · शराब · धूम्रपान</string>
+
+    <string name="title_blocklist">अवरुद्ध आइटम</string>
+    <string name="title_permissions">सुरक्षा सेटअप</string>
+    <string name="accessibility_description">सट्टेबाजी ऐप्स और हानिकारक वेबसाइटों को ब्लॉक करता है।</string>
+    <string name="device_admin_description">UrgeVault को अनइंस्टॉल होने से रोकता है।</string>
+
+    <string name="status_protected">शील्ड सक्रिय है</string>
+    <string name="status_unprotected">शील्ड निष्क्रिय है</string>
+    <string name="status_protected_desc">सभी सट्टेबाजी वेबसाइटें और ऐप्स सक्रिय रूप से ब्लॉक हैं।</string>
+    <string name="status_unprotected_desc">डिवाइस शील्ड रुकी हुई है।</string>
+
+    <string name="vpn_service_title">वेब फ़िल्टर</string>
+    <string name="vpn_service_desc">सट्टेबाजी वेबसाइटों के कनेक्शन को रोकता है।</string>
+    <string name="accessibility_service_title">एडिक्शन गार्जियन</string>
+    <string name="accessibility_service_desc">सट्टेबाजी ऐप्स और ब्राउज़र टैब को तुरंत बंद करता है।</string>
+    <string name="notification_service_title">नोटिफिकेशन ब्लॉकर</string>
+    <string name="notification_service_desc">सट्टेबाजी विज्ञापनों और अलर्ट्स को शांत करता है।</string>
+    <string name="device_admin_title">अनइंस्टॉल सुरक्षा</string>
+    <string name="device_admin_desc">ऐप को जल्दबाजी में हटाने से रोकता है।</string>
+
+    <!-- Urge SOS Strings -->
+    <string name="sos_title">आवेग एसओएस (SOS)</string>
+    <string name="sos_subtitle">कदम उठाने से पहले रुकें। आपको अभी सब कुछ हल करने की आवश्यकता नहीं है।</string>
+    <string name="sos_slider_title">इस समय आग्रह कितना तीव्र है?</string>
+    <string name="sos_breathe_title">60-सेकंड ग्राउंडिंग श्वास</string>
+    <string name="sos_breathe_desc">सर्कल का अनुसरण करें: 4s सांस लें, 7s रोकें, 8s छोड़ें।</string>
+    <string name="sos_delay_title">15-मिनट लालसा विलंब टाइमर</string>
+    <string name="sos_delay_desc">डोपामाइन स्पाइक 15 मिनट के भीतर शांत हो जाता है। खुद को यह समय दें।</string>
+    <string name="sos_why_title">मैंने यह यात्रा क्यों शुरू की</string>
+    <string name="sos_contact_trusted">विश्वसनीय व्यक्ति को कॉल करें</string>
+    <string name="sos_crisis_helpline">निःशुल्क 24/7 सहायता हेल्पलाइन</string>
+    <string name="sos_helpline_number">Tele-MANAS 14416 / 1-800-522-4700</string>
+    <string name="sos_complete_button">मैंने आवेग को नियंत्रित किया • जीत दर्ज करें</string>
+
+    <!-- Medical Advisory -->
+    <string name="alcohol_medical_warning_title">महत्वपूर्ण चिकित्सा सूचना</string>
+    <string name="alcohol_medical_warning">UrgeVault एक स्व-प्रबंधन सहायता ऐप है, न कि कोई चिकित्सीय उपचार। शराब की लत वाले लोगों के लिए अचानक रुकना खतरनाक हो सकता है। यदि आपको कंपन, पसीना, या भ्रम का अनुभव होता है, तो तुरंत डॉक्टर से संपर्क करें।</string>
+
+    <!-- Blocked Screen -->
+    <string name="blocked_title">पहुंच अवरुद्ध</string>
+    <string name="blocked_subtitle">UrgeVault ने इस ट्रिगर को रोक दिया है।</string>
+    <string name="blocked_quote">"स्वयं पर विजय प्राप्त करना ही सबसे बड़ी विजय है।"</string>
+    <string name="blocked_helpline_text">निःशुल्क, गोपनीय 24/7 सहायता:</string>
+    <string name="blocked_helpline_number">Tele-MANAS 14416 / 1-800-522-4700</string>
+    <string name="btn_return_home">सुरक्षित घर लौटें</string>
+
+    <!-- Password / Lock Strings -->
+    <string name="password_title_setup">मास्टर पासवर्ड सेट करें</string>
+    <string name="password_title_unlock">मास्टर पासवर्ड दर्ज करें</string>
+    <string name="password_desc_setup">एक मजबूत पिन या पासवर्ड चुनें। सेटिंग्स बदलने के लिए इसकी आवश्यकता होगी।</string>
+    <string name="password_desc_unlock">सुरक्षा बदलने के लिए अपना पासवर्ड दर्ज करें।</string>
+    <string name="password_hint">पिन / पासवर्ड दर्ज करें</string>
+    <string name="password_confirm_hint">पिन / पासवर्ड की पुष्टि करें</string>
+    <string name="btn_confirm">पुष्टि करें</string>
+    <string name="btn_cancel">रद्द करें</string>
+    <string name="btn_unlock">अनलॉक करें</string>
+    <string name="error_password_mismatch">पासवर्ड मेल नहीं खाते।</string>
+    <string name="error_password_incorrect">गलत पासवर्ड। प्रवेश अस्वीकृत।</string>
+    <string name="error_password_short">पासवर्ड कम से कम 4 अक्षरों का होना चाहिए।</string>
+
+    <!-- Stats -->
+    <string name="stats_domains_blocked">अवरुद्ध डोमेन</string>
+    <string name="stats_apps_blocked">अवरुद्ध ऐप्स</string>
+    <string name="stats_events_intercepted">रोके गए प्रयास</string>
+
+    <string name="settings_language_currency_title">भाषा और मुद्रा</string>
+    <string name="settings_protection_mode_title">शील्ड सुरक्षा विधि</string>
+    <string name="settings_ally_title">आपातकालीन सहायता साथी</string>
+    <string name="call_ally_default">साथी को कॉल करें</string>
+</resources>

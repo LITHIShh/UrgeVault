@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">UrgeVault</string>
+    <string name="tagline">Proteja seu progresso.</string>
+    <string name="sub_tagline">Construa hábitos saudáveis, uma decisão de cada vez.</string>
+    <string name="habits_subtitle">Apostas · Álcool · Tabaco</string>
+
+    <string name="title_blocklist">Itens Bloqueados</string>
+    <string name="title_permissions">Configuração de Proteção</string>
+    <string name="accessibility_description">Monitora e bloqueia aplicativos de apostas e plataformas viciantes.</string>
+    <string name="device_admin_description">Ativa a proteção contra desinstalação sem o seu PIN mestre.</string>
+
+    <string name="status_protected">Escudo Ativo</string>
+    <string name="status_unprotected">Escudo Inativo</string>
+    <string name="status_protected_desc">Todos os sites de apostas e aplicativos estão bloqueados.</string>
+    <string name="status_unprotected_desc">O escudo está pausado.</string>
+
+    <string name="vpn_service_title">Filtro Web</string>
+    <string name="vpn_service_desc">Interrompe conexões a sites de apostas e cassinos.</string>
+    <string name="accessibility_service_title">Guardião de Hábitos</string>
+    <string name="accessibility_service_desc">Fecha imediatamente aplicativos e guias de apostas.</string>
+    <string name="notification_service_title">Bloqueador de Notificações</string>
+    <string name="notification_service_desc">Silencia notificações e alertas de apostas.</string>
+    <string name="device_admin_title">Bloqueio de Desinstalação</string>
+    <string name="device_admin_desc">Evita a remoção impulsiva do aplicativo.</string>
+
+    <!-- Urge SOS Strings -->
+    <string name="sos_title">Urge SOS</string>
+    <string name="sos_subtitle">Respire antes de agir. Você não precisa resolver tudo de uma vez.</string>
+    <string name="sos_slider_title">Qual é a intensidade do impulso agora?</string>
+    <string name="sos_breathe_title">Exercício de Respiração de 60s</string>
+    <string name="sos_breathe_desc">Acompanhe o círculo: Inspire 4s, Segure 7s, Expire 8s.</string>
+    <string name="sos_delay_title">Cronômetro de Espera de 15 Minutos</string>
+    <string name="sos_delay_desc">O pico do impulso dura em média 15 minutos. Dê a si mesmo essa pausa.</string>
+    <string name="sos_why_title">Por que comecei esta jornada</string>
+    <string name="sos_contact_trusted">Ligue para alguém de confiança</string>
+    <string name="sos_crisis_helpline">Linha de Apoio Gratuita 24/7</string>
+    <string name="sos_helpline_number">CVV 188 / 1-800-522-4700</string>
+    <string name="sos_complete_button">Superado com Sucesso • Registrar Vitória</string>
+
+    <!-- Medical Advisory -->
+    <string name="alcohol_medical_warning_title">Aviso Médico Importante</string>
+    <string name="alcohol_medical_warning">O UrgeVault é um assistente de autocontrole e não substitui acompanhamento médico. A abstinência de álcool pode ser grave em casos de dependência física severa. Consulte um profissional de saúde se sentir sintomas agudos.</string>
+
+    <!-- Blocked Screen -->
+    <string name="blocked_title">Acesso Bloqueado</string>
+    <string name="blocked_subtitle">O UrgeVault interceptou este gatilho.</string>
+    <string name="blocked_quote">"A maior vitória é vencer a si mesmo."</string>
+    <string name="blocked_helpline_text">Apoio gratuito e confidencial 24h:</string>
+    <string name="blocked_helpline_number">CVV 188 / 1-800-522-4700</string>
+    <string name="btn_return_home">Voltar ao Início</string>
+
+    <!-- Password / Lock Strings -->
+    <string name="password_title_setup">Definir Senha Mestra</string>
+    <string name="password_title_unlock">Inserir Senha Mestra</string>
+    <string name="password_desc_setup">Escolha um PIN seguro para proteger as configurações.</string>
+    <string name="password_desc_unlock">Digite sua senha para desbloquear as opções.</string>
+    <string name="password_hint">Digite o PIN / Senha</string>
+    <string name="password_confirm_hint">Confirme o PIN / Senha</string>
+    <string name="btn_confirm">Confirmar</string>
+    <string name="btn_cancel">Cancelar</string>
+    <string name="btn_unlock">Desbloquear</string>
+    <string name="error_password_mismatch">As senhas não coincidem.</string>
+    <string name="error_password_incorrect">Senha incorreta. Acesso negado.</string>
+    <string name="error_password_short">A senha deve ter pelo menos 4 caracteres.</string>
+
+    <!-- Stats -->
+    <string name="stats_domains_blocked">Domínios Bloqueados</string>
+    <string name="stats_apps_blocked">Apps Bloqueados</string>
+    <string name="stats_events_intercepted">Interceptações</string>
+
+    <string name="settings_language_currency_title">Idioma e Moeda</string>
+    <string name="settings_protection_mode_title">Modo de Proteção</string>
+    <string name="settings_ally_title">Aliado de Confiança</string>
+    <string name="call_ally_default">Ligar para o Aliado</string>
+</resources>

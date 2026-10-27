@@ -1,0 +1,75 @@
+<resources>
+    <string name="app_name">UrgeVault</string>
+    <string name="tagline">Protect your progress.</string>
+    <string name="sub_tagline">Build healthier habits, one decision at a time.</string>
+    <string name="habits_subtitle">Betting · Alcohol · Smoking</string>
+
+    <string name="title_blocklist">Blocked Items</string>
+    <string name="title_permissions">Protection Setup</string>
+    <string name="accessibility_description">Monitors and blocks gambling, betting apps, and custom addictive platforms to assist in recovery and self-exclusion.</string>
+    <string name="device_admin_description">Enables anti-uninstall protection for UrgeVault to prevent impulsive removal without your master PIN.</string>
+
+    <string name="status_protected">Shield Active</string>
+    <string name="status_unprotected">Shield Inactive</string>
+    <string name="status_protected_desc">All betting websites, apps, and addictive triggers are actively blocked.</string>
+    <string name="status_unprotected_desc">Device shield is paused. Keep your recovery focus strong.</string>
+
+    <string name="vpn_service_title">Web Filter (DNS Sinkhole)</string>
+    <string name="vpn_service_desc">Intercepts and drops connections to betting &amp; casino websites.</string>
+    <string name="accessibility_service_title">Addiction Guardian</string>
+    <string name="accessibility_service_desc">Instantly shuts down betting apps, browser tabs, and settings bypass.</string>
+    <string name="notification_service_title">Notification Blocker</string>
+    <string name="notification_service_desc">Silences betting promotions, bonus alerts, and custom app notifications.</string>
+    <string name="device_admin_title">Anti-Relapse Uninstall Lock</string>
+    <string name="device_admin_desc">Prevents bypassing your commitment by deleting the app.</string>
+
+    <!-- Urge SOS Strings -->
+    <string name="sos_title">Urge SOS</string>
+    <string name="sos_subtitle">Pause before acting. You don\'t have to solve everything right now. Start by noticing what is happening.</string>
+    <string name="sos_slider_title">How strong is the urge right now?</string>
+    <string name="sos_breathe_title">60-Second Grounding Exercise</string>
+    <string name="sos_breathe_desc">Follow the circle: Inhale 4s, Hold 7s, Exhale 8s. Bring oxygen to your prefrontal cortex.</string>
+    <string name="sos_delay_title">15-Minute Craving Delay Timer</string>
+    <string name="sos_delay_desc">Dopamine spikes peak and subside within 15 minutes. Just give yourself this pause.</string>
+    <string name="sos_why_title">Why I Started This Journey</string>
+    <string name="sos_contact_trusted">Call / Message Someone I Trust</string>
+    <string name="sos_crisis_helpline">Free Confidential 24/7 National Gambling Helpline</string>
+    <string name="sos_helpline_number">GamCare 0808 8020 133 / NHS 111</string>
+    <string name="sos_complete_button">I Surfed the Urge • Log Victory</string>
+
+    <!-- Medical Advisory -->
+    <string name="alcohol_medical_warning_title">Important Medical Notice</string>
+    <string name="alcohol_medical_warning">UrgeVault is a self-management recovery companion, not a clinical treatment. Alcohol withdrawal can be dangerous or life-threatening for individuals with physical alcohol dependence. If you experience severe tremors, sweating, confusion, or seizures, do NOT stop abruptly without medical supervision. Contact NHS 111 or emergency services (999) immediately.</string>
+
+    <!-- Blocked Screen -->
+    <string name="blocked_title">Access Blocked</string>
+    <string name="blocked_subtitle">UrgeVault stopped access to this trigger.</string>
+    <string name="blocked_quote">"The first and greatest victory is to conquer yourself."</string>
+    <string name="blocked_helpline_text">Free, confidential 24/7 recovery support:</string>
+    <string name="blocked_helpline_number">GamCare 0808 8020 133 / NHS 111</string>
+    <string name="btn_return_home">Return to Safety (Home)</string>
+
+    <!-- Password / Lock Strings -->
+    <string name="password_title_setup">Set Master Password</string>
+    <string name="password_title_unlock">Enter Master Password</string>
+    <string name="password_desc_setup">Choose a strong PIN or password. You will need this to change settings or turn off protection.</string>
+    <string name="password_desc_unlock">Enter your master password to unlock changes or disable the shield.</string>
+    <string name="password_hint">Enter PIN / Password</string>
+    <string name="password_confirm_hint">Confirm PIN / Password</string>
+    <string name="btn_confirm">Confirm</string>
+    <string name="btn_cancel">Cancel</string>
+    <string name="btn_unlock">Unlock</string>
+    <string name="error_password_mismatch">Passwords do not match.</string>
+    <string name="error_password_incorrect">Incorrect password. Access denied.</string>
+    <string name="error_password_short">Password must be at least 4 digits/characters.</string>
+
+    <!-- Stats -->
+    <string name="stats_domains_blocked">Blocked Domains</string>
+    <string name="stats_apps_blocked">Blocked Apps</string>
+    <string name="stats_events_intercepted">Interceptions</string>
+
+    <string name="settings_language_currency_title">Language &amp; Currency</string>
+    <string name="settings_protection_mode_title">Shield Protection Mode</string>
+    <string name="settings_ally_title">Emergency Support Ally</string>
+    <string name="call_ally_default">Call Ally</string>
+</resources>

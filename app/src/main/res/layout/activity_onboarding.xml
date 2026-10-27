@@ -581,14 +581,16 @@
                         android:padding="16dp">
 
                         <TextView
+                            android:id="@+id/tvDailySpendingLabel"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Typical daily spending (₹ / $)"
+                            android:text="Typical daily spending"
                             android:textColor="@color/text_primary"
                             android:textSize="14sp"
                             android:textStyle="bold" />
 
                         <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/tilDailySpend"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
@@ -597,8 +599,7 @@
                             app:boxCornerRadiusBottomStart="12dp"
                             app:boxCornerRadiusTopEnd="12dp"
                             app:boxCornerRadiusTopStart="12dp"
-                            app:boxStrokeColor="@color/primary"
-                            app:prefixText="₹ ">
+                            app:boxStrokeColor="@color/primary">
 
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/etDailySpend"

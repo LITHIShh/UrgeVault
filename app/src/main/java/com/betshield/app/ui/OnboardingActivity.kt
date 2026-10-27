@@ -12,21 +12,37 @@ import com.betshield.app.databinding.ActivityOnboardingBinding
 import com.betshield.app.model.GoalType
 import com.betshield.app.model.HabitProfile
 import com.betshield.app.model.HabitType
+import com.betshield.app.util.CurrencyFormatter
+import com.betshield.app.util.LocaleManager
 import java.time.LocalDate
 
 class OnboardingActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityOnboardingBinding
     private val repo by lazy { BetShieldApplication.instance.urgeVaultRepository }
+    private val prefs by lazy { BetShieldApplication.instance.preferencesManager }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityOnboardingBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        updateCurrencyPrefix()
+
+        if (!prefs.isRegionSetupCompleted) {
+            LocaleManager.showLanguageCurrencyDialog(this, isFirstStart = true) {
+                updateCurrencyPrefix()
+            }
+        }
+
         setupStep1()
         setupStep2()
         setupStep3()
+    }
+
+    private fun updateCurrencyPrefix() {
+        binding.tilDailySpend.prefixText = "${CurrencyFormatter.currentSymbol} "
+        binding.tvDailySpendingLabel.text = "Typical daily spending (${CurrencyFormatter.currentSymbol})"
     }
 
     private fun setupStep1() {

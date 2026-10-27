@@ -236,12 +236,21 @@ class UrgeSosActivity : AppCompatActivity() {
     }
 
     private fun setupHelplines() {
+        updateAllyButton()
+
         binding.btnDialContact.setOnClickListener {
-            val intent = Intent(Intent.ACTION_DIAL).apply {
-                // Allows user to pick an ally or speed dial
-                data = Uri.parse("tel:")
+            val allyPhone = BetShieldApplication.instance.preferencesManager.allyPhone
+            if (allyPhone.isNotBlank()) {
+                val intent = Intent(Intent.ACTION_DIAL, Uri.parse("tel:$allyPhone"))
+                startActivity(intent)
+            } else {
+                promptConfigureAlly(shouldDialAfterSave = true)
             }
-            startActivity(intent)
+        }
+
+        binding.btnDialContact.setOnLongClickListener {
+            promptConfigureAlly(shouldDialAfterSave = false)
+            true
         }
 
         binding.btnDialHelpline.setOnClickListener {
@@ -253,6 +262,25 @@ class UrgeSosActivity : AppCompatActivity() {
             }
             val intent = Intent(Intent.ACTION_DIAL, Uri.parse("tel:$helplineNumber"))
             startActivity(intent)
+        }
+    }
+
+    private fun updateAllyButton() {
+        val allyName = BetShieldApplication.instance.preferencesManager.allyName
+        if (allyName.isNotBlank()) {
+            binding.btnDialContact.text = "Call $allyName"
+        } else {
+            binding.btnDialContact.text = "Call Ally"
+        }
+    }
+
+    private fun promptConfigureAlly(shouldDialAfterSave: Boolean) {
+        AllyConfigDialog.show(this, shouldDialAfterSave) { _, phone ->
+            updateAllyButton()
+            if (shouldDialAfterSave && phone.isNotBlank()) {
+                val intent = Intent(Intent.ACTION_DIAL, Uri.parse("tel:$phone"))
+                startActivity(intent)
+            }
         }
     }
 

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">UrgeVault</string>
+    <string name="tagline">Protege tu progreso.</string>
+    <string name="sub_tagline">Construye hábitos más saludables, una decisión a la vez.</string>
+    <string name="habits_subtitle">Apuestas · Alcohol · Tabaco</string>
+
+    <string name="title_blocklist">Elementos Bloqueados</string>
+    <string name="title_permissions">Configuración de Protección</string>
+    <string name="accessibility_description">Monitorea y bloquea aplicaciones de apuestas y plataformas adictivas para apoyar tu recuperación.</string>
+    <string name="device_admin_description">Habilita protección contra desinstalación para evitar la eliminación impulsiva de UrgeVault.</string>
+
+    <string name="status_protected">Escudo Activo</string>
+    <string name="status_unprotected">Escudo Inactivo</string>
+    <string name="status_protected_desc">Todos los sitios web de apuestas y aplicaciones están activamente bloqueados.</string>
+    <string name="status_unprotected_desc">El escudo está en pausa. Mantén tu enfoque firme.</string>
+
+    <string name="vpn_service_title">Filtro Web</string>
+    <string name="vpn_service_desc">Intercepta conexiones a sitios de apuestas y casinos.</string>
+    <string name="accessibility_service_title">Guardián de Hábitos</string>
+    <string name="accessibility_service_desc">Cierra instantáneamente aplicaciones de apuestas y pestañas del navegador.</string>
+    <string name="notification_service_title">Bloqueador de Notificaciones</string>
+    <string name="notification_service_desc">Silencia promociones y alertas de apuestas.</string>
+    <string name="device_admin_title">Bloqueo de Desinstalación</string>
+    <string name="device_admin_desc">Evita desinstalar la app por impulso.</string>
+
+    <!-- Urge SOS Strings -->
+    <string name="sos_title">Urge SOS</string>
+    <string name="sos_subtitle">Haz una pausa antes de actuar. No tienes que resolver todo ahora mismo.</string>
+    <string name="sos_slider_title">¿Qué tan fuerte es el impulso ahora?</string>
+    <string name="sos_breathe_title">Respiración de Conexión de 60s</string>
+    <string name="sos_breathe_desc">Sigue el círculo: Inhala 4s, Mantén 7s, Exhala 8s.</string>
+    <string name="sos_delay_title">Temporizador de Pausa de 15 Minutos</string>
+    <string name="sos_delay_desc">Los picos de dopamina bajan en 15 minutos. Date este momento.</string>
+    <string name="sos_why_title">Por Qué Empecé Este Camino</string>
+    <string name="sos_contact_trusted">Llamar a Alguien de Confianza</string>
+    <string name="sos_crisis_helpline">Línea de Apoyo Gratuita y Confidencial 24/7</string>
+    <string name="sos_helpline_number">1-800-522-4700 / 024</string>
+    <string name="sos_complete_button">Superé el Impulso • Registrar Victoria</string>
+
+    <!-- Medical Advisory -->
+    <string name="alcohol_medical_warning_title">Aviso Médico Importante</string>
+    <string name="alcohol_medical_warning">UrgeVault es un compañero de apoyo personal, no un tratamiento clínico. La abstinencia de alcohol puede ser peligrosa para personas con dependencia física. Si experimenta temblores o convulsiones, busque atención médica de inmediato.</string>
+
+    <!-- Blocked Screen -->
+    <string name="blocked_title">Acceso Bloqueado</string>
+    <string name="blocked_subtitle">UrgeVault detuvo el acceso a este desencadenante.</string>
+    <string name="blocked_quote">"La primera y mejor victoria es conquistarse a uno mismo."</string>
+    <string name="blocked_helpline_text">Apoyo gratuito y confidencial las 24 horas:</string>
+    <string name="blocked_helpline_number">1-800-522-4700 / 024</string>
+    <string name="btn_return_home">Volver a Inicio Seguro</string>
+
+    <!-- Password / Lock Strings -->
+    <string name="password_title_setup">Establecer Contraseña Maestra</string>
+    <string name="password_title_unlock">Introducir Contraseña Maestra</string>
+    <string name="password_desc_setup">Elige un PIN o contraseña segura para proteger tus ajustes.</string>
+    <string name="password_desc_unlock">Ingresa tu contraseña para modificar la configuración.</string>
+    <string name="password_hint">Ingresar PIN / Contraseña</string>
+    <string name="password_confirm_hint">Confirmar PIN / Contraseña</string>
+    <string name="btn_confirm">Confirmar</string>
+    <string name="btn_cancel">Cancelar</string>
+    <string name="btn_unlock">Desbloquear</string>
+    <string name="error_password_mismatch">Las contraseñas no coinciden.</string>
+    <string name="error_password_incorrect">Contraseña incorrecta. Acceso denegado.</string>
+    <string name="error_password_short">La contraseña debe tener al menos 4 caracteres.</string>
+
+    <!-- Stats -->
+    <string name="stats_domains_blocked">Dominios Bloqueados</string>
+    <string name="stats_apps_blocked">Apps Bloqueadas</string>
+    <string name="stats_events_intercepted">Intercepciones</string>
+
+    <string name="settings_language_currency_title">Idioma y Moneda</string>
+    <string name="settings_protection_mode_title">Modo de Protección</string>
+    <string name="settings_ally_title">Aliado de Apoyo</string>
+    <string name="call_ally_default">Llamar a mi Aliado</string>
+</resources>

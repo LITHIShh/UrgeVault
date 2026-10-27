@@ -172,7 +172,7 @@ object VaultCalculator {
             Triple(3L, "3-Day Breakthrough", "Passed the critical initial 72 hours of cravings."),
             Triple(7L, "1 Week Clean", "First full seven days protected from impulses."),
             Triple(14L, "2 Weeks Grounded", "Noticeable mental clarity and financial preservation."),
-            Triple(30L, "1 Month Milestone", "Habit circuits rewiring. ₹${summary.totalMoneyProtected.toInt()} protected."),
+            Triple(30L, "1 Month Milestone", "Habit circuits rewiring. ${com.betshield.app.util.CurrencyFormatter.format(summary.totalMoneyProtected)} protected."),
             Triple(60L, "60 Days of Resilience", "Overcoming triggers with structured coping routines."),
             Triple(90L, "Season of Transformation", "Solid identity shift away from dependency.")
         )

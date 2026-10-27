@@ -33,9 +33,12 @@ import com.betshield.app.data.PreferencesManager
 import com.betshield.app.monetization.AdBlockerDetector
 import com.betshield.app.service.BetBlockerAccessibilityService
 import com.betshield.app.service.BetShieldVpnService
+import com.betshield.app.util.CurrencyFormatter
 import com.betshield.app.util.HapticEngine
+import com.betshield.app.util.LocaleManager
 import com.betshield.app.util.ThemeHelper
 import com.betshield.app.util.TimeThemeManager
+import com.betshield.app.ui.AllyConfigDialog
 import com.google.android.material.card.MaterialCardView
 import java.time.LocalDate
 import java.util.UUID
@@ -57,14 +60,17 @@ class MainActivity : AppCompatActivity() {
         if (result.resultCode == RESULT_OK) {
             startVpnService()
             updateShieldUi()
-            Toast.makeText(this, "UrgeVault Shield is active.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "UrgeVault Full Defense is active.", Toast.LENGTH_SHORT).show()
             if (!BetBlockerAccessibilityService.isAccessibilityServiceEnabled(this)) {
                 promptAccessibilityActivation()
             }
         } else {
-            Toast.makeText(this, "VPN permission needed for web filter.", Toast.LENGTH_SHORT).show()
-            app.preferencesManager.isShieldEnabled = false
+            Toast.makeText(this, "VPN permission skipped. Using Browser Guardian instead.", Toast.LENGTH_SHORT).show()
+            app.preferencesManager.isVpnProtectionEnabled = false
             updateShieldUi()
+            if (!BetBlockerAccessibilityService.isAccessibilityServiceEnabled(this)) {
+                promptAccessibilityActivation()
+            }
         }
     }
 
@@ -127,6 +133,14 @@ class MainActivity : AppCompatActivity() {
         lifecycleScope.launch {
             if (AdBlockerDetector.checkAdBlockerActive()) {
                 binding.cardAdBlockerAlert.visibility = View.VISIBLE
+            }
+        }
+
+        // Check if region & currency setup should be prompted
+        if (!app.preferencesManager.isRegionSetupCompleted) {
+            LocaleManager.showLanguageCurrencyDialog(this, isFirstStart = true) {
+                updateShieldUi()
+                refreshAllData()
             }
         }
 
@@ -288,6 +302,26 @@ class MainActivity : AppCompatActivity() {
                 .show()
         }
 
+        binding.btnSettingsLanguageCard.setOnClickListener {
+            HapticEngine.performClick(it)
+            LocaleManager.showLanguageCurrencyDialog(this) {
+                updateShieldUi()
+                refreshAllData()
+            }
+        }
+
+        binding.btnSettingsProtectionModeCard.setOnClickListener {
+            HapticEngine.performClick(it)
+            showProtectionModeDialog()
+        }
+
+        binding.btnSettingsAllyCard.setOnClickListener {
+            HapticEngine.performClick(it)
+            AllyConfigDialog.show(this) { _, _ ->
+                updateShieldUi()
+            }
+        }
+
         binding.btnSettingsPassword.setOnClickListener {
             HapticEngine.performClick(it)
             if (app.passwordManager.isPasswordSet()) {
@@ -338,7 +372,7 @@ class MainActivity : AppCompatActivity() {
 
         // 1. Home Dashboard Metrics
         binding.tvHomeDaysClean.text = summary.longestActiveDays.toString()
-        binding.tvHomeMoneyProtected.text = "₹${summary.totalMoneyProtected.toInt()}"
+        binding.tvHomeMoneyProtected.text = CurrencyFormatter.format(summary.totalMoneyProtected)
         val hours = String.format("%.1f", summary.totalHoursReclaimed)
         binding.tvHomeTimeReclaimed.text = "$hours Hours Reclaimed"
         binding.tvHomeUrgesResisted.text = "${summary.urgesResisted} Urges Surfed"
@@ -398,7 +432,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             val sub = TextView(this).apply {
-                text = "${item.eligibleDays} days · ₹${item.moneyProtected.toInt()} saved · ${item.quantityAvoided.toInt()} ${item.unitLabel}"
+                text = "${item.eligibleDays} days · ${CurrencyFormatter.format(item.moneyProtected)} saved · ${item.quantityAvoided.toInt()} ${item.unitLabel}"
                 setTextColor(ContextCompat.getColor(context, R.color.text_secondary))
                 textSize = 12f
             }
@@ -449,7 +483,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             val moneyText = TextView(this).apply {
-                text = "₹${item.moneyProtected.toInt()} Protected"
+                text = "${CurrencyFormatter.format(item.moneyProtected)} Protected"
                 setTextColor(ContextCompat.getColor(context, R.color.primary))
                 textSize = 22f
                 setTypeface(null, android.graphics.Typeface.BOLD)
@@ -526,7 +560,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             val targetText = TextView(this).apply {
-                text = "Target: ₹${goal.targetAmount.toInt()} (Funded from protected spend)"
+                text = "Target: ${CurrencyFormatter.format(goal.targetAmount)} (Funded from protected spend)"
                 setTextColor(ContextCompat.getColor(context, R.color.text_muted))
                 textSize = 11f
                 setPadding(0, 12, 0, 0)
@@ -612,6 +646,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun showDailyCheckInDialog() {
         val dialogBinding = DialogDailyCheckinBinding.inflate(layoutInflater)
+        dialogBinding.tilLapseSpend.prefixText = "${CurrencyFormatter.currentSymbol} "
         val dialog = AlertDialog.Builder(this, R.style.Theme_BetShield_Dialog)
             .setView(dialogBinding.root)
             .setPositiveButton("Save Check-In") { _, _ ->
@@ -656,6 +691,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun showAddGoalDialog() {
         val dialogBinding = DialogAddGoalBinding.inflate(layoutInflater)
+        dialogBinding.tilGoalAmount.prefixText = "${CurrencyFormatter.currentSymbol} "
         AlertDialog.Builder(this, R.style.Theme_BetShield_Dialog)
             .setView(dialogBinding.root)
             .setPositiveButton("Add Goal") { _, _ ->
@@ -718,32 +754,108 @@ class MainActivity : AppCompatActivity() {
         binding.switchProtectionShield.setOnCheckedChangeListener(shieldSwitchListener)
 
         val isAccessibilityOn = BetBlockerAccessibilityService.isAccessibilityServiceEnabled(this)
+        val isVpnOn = BetShieldVpnService.isRunning
 
         if (isEnabled) {
-            if (isAccessibilityOn) {
-                binding.tvQuickShieldText.text = "Active"
-                binding.viewShieldDot.backgroundTintList = ContextCompat.getColorStateList(this, R.color.shield_active)
-            } else {
-                binding.tvQuickShieldText.text = "Shield On"
-                binding.viewShieldDot.backgroundTintList = ContextCompat.getColorStateList(this, R.color.warning)
+            when {
+                isAccessibilityOn && isVpnOn -> {
+                    binding.tvQuickShieldText.text = "Active (Full Defense)"
+                    binding.viewShieldDot.backgroundTintList = ContextCompat.getColorStateList(this, R.color.shield_active)
+                }
+                isAccessibilityOn -> {
+                    binding.tvQuickShieldText.text = "Active (Browser Shield)"
+                    binding.viewShieldDot.backgroundTintList = ContextCompat.getColorStateList(this, R.color.shield_active)
+                }
+                isVpnOn -> {
+                    binding.tvQuickShieldText.text = "Active (DNS Filter)"
+                    binding.viewShieldDot.backgroundTintList = ContextCompat.getColorStateList(this, R.color.shield_active)
+                }
+                else -> {
+                    binding.tvQuickShieldText.text = "Setup Required"
+                    binding.viewShieldDot.backgroundTintList = ContextCompat.getColorStateList(this, R.color.warning)
+                }
             }
         } else {
             binding.tvQuickShieldText.text = "Paused"
             binding.viewShieldDot.backgroundTintList = ContextCompat.getColorStateList(this, R.color.shield_inactive)
         }
+
+        updateSettingsSubtitles()
+    }
+
+    private fun updateSettingsSubtitles() {
+        val currentOption = LocaleManager.getCurrentOption()
+        binding.tvSettingsCurrentLanguage.text = "${currentOption.displayName} • ${CurrencyFormatter.currentSymbol} ${CurrencyFormatter.currentCode}"
+
+        binding.tvSettingsCurrentProtectionMode.text = if (app.preferencesManager.isVpnProtectionEnabled) {
+            "Full Defense (Browser + VPN)"
+        } else {
+            "Browser Guardian (No VPN)"
+        }
+
+        val allyName = app.preferencesManager.allyName
+        val allyPhone = app.preferencesManager.allyPhone
+        binding.tvSettingsCurrentAlly.text = when {
+            allyName.isNotBlank() && allyPhone.isNotBlank() -> "$allyName ($allyPhone)"
+            allyName.isNotBlank() -> allyName
+            allyPhone.isNotBlank() -> allyPhone
+            else -> "Tap to set trusted contact"
+        }
+    }
+
+    private fun showProtectionModeDialog() {
+        val options = arrayOf(
+            "Browser Guardian (No VPN - Recommended)\nZero battery drain. Blocks betting & harmful sites in Chrome, Brave, Firefox, and Samsung Internet.",
+            "Full Defense (Browser Guardian + VPN Sinkhole)\nLocal DNS sinkhole drops gambling connections system-wide plus browser inspection."
+        )
+        val currentIdx = if (app.preferencesManager.isVpnProtectionEnabled) 1 else 0
+
+        AlertDialog.Builder(this, R.style.Theme_BetShield_Dialog)
+            .setTitle("Shield Protection Method")
+            .setSingleChoiceItems(options, currentIdx) { dialog, which ->
+                if (which == 1) {
+                    app.preferencesManager.isVpnProtectionEnabled = true
+                    enableProtection()
+                    Toast.makeText(this, "Full Defense (VPN + Browser) activated.", Toast.LENGTH_SHORT).show()
+                } else {
+                    app.preferencesManager.isVpnProtectionEnabled = false
+                    disableVpnOnly()
+                    Toast.makeText(this, "Browser Guardian active. VPN disabled.", Toast.LENGTH_SHORT).show()
+                    if (!BetBlockerAccessibilityService.isAccessibilityServiceEnabled(this)) {
+                        promptAccessibilityActivation()
+                    }
+                }
+                updateShieldUi()
+                dialog.dismiss()
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
+
+    private fun disableVpnOnly() {
+        try {
+            val intent = Intent(this, BetShieldVpnService::class.java).apply {
+                action = BetShieldVpnService.ACTION_STOP
+            }
+            startService(intent)
+        } catch (e: Exception) {
+            android.util.Log.e("MainActivity", "Error stopping VPN service", e)
+        }
     }
 
     private fun enableProtection() {
-        try {
-            val vpnIntent = VpnService.prepare(this)
-            if (vpnIntent != null) {
-                vpnPrepareLauncher.launch(vpnIntent)
-            } else {
-                startVpnService()
+        if (app.preferencesManager.isVpnProtectionEnabled) {
+            try {
+                val vpnIntent = VpnService.prepare(this)
+                if (vpnIntent != null) {
+                    vpnPrepareLauncher.launch(vpnIntent)
+                } else {
+                    startVpnService()
+                }
+            } catch (e: Exception) {
+                android.util.Log.e("MainActivity", "Error preparing VPN", e)
+                Toast.makeText(this, "VPN setup error: ${e.message}", Toast.LENGTH_SHORT).show()
             }
-        } catch (e: Exception) {
-            android.util.Log.e("MainActivity", "Error preparing VPN", e)
-            Toast.makeText(this, "VPN setup error: ${e.message}", Toast.LENGTH_SHORT).show()
         }
 
         if (!BetBlockerAccessibilityService.isAccessibilityServiceEnabled(this)) {
@@ -770,14 +882,12 @@ class MainActivity : AppCompatActivity() {
         }
 
         val isAccessibilityGranted = BetBlockerAccessibilityService.isAccessibilityServiceEnabled(this)
-        val isVpnGranted = VpnService.prepare(this) == null
-
-        if (!isAccessibilityGranted || !isVpnGranted) {
+        if (!isAccessibilityGranted) {
             AlertDialog.Builder(this, R.style.Theme_BetShield_Dialog)
-                .setTitle("🛡️ Activate Complete Protection")
-                .setMessage("To block distracting websites and safeguard your browsing in Chrome, Brave, and Samsung Internet, UrgeVault requires permission access:\n\n1. Web Shield (VPN): Local, zero-data-collection filter.\n2. Browser Guardian (Accessibility): Stops browser circumvention mirrors.\n\nTap 'Activate Now' to grant permissions.")
-                .setPositiveButton("Activate Now") { _, _ ->
-                    enableProtection()
+                .setTitle("🛡️ Activate Browser Guardian")
+                .setMessage("To block betting websites and harmful URLs inside Chrome, Brave, Samsung Internet, and Firefox, UrgeVault requires Accessibility access.\n\n(VPN is 100% optional and not required).")
+                .setPositiveButton("Enable Now") { _, _ ->
+                    startActivity(Intent(android.provider.Settings.ACTION_ACCESSIBILITY_SETTINGS))
                 }
                 .setNegativeButton("Later", null)
                 .show()

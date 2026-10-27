@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">UrgeVault</string>
+    <string name="tagline">احمِ تقدمك.</string>
+    <string name="sub_tagline">ابنِ عادات صحية، قرارًا تلو الآخر.</string>
+    <string name="habits_subtitle">المراهنات · الكحول · التدخين</string>
+
+    <string name="title_blocklist">العناصر المحظورة</string>
+    <string name="title_permissions">إعداد الحماية</string>
+    <string name="accessibility_description">يراقب ويحظر تطبيقات المراهنات والمواقع الإدمانية للمساعدة في التعافي.</string>
+    <string name="device_admin_description">يمنع إزالة UrgeVault بشكل اندفاعي دون رقم التعريف الشخصي الرئيسي.</string>
+
+    <string name="status_protected">الدرع نشط</string>
+    <string name="status_unprotected">الدرع متوقف</string>
+    <string name="status_protected_desc">جميع مواقع وتطبيقات المراهنات محظورة بنشاط.</string>
+    <string name="status_unprotected_desc">درع الحماية متوقف مؤقتًا.</string>
+
+    <string name="vpn_service_title">فلتر الويب</string>
+    <string name="vpn_service_desc">يقطع الاتصال بمواقع المراهنات والكازينو.</string>
+    <string name="accessibility_service_title">حارس التعافي</string>
+    <string name="accessibility_service_desc">يغلق تطبيقات المراهنات وعلامات تبويب المتصفح فورًا.</string>
+    <string name="notification_service_title">حاجب الإشعارات</string>
+    <string name="notification_service_desc">يكتم تنبيهات وعروض المراهنات الترويجية.</string>
+    <string name="device_admin_title">قفل منع إلغاء التثبيت</string>
+    <string name="device_admin_desc">يمنع حذف التطبيق أثناء الاندفاع.</string>
+
+    <!-- Urge SOS Strings -->
+    <string name="sos_title">طوارئ الرغبة (Urge SOS)</string>
+    <string name="sos_subtitle">توقف قليلاً قبل التصرف. لا يتعين عليك حل كل شيء الآن.</string>
+    <string name="sos_slider_title">ما مدى شدة الرغبة الآن؟</string>
+    <string name="sos_breathe_title">تمرين التنفس الهادئ لمدة 60 ثانية</string>
+    <string name="sos_breathe_desc">اتبع الدائرة: شهيق 4 ثوانٍ، حبس 7 ثوانٍ، زفير 8 ثوانٍ.</string>
+    <string name="sos_delay_title">مؤقت تأخير الرغبة لمدة 15 دقيقة</string>
+    <string name="sos_delay_desc">تنخفض ذروة الدوبامين خلال 15 دقيقة. امنح نفسك هذه الاستراحة.</string>
+    <string name="sos_why_title">لماذا بدأت هذه الرحلة</string>
+    <string name="sos_contact_trusted">الاتصال بشخص أثق به</string>
+    <string name="sos_crisis_helpline">خط مساعدة سري ومجاني على مدار الساعة</string>
+    <string name="sos_helpline_number">1-800-522-4700 / 937</string>
+    <string name="sos_complete_button">تغلبت على الرغبة • تسجيل انتصار</string>
+
+    <!-- Medical Advisory -->
+    <string name="alcohol_medical_warning_title">إشعار طبي مهم</string>
+    <string name="alcohol_medical_warning">UrgeVault هو تطبيق للدعم الذاتي وليس بديلاً عن العلاج الطبي. يمكن أن يكون الانسحاب من الكحول خطيرًا على الأشخاص الذين يعانون من اعتماد بدني. استشر الطبيب فورًا إذا شعرت بأعراض شديدة.</string>
+
+    <!-- Blocked Screen -->
+    <string name="blocked_title">تم حظر الوصول</string>
+    <string name="blocked_subtitle">أوقف UrgeVault هذا المحفز.</string>
+    <string name="blocked_quote">"أول وأعظم نصر هو قهر الذات."</string>
+    <string name="blocked_helpline_text">دعم مجاني وسري على مدار 24 ساعة:</string>
+    <string name="blocked_helpline_number">1-800-522-4700 / 937</string>
+    <string name="btn_return_home">العودة إلى بر الأمان</string>
+
+    <!-- Password / Lock Strings -->
+    <string name="password_title_setup">تعيين كلمة المرور الرئيسية</string>
+    <string name="password_title_unlock">إدخال كلمة المرور الرئيسية</string>
+    <string name="password_desc_setup">اختر رمز PIN قوي لحماية الإعدادات.</string>
+    <string name="password_desc_unlock">أدخل كلمة المرور لتعديل الإعدادات.</string>
+    <string name="password_hint">أدخل رمز PIN / كلمة المرور</string>
+    <string name="password_confirm_hint">تأكيد رمز PIN / كلمة المرور</string>
+    <string name="btn_confirm">تأكيد</string>
+    <string name="btn_cancel">إلغاء</string>
+    <string name="btn_unlock">إلغاء القفل</string>
+    <string name="error_password_mismatch">كلمتا المرور غير متطابقتين.</string>
+    <string name="error_password_incorrect">كلمة المرور غير صحيحة. تم رفض الوصول.</string>
+    <string name="error_password_short">يجب أن تتكون كلمة المرور من 4 أحرف على الأقل.</string>
+
+    <!-- Stats -->
+    <string name="stats_domains_blocked">النطاقات المحظورة</string>
+    <string name="stats_apps_blocked">التطبيقات المحظورة</string>
+    <string name="stats_events_intercepted">عمليات الاعتراض</string>
+
+    <string name="settings_language_currency_title">اللغة والعملة</string>
+    <string name="settings_protection_mode_title">طريقة الحماية</string>
+    <string name="settings_ally_title">حليف الدعم</string>
+    <string name="call_ally_default">الاتصال بالحليف</string>
+</resources>

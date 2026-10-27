@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">UrgeVault</string>
+    <string name="tagline">進歩を守り抜く。</string>
+    <string name="sub_tagline">一つの決断から、健康的な習慣を築く。</string>
+    <string name="habits_subtitle">ギャンブル · アルコール · 喫煙</string>
+
+    <string name="title_blocklist">ブロック対象リスト</string>
+    <string name="title_permissions">保護設定</string>
+    <string name="accessibility_description">ギャンブルアプリや依存性のあるサイトを監視・ブロックします。</string>
+    <string name="device_admin_description">衝動的なアンインストールを防止します。</string>
+
+    <string name="status_protected">シールド作動中</string>
+    <string name="status_unprotected">シールド一時停止</string>
+    <string name="status_protected_desc">すべてのギャンブルサイトおよびアプリがブロックされています。</string>
+    <string name="status_unprotected_desc">保護は一時停止中です。</string>
+
+    <string name="vpn_service_title">ウェブフィルター</string>
+    <string name="vpn_service_desc">ギャンブルサイトへの接続を遮断します。</string>
+    <string name="accessibility_service_title">習慣ガーディアン</string>
+    <string name="accessibility_service_desc">ギャンブルアプリやブラウザのタブを即座に閉じます。</string>
+    <string name="notification_service_title">通知ブロッカー</string>
+    <string name="notification_service_desc">プロモーションやギャンブル通知をミュートします。</string>
+    <string name="device_admin_title">アンインストール保護</string>
+    <string name="device_admin_desc">衝動的なアプリ削除を防ぎます。</string>
+
+    <!-- Urge SOS Strings -->
+    <string name="sos_title">衝動SOS</string>
+    <string name="sos_subtitle">行動する前に一息つきましょう。今すぐすべてを解決する必要はありません。</string>
+    <string name="sos_slider_title">現在の衝動の強さはどのくらいですか？</string>
+    <string name="sos_breathe_title">60秒グラウンディング呼吸法</string>
+    <string name="sos_breathe_desc">円に合わせて呼吸：4秒吸う、7秒止める、8秒吐く。</string>
+    <string name="sos_delay_title">15分ディレイタイマー</string>
+    <string name="sos_delay_desc">ドーパミンの急上昇は15分で収まります。自分にこの時間を与えてください。</string>
+    <string name="sos_why_title">この旅を始めた理由</string>
+    <string name="sos_contact_trusted">信頼できる人に連絡する</string>
+    <string name="sos_crisis_helpline">24時間無料相談窓口</string>
+    <string name="sos_helpline_number">0120-279-338 / 110</string>
+    <string name="sos_complete_button">衝動を乗り越えた • 勝利を記録</string>
+
+    <!-- Medical Advisory -->
+    <string name="alcohol_medical_warning_title">重要な医療上の注意</string>
+    <string name="alcohol_medical_warning">UrgeVaultは自己管理の支援アプリであり、医療治療ではありません。重度の身体的アルコール依存がある場合、急な断酒は危険を伴うことがあります。震えやけいれんなどの症状がある場合は、直ちに医療機関にご相談ください。</string>
+
+    <!-- Blocked Screen -->
+    <string name="blocked_title">アクセス遮断</string>
+    <string name="blocked_subtitle">UrgeVaultがこの誘惑を阻止しました。</string>
+    <string name="blocked_quote">"自分に打ち勝つことが、最も偉大な勝利である。"</string>
+    <string name="blocked_helpline_text">24時間無料・秘密厳守のサポート窓口：</string>
+    <string name="blocked_helpline_number">0120-279-338 / 110</string>
+    <string name="btn_return_home">安全なホームに戻る</string>
+
+    <!-- Password / Lock Strings -->
+    <string name="password_title_setup">マスターパスワード設定</string>
+    <string name="password_title_unlock">マスターパスワード入力</string>
+    <string name="password_desc_setup">設定を保護するためのPINを設定してください。</string>
+    <string name="password_desc_unlock">設定を変更するにはパスワードを入力してください。</string>
+    <string name="password_hint">PIN / パスワードを入力</string>
+    <string name="password_confirm_hint">PIN / パスワードの確認</string>
+    <string name="btn_confirm">確認</string>
+    <string name="btn_cancel">キャンセル</string>
+    <string name="btn_unlock">解除</string>
+    <string name="error_password_mismatch">パスワードが一致しません。</string>
+    <string name="error_password_incorrect">パスワードが正しくありません。</string>
+    <string name="error_password_short">パスワードは4文字以上で設定してください。</string>
+
+    <!-- Stats -->
+    <string name="stats_domains_blocked">ブロックされたドメイン</string>
+    <string name="stats_apps_blocked">ブロックされたアプリ</string>
+    <string name="stats_events_intercepted">遮断回数</string>
+
+    <string name="settings_language_currency_title">言語と通貨</string>
+    <string name="settings_protection_mode_title">保護モード</string>
+    <string name="settings_ally_title">緊急サポーター</string>
+    <string name="call_ally_default">サポーターに電話</string>
+</resources>

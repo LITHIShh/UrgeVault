@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">UrgeVault</string>
+    <string name="tagline">Protégez vos progrès.</string>
+    <string name="sub_tagline">Adoptez des habitudes saines, une décision à la fois.</string>
+    <string name="habits_subtitle">Paris · Alcool · Tabac</string>
+
+    <string name="title_blocklist">Éléments Bloqués</string>
+    <string name="title_permissions">Configuration de la Protection</string>
+    <string name="accessibility_description">Surveille et bloque les applications de paris et les sites addictifs.</string>
+    <string name="device_admin_description">Empêche la désinstallation impulsive d\'UrgeVault sans votre code PIN.</string>
+
+    <string name="status_protected">Bouclier Actif</string>
+    <string name="status_unprotected">Bouclier Inactif</string>
+    <string name="status_protected_desc">Tous les sites de paris et applications sont bloqués.</string>
+    <string name="status_unprotected_desc">Le bouclier est en pause.</string>
+
+    <string name="vpn_service_title">Filtre Web</string>
+    <string name="vpn_service_desc">Intercepte les connexions vers les sites de paris.</string>
+    <string name="accessibility_service_title">Gardien d\'Addiction</string>
+    <string name="accessibility_service_desc">Ferme instantanément les applications de jeux d\'argent.</string>
+    <string name="notification_service_title">Bloqueur de Notifications</string>
+    <string name="notification_service_desc">Coupe les alertes et offres promotionnelles de paris.</string>
+    <string name="device_admin_title">Verrou Anti-Désinstallation</string>
+    <string name="device_admin_desc">Empêche la suppression impulsive de l\'application.</string>
+
+    <!-- Urge SOS Strings -->
+    <string name="sos_title">Urge SOS</string>
+    <string name="sos_subtitle">Faites une pause avant d\'agir. Vous n\'avez pas besoin de tout régler maintenant.</string>
+    <string name="sos_slider_title">Quelle est l\'intensité de l\'envie ?</string>
+    <string name="sos_breathe_title">Respiration d\'Ancrage de 60s</string>
+    <string name="sos_breathe_desc">Suivez le cercle : Inspirez 4s, Maintenez 7s, Expirez 8s.</string>
+    <string name="sos_delay_title">Minuteur de Report de 15 Minutes</string>
+    <string name="sos_delay_desc">Le pic de dopamine retombe en 15 minutes. Accordez-vous ce répit.</string>
+    <string name="sos_why_title">Pourquoi j\'ai commencé ce voyage</string>
+    <string name="sos_contact_trusted">Appeler un proche de confiance</string>
+    <string name="sos_crisis_helpline">Ligne d\'assistance gratuite 24/7</string>
+    <string name="sos_helpline_number">09 74 75 13 13 / 112</string>
+    <string name="sos_complete_button">J\'ai surmonté l\'envie • Enregistrer la Victoire</string>
+
+    <!-- Medical Advisory -->
+    <string name="alcohol_medical_warning_title">Avis Médical Important</string>
+    <string name="alcohol_medical_warning">UrgeVault est un compagnon de soutien personnel et ne remplace pas un avis médical. Le sevrage alcoolique peut présenter des risques sérieux en cas de dépendance physique. Consultez immédiatement un professionnel de santé en cas de symptômes graves.</string>
+
+    <!-- Blocked Screen -->
+    <string name="blocked_title">Accès Bloqué</string>
+    <string name="blocked_subtitle">UrgeVault a arrêté l\'accès à ce déclencheur.</string>
+    <string name="blocked_quote">"La première et la plus belle victoire est de se vaincre soi-même."</string>
+    <string name="blocked_helpline_text">Soutien gratuit et confidentiel 24h/24 :</string>
+    <string name="blocked_helpline_number">09 74 75 13 13 / 112</string>
+    <string name="btn_return_home">Retour à l\'Accueil</string>
+
+    <!-- Password / Lock Strings -->
+    <string name="password_title_setup">Définir le Mot de Passe Maître</string>
+    <string name="password_title_unlock">Entrer le Mot de Passe Maître</string>
+    <string name="password_desc_setup">Définissez un code PIN ou un mot de passe sécurisé pour protéger vos paramètres.</string>
+    <string name="password_desc_unlock">Entrez votre mot de passe pour modifier les protections.</string>
+    <string name="password_hint">Entrez votre code PIN / Mot de passe</string>
+    <string name="password_confirm_hint">Confirmez votre code PIN / Mot de passe</string>
+    <string name="btn_confirm">Confirmer</string>
+    <string name="btn_cancel">Annuler</string>
+    <string name="btn_unlock">Déverrouiller</string>
+    <string name="error_password_mismatch">Les mots de passe ne correspondent pas.</string>
+    <string name="error_password_incorrect">Mot de passe incorrect. Accès refusé.</string>
+    <string name="error_password_short">Le mot de passe doit comporter au moins 4 caractères.</string>
+
+    <!-- Stats -->
+    <string name="stats_domains_blocked">Domaines Bloqués</string>
+    <string name="stats_apps_blocked">Applications Bloquées</string>
+    <string name="stats_events_intercepted">Interceptions</string>
+
+    <string name="settings_language_currency_title">Langue et Devise</string>
+    <string name="settings_protection_mode_title">Méthode de Protection</string>
+    <string name="settings_ally_title">Allié de Confiance</string>
+    <string name="call_ally_default">Appeler mon Allié</string>
+</resources>

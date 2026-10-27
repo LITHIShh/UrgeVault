@@ -67,4 +67,10 @@
     <string name="stats_domains_blocked">Blocked Domains</string>
     <string name="stats_apps_blocked">Blocked Apps</string>
     <string name="stats_events_intercepted">Interceptions</string>
+
+    <!-- Global Multi-Language & Ally Settings -->
+    <string name="settings_language_currency_title">Language &amp; Currency</string>
+    <string name="settings_protection_mode_title">Shield Protection Mode</string>
+    <string name="settings_ally_title">Emergency Support Ally</string>
+    <string name="call_ally_default">Call Ally</string>
 </resources>
