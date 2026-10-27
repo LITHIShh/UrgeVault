@@ -33,9 +33,9 @@ object TimeThemeManager {
      * Generates a warm, highly personalized greeting for the top corner of the app,
      * tailored to urge management and emotional resilience at that hour.
      */
-    fun getPersonalizedGreeting(soberDays: Int = 0): PersonalizedGreeting {
+    fun getPersonalizedGreeting(soberDays: Long = 0L): PersonalizedGreeting {
         val slot = getCurrentTimeSlot()
-        val streakText = if (soberDays > 0) "Day $soberDays Clean" else "Fortress Active"
+        val streakText = if (soberDays > 0L) "Day $soberDays Clean" else "Fortress Active"
 
         return when (slot) {
             TimeSlot.MORNING -> PersonalizedGreeting(
@@ -64,6 +64,9 @@ object TimeThemeManager {
             )
         }
     }
+
+    fun getPersonalizedGreeting(soberDays: Int): PersonalizedGreeting =
+        getPersonalizedGreeting(soberDays.toLong())
 
     /**
      * Returns true if current time is night / midnight (for OLED black shift).
