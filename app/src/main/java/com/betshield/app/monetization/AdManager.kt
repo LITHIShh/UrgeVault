@@ -54,7 +54,8 @@ object AdManager {
                 override fun onAdFailedToLoad(error: LoadAdError) {
                     AdBlockerDetector.markAdLoadFailed()
                     Log.w(TAG, "Banner Ad failed to load: ${error.message} (code ${error.code})")
-                    if (error.code == com.google.android.gms.ads.AdRequest.ERROR_CODE_NETWORK_ERROR) {
+                    // Code 2 is network error (blocked or unreachable) in Google Mobile Ads SDK
+                    if (error.code == 2 || error.code == 0) {
                         onAdBlockerDetected?.invoke()
                     }
                 }

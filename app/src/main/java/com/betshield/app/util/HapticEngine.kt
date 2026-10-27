@@ -2,7 +2,6 @@ package com.betshield.app.util
 
 import android.content.Context
 import android.os.Build
-import android.os.CombinedVibration
 import android.os.VibrationEffect
 import android.os.Vibrator
 import android.os.VibratorManager
@@ -25,7 +24,7 @@ object HapticEngine {
                 @Suppress("DEPRECATION")
                 context.getSystemService(Context.VIBRATOR_SERVICE) as? Vibrator
             }
-        } catch (_: Exception) {
+        } catch (e: Exception) {
             null
         }
     }
@@ -48,7 +47,7 @@ object HapticEngine {
                 @Suppress("DEPRECATION")
                 v.vibrate(20)
             }
-        } catch (_: Exception) {}
+        } catch (e: Exception) {}
     }
 
     /**
@@ -62,7 +61,6 @@ object HapticEngine {
 
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                // Two upbeat pulses: 30ms light, 50ms pause, 60ms strong
                 val timings = longArrayOf(0, 30, 60, 70)
                 val amplitudes = intArrayOf(0, 120, 0, 220)
                 v.vibrate(VibrationEffect.createWaveform(timings, amplitudes, -1))
@@ -70,7 +68,7 @@ object HapticEngine {
                 @Suppress("DEPRECATION")
                 v.vibrate(longArrayOf(0, 40, 50, 70), -1)
             }
-        } catch (_: Exception) {}
+        } catch (e: Exception) {}
     }
 
     /**
@@ -91,7 +89,7 @@ object HapticEngine {
                 @Suppress("DEPRECATION")
                 v.vibrate(longArrayOf(0, 80, 60, 100), -1)
             }
-        } catch (_: Exception) {}
+        } catch (e: Exception) {}
     }
 
     /**
@@ -110,6 +108,6 @@ object HapticEngine {
                 @Suppress("DEPRECATION")
                 v.vibrate(40)
             }
-        } catch (_: Exception) {}
+        } catch (e: Exception) {}
     }
 }
