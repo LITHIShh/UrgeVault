@@ -106,6 +106,13 @@ class BetShieldVpnService : VpnService(), Runnable {
                 // Set the virtual DNS server to 10.0.0.1
                 .addDnsServer(VPN_DNS_SERVER_IP)
                 .addRoute(VPN_DNS_SERVER_IP, 32)
+                // Route common public DNS resolver IPs so hardcoded and DoH lookups enter TUN
+                .addRoute("8.8.8.8", 32)
+                .addRoute("8.8.4.4", 32)
+                .addRoute("1.1.1.1", 32)
+                .addRoute("1.0.0.1", 32)
+                .addRoute("9.9.9.9", 32)
+                .addRoute("208.67.222.222", 32)
 
             // Dynamically discover and route active network DNS servers so system lookups enter TUN
             val cm = getSystemService(ConnectivityManager::class.java)

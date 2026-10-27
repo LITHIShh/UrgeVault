@@ -139,11 +139,31 @@ class BlocklistDatabase(private val context: Context) {
     private val gamblingTlds = setOf(".bet", ".casino", ".poker", ".bingo", ".gambling", ".lotto", ".vegas")
     private val adultTlds = setOf(".porn", ".xxx", ".adult", ".sex")
 
-    private val gamblingKeywords = listOf(
+    val dohBootstrapDomains = setOf(
+        "chrome.cloudflare-dns.com",
+        "cloudflare-dns.com",
+        "mozilla.cloudflare-dns.com",
+        "dns.google",
+        "dns.google.com",
+        "dns.quad9.net",
+        "doh.opendns.com",
+        "dns.adguard.com"
+    )
+
+    val gamblingKeywords = listOf(
         "casino", "sportsbook", "betting", "blackjack", "roulette",
         "slotmachine", "jackpotslots", "realmoneybet", "onlinegambling", "rummy", "teenpatti",
         "bet365", "stake", "1xbet", "parimatch", "dafabet", "fairplay", "lotus365", "mahadevbook",
-        "crickex", "betway", "bovada", "roobet", "melbet", "1win", "mostbet", "kheloo", "rajabets"
+        "crickex", "betway", "bovada", "roobet", "melbet", "1win", "mostbet", "kheloo", "rajabets",
+        "betbhai", "laser247", "diamond247", "sky247", "4rabet", "10cric", "indibet", "purewin",
+        "baazi247", "fun88", "betbarter", "linebet", "megapari", "winzo", "dream11", "my11circle",
+        "myteam11", "mpl", "rummycircle", "jungleerummy", "zupee", "pokerbaazi", "spartanpoker",
+        "adda52", "draftkings", "fanduel", "betmgm", "caesars", "williamhill", "unibet", "betfair",
+        "ladbrokes", "skybet", "paddypower", "bwin", "betsson", "betsafe", "nordicbet", "betonline",
+        "mybookie", "sportsbetting", "betus", "leovegas", "mrgreen", "rizk", "dunder", "casumo",
+        "betrivers", "espnbet", "fanatics", "hardrock", "chumba", "luckyland", "pulsz", "mcluck",
+        "slotomania", "huuuge", "heartofvegas", "betfred", "betvictor", "boylesports", "virginbet",
+        "livescorebet", "grosvenor", "meccabingo", "foxybingo", "tombola", "lotto247", "thelotter"
     )
 
     private val adultKeywords = listOf("porn", "xxx", "nsfw", "erotic", "nude", "camgirl", "onlyfans")
@@ -163,6 +183,13 @@ class BlocklistDatabase(private val context: Context) {
             .removeSuffix(".")
 
         if (cleanDomain.isBlank()) return false
+
+        // 0. Chrome / Android DoH bootstrap domains (forces browser to use device DNS)
+        if (prefsManager.isShieldEnabled) {
+            for (doh in dohBootstrapDomains) {
+                if (cleanDomain == doh || cleanDomain.endsWith(".$doh")) return true
+            }
+        }
 
         // 1. User custom blocked websites (ALWAYS APPLIED)
         for (custom in prefsManager.customDomains) {
@@ -224,6 +251,41 @@ class BlocklistDatabase(private val context: Context) {
         if (prefsManager.isCryptoBlockingEnabled) {
             for (blocked in cryptoDomains) {
                 if (cleanDomain == blocked || cleanDomain.endsWith(".$blocked")) return true
+            }
+        }
+
+        return false
+    }
+
+    /**
+     * Checks if a raw text snippet (from browser Omnibox, search input, or page title)
+     * is associated with betting, gambling, or custom blocked targets.
+     */
+    fun isTextGamblingRelated(rawText: String): Boolean {
+        if (rawText.isBlank()) return false
+        val lower = rawText.lowercase(Locale.ROOT)
+
+        // 1. Check custom websites
+        for (custom in prefsManager.customDomains) {
+            val c = custom.trim().lowercase(Locale.ROOT)
+                .removePrefix("https://")
+                .removePrefix("http://")
+                .removePrefix("www.")
+                .split("/")[0]
+                .split(":")[0]
+                .removeSuffix(".")
+            if (c.length >= 3 && lower.contains(c)) {
+                return true
+            }
+        }
+
+        // 2. Check gambling keywords and brands
+        if (prefsManager.isGamblingBlockingEnabled) {
+            for (kw in gamblingKeywords) {
+                if (lower.contains(kw)) return true
+            }
+            for (tld in gamblingTlds) {
+                if (lower.contains(tld)) return true
             }
         }
 

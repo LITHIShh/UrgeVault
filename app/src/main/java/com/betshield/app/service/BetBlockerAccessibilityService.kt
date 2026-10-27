@@ -98,25 +98,33 @@ class BetBlockerAccessibilityService : AccessibilityService() {
             }
         }
 
-        // 2. Real-time Browser URL Inspection
+        // 2. Real-time Browser URL & Content Inspection
         if (BROWSER_PACKAGES.contains(eventPackage)) {
+            // Fast check: inspect event text directly (typed URLs, search queries, page titles)
+            for (t in event.text) {
+                val str = t?.toString() ?: ""
+                if (str.isNotBlank()) {
+                    if (blocklist.isDomainBlocked(str) || blocklist.isTextGamblingRelated(str)) {
+                        triggerBlock(str)
+                        return
+                    }
+                }
+            }
+
+            val desc = event.contentDescription?.toString() ?: ""
+            if (desc.isNotBlank()) {
+                if (blocklist.isDomainBlocked(desc) || blocklist.isTextGamblingRelated(desc)) {
+                    triggerBlock(desc)
+                    return
+                }
+            }
+
+            // Deep check: inspect the window node hierarchy (address bar & page content)
             val rootNode = rootInActiveWindow ?: event.source
             if (rootNode != null) {
                 val detectedBlockedUrl = findBlockedUrlInBrowser(rootNode)
                 if (detectedBlockedUrl != null) {
-                    Log.w(TAG, "BLOCKED website in browser: $detectedBlockedUrl")
-                    app.preferencesManager.incrementInterceptionCount()
-
-                    // Kick browser to home screen immediately
-                    performGlobalAction(GLOBAL_ACTION_HOME)
-
-                    // Launch high-priority blocked screen
-                    val blockIntent = Intent(this, BlockedActivity::class.java).apply {
-                        flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
-                        putExtra(BlockedActivity.EXTRA_TARGET, detectedBlockedUrl)
-                        putExtra(BlockedActivity.EXTRA_IS_APP, false)
-                    }
-                    startActivity(blockIntent)
+                    triggerBlock(detectedBlockedUrl)
                     return
                 }
             }
@@ -141,6 +149,23 @@ class BetBlockerAccessibilityService : AccessibilityService() {
         }
     }
 
+    private fun triggerBlock(target: String) {
+        val app = BetShieldApplication.instance
+        Log.w(TAG, "BLOCKED gambling target in browser: $target")
+        app.preferencesManager.incrementInterceptionCount()
+
+        // Kick browser to home screen immediately
+        performGlobalAction(GLOBAL_ACTION_HOME)
+
+        // Launch high-priority blocked screen with Urge SOS helper
+        val blockIntent = Intent(this, BlockedActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+            putExtra(BlockedActivity.EXTRA_TARGET, target)
+            putExtra(BlockedActivity.EXTRA_IS_APP, false)
+        }
+        startActivity(blockIntent)
+    }
+
     private fun findBlockedUrlInBrowser(rootNode: AccessibilityNodeInfo): String? {
         val app = BetShieldApplication.instance
         val blocklist = app.blocklistDatabase
@@ -153,8 +178,11 @@ class BetBlockerAccessibilityService : AccessibilityService() {
                     for (node in matches) {
                         val text = node.text?.toString()
                         if (!text.isNullOrBlank()) {
+                            if (blocklist.isDomainBlocked(text) || blocklist.isTextGamblingRelated(text)) {
+                                return text
+                            }
                             val clean = cleanUrl(text)
-                            if (clean != null && blocklist.isDomainBlocked(clean)) {
+                            if (clean != null && (blocklist.isDomainBlocked(clean) || blocklist.isTextGamblingRelated(clean))) {
                                 return clean
                             }
                         }
@@ -171,23 +199,25 @@ class BetBlockerAccessibilityService : AccessibilityService() {
         val app = BetShieldApplication.instance
         val blocklist = app.blocklistDatabase
 
-        val viewId = node.viewIdResourceName?.lowercase() ?: ""
         val text = node.text?.toString() ?: ""
         val desc = node.contentDescription?.toString() ?: ""
 
-        val isAddressNode = viewId.contains("url") || viewId.contains("address") ||
-                viewId.contains("location") || viewId.contains("omnibar") || viewId.contains("search")
-
         if (text.isNotBlank()) {
+            if (blocklist.isDomainBlocked(text) || blocklist.isTextGamblingRelated(text)) {
+                return text
+            }
             val clean = cleanUrl(text)
-            if (clean != null && blocklist.isDomainBlocked(clean)) {
+            if (clean != null && (blocklist.isDomainBlocked(clean) || blocklist.isTextGamblingRelated(clean))) {
                 return clean
             }
         }
 
         if (desc.isNotBlank()) {
+            if (blocklist.isDomainBlocked(desc) || blocklist.isTextGamblingRelated(desc)) {
+                return desc
+            }
             val clean = cleanUrl(desc)
-            if (clean != null && blocklist.isDomainBlocked(clean)) {
+            if (clean != null && (blocklist.isDomainBlocked(clean) || blocklist.isTextGamblingRelated(clean))) {
                 return clean
             }
         }

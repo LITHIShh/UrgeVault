@@ -167,8 +167,11 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.cardQuickShieldStatus.setOnClickListener {
-            // Jump to settings tab
-            binding.bottomNavigationView.selectedItemId = R.id.nav_settings
+            if (app.preferencesManager.isShieldEnabled && !BetBlockerAccessibilityService.isAccessibilityServiceEnabled(this)) {
+                promptAccessibilityActivation()
+            } else {
+                binding.bottomNavigationView.selectedItemId = R.id.nav_settings
+            }
         }
     }
 
@@ -528,9 +531,16 @@ class MainActivity : AppCompatActivity() {
         binding.switchProtectionShield.isChecked = isEnabled
         binding.switchProtectionShield.setOnCheckedChangeListener(shieldSwitchListener)
 
+        val isAccessibilityOn = BetBlockerAccessibilityService.isAccessibilityServiceEnabled(this)
+
         if (isEnabled) {
-            binding.tvQuickShieldText.text = "Shield Active"
-            binding.viewShieldDot.backgroundTintList = ContextCompat.getColorStateList(this, R.color.shield_active)
+            if (isAccessibilityOn) {
+                binding.tvQuickShieldText.text = "Shield Active (Full Defense)"
+                binding.viewShieldDot.backgroundTintList = ContextCompat.getColorStateList(this, R.color.shield_active)
+            } else {
+                binding.tvQuickShieldText.text = "Shield Active (Tap for Browser Shield)"
+                binding.viewShieldDot.backgroundTintList = ContextCompat.getColorStateList(this, R.color.warning_accent)
+            }
         } else {
             binding.tvQuickShieldText.text = "Shield Paused"
             binding.viewShieldDot.backgroundTintList = ContextCompat.getColorStateList(this, R.color.shield_inactive)
@@ -551,15 +561,19 @@ class MainActivity : AppCompatActivity() {
         }
 
         if (!BetBlockerAccessibilityService.isAccessibilityServiceEnabled(this)) {
-            AlertDialog.Builder(this, R.style.Theme_BetShield_Dialog)
-                .setTitle("Enable Browser Protection")
-                .setMessage("To block betting websites and custom blocked URLs inside Chrome, Firefox, and other browsers, UrgeVault needs Accessibility Permission.\n\nTap 'Enable Now' -> Look for 'BetShield' or 'UrgeVault' under Installed Apps -> Switch it ON.")
-                .setPositiveButton("Enable Now") { _, _ ->
-                    startActivity(Intent(android.provider.Settings.ACTION_ACCESSIBILITY_SETTINGS))
-                }
-                .setNegativeButton("Later", null)
-                .show()
+            promptAccessibilityActivation()
         }
+    }
+
+    private fun promptAccessibilityActivation() {
+        AlertDialog.Builder(this, R.style.Theme_BetShield_Dialog)
+            .setTitle("Turn ON Browser Guardian")
+            .setMessage("To block betting websites and custom URLs inside Chrome, Firefox, and other browsers, UrgeVault requires Accessibility access.\n\n1. Tap 'Enable Now'\n2. Look under 'Installed apps' (or 'Downloaded apps')\n3. Tap 'BetShield' (or 'UrgeVault') and switch it ON.")
+            .setPositiveButton("Enable Now") { _, _ ->
+                startActivity(Intent(android.provider.Settings.ACTION_ACCESSIBILITY_SETTINGS))
+            }
+            .setNegativeButton("Later", null)
+            .show()
     }
 
     private fun disableProtection() {
