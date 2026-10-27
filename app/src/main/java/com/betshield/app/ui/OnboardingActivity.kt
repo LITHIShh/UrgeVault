@@ -56,14 +56,22 @@ class OnboardingActivity : AppCompatActivity() {
         binding.cardHabitSmoking.setOnClickListener {
             binding.cbHabitSmoking.isChecked = !binding.cbHabitSmoking.isChecked
         }
+        binding.cardHabitDigital.setOnClickListener {
+            binding.cbHabitDigital.isChecked = !binding.cbHabitDigital.isChecked
+        }
+        binding.cardHabitAdult.setOnClickListener {
+            binding.cbHabitAdult.isChecked = !binding.cbHabitAdult.isChecked
+        }
 
         binding.cbHabitAlcohol.setOnCheckedChangeListener { _, isChecked ->
             binding.tvAlcoholNoticeInOnboarding.visibility = if (isChecked) View.VISIBLE else View.GONE
         }
 
         binding.btnContinueToBaseline.setOnClickListener {
-            if (!binding.cbHabitBetting.isChecked && !binding.cbHabitAlcohol.isChecked && !binding.cbHabitSmoking.isChecked) {
-                Toast.makeText(this, "Please select at least one habit to focus on.", Toast.LENGTH_SHORT).show()
+            val anyChecked = binding.cbHabitBetting.isChecked || binding.cbHabitAlcohol.isChecked ||
+                    binding.cbHabitSmoking.isChecked || binding.cbHabitDigital.isChecked || binding.cbHabitAdult.isChecked
+            if (!anyChecked) {
+                Toast.makeText(this, "Please select at least one focus habit.", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
             binding.viewFlipperOnboarding.displayedChild = 2
@@ -135,6 +143,46 @@ class OnboardingActivity : AppCompatActivity() {
                             "Preserve lung capacity and stamina",
                             "Break nicotine chemical dependency",
                             "Save money for meaningful life goals"
+                        )
+                    )
+                )
+            }
+
+            if (binding.cbHabitDigital.isChecked) {
+                profiles.add(
+                    HabitProfile(
+                        id = "habit_digital",
+                        type = HabitType.DIGITAL_ADDICTION,
+                        goal = goal,
+                        startDateEpochDay = todayEpochDay,
+                        baselineSpendPerDay = 0.0,
+                        baselineMinutesPerDay = 90,
+                        baselineQuantityPerDay = 15.0,
+                        isActive = true,
+                        motivations = listOf(
+                            "Reclaim 2-3 hours of wasted screen time every day",
+                            "Restore natural dopamine baseline and mental clarity",
+                            "Be present for real-life relationships and hobbies"
+                        )
+                    )
+                )
+            }
+
+            if (binding.cbHabitAdult.isChecked) {
+                profiles.add(
+                    HabitProfile(
+                        id = "habit_adult",
+                        type = HabitType.ADULT_CONTENT,
+                        goal = goal,
+                        startDateEpochDay = todayEpochDay,
+                        baselineSpendPerDay = 50.0,
+                        baselineMinutesPerDay = 40,
+                        baselineQuantityPerDay = 2.0,
+                        isActive = true,
+                        motivations = listOf(
+                            "Heal brain reward pathways and intimacy",
+                            "Build genuine self-confidence and self-respect",
+                            "Reclaim mental energy and focus"
                         )
                     )
                 )

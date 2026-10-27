@@ -16,6 +16,13 @@ class PreferencesManager(context: Context) {
         private const val KEY_STRICT_MODE = "key_strict_mode"
         private const val KEY_UPSTREAM_DNS = "key_upstream_dns"
 
+        // Category Blocker Keys
+        private const val KEY_BLOCK_GAMBLING = "key_block_gambling"
+        private const val KEY_BLOCK_ADULT = "key_block_adult"
+        private const val KEY_BLOCK_SOCIAL = "key_block_social"
+        private const val KEY_BLOCK_GAMING = "key_block_gaming"
+        private const val KEY_BLOCK_CRYPTO = "key_block_crypto"
+
         // Default: Cloudflare Family (1.1.1.3 blocks malware and adult/gambling)
         const val DEFAULT_DNS_PRIMARY = "1.1.1.3"
         const val DEFAULT_DNS_SECONDARY = "1.0.0.3"
@@ -35,14 +42,43 @@ class PreferencesManager(context: Context) {
         return current
     }
 
+    // Category Toggles
+    var isGamblingBlockingEnabled: Boolean
+        get() = prefs.getBoolean(KEY_BLOCK_GAMBLING, true)
+        set(value) = prefs.edit().putBoolean(KEY_BLOCK_GAMBLING, value).apply()
+
+    var isAdultBlockingEnabled: Boolean
+        get() = prefs.getBoolean(KEY_BLOCK_ADULT, true)
+        set(value) = prefs.edit().putBoolean(KEY_BLOCK_ADULT, value).apply()
+
+    var isSocialMediaBlockingEnabled: Boolean
+        get() = prefs.getBoolean(KEY_BLOCK_SOCIAL, false)
+        set(value) = prefs.edit().putBoolean(KEY_BLOCK_SOCIAL, value).apply()
+
+    var isGamingBlockingEnabled: Boolean
+        get() = prefs.getBoolean(KEY_BLOCK_GAMING, false)
+        set(value) = prefs.edit().putBoolean(KEY_BLOCK_GAMING, value).apply()
+
+    var isCryptoBlockingEnabled: Boolean
+        get() = prefs.getBoolean(KEY_BLOCK_CRYPTO, false)
+        set(value) = prefs.edit().putBoolean(KEY_BLOCK_CRYPTO, value).apply()
+
+    // Custom Domains (Websites)
     var customDomains: Set<String>
         get() = prefs.getStringSet(KEY_CUSTOM_DOMAINS, emptySet()) ?: emptySet()
         set(value) = prefs.edit().putStringSet(KEY_CUSTOM_DOMAINS, value).apply()
 
     fun addCustomDomain(domain: String) {
         val current = customDomains.toMutableSet()
-        current.add(domain.trim().lowercase())
-        customDomains = current
+        val cleanDomain = domain.trim().lowercase()
+            .removePrefix("https://")
+            .removePrefix("http://")
+            .removePrefix("www.")
+            .split("/")[0]
+        if (cleanDomain.isNotEmpty()) {
+            current.add(cleanDomain)
+            customDomains = current
+        }
     }
 
     fun removeCustomDomain(domain: String) {
@@ -51,6 +87,7 @@ class PreferencesManager(context: Context) {
         customDomains = current
     }
 
+    // Custom Apps
     var customApps: Set<String>
         get() = prefs.getStringSet(KEY_CUSTOM_APPS, emptySet()) ?: emptySet()
         set(value) = prefs.edit().putStringSet(KEY_CUSTOM_APPS, value).apply()

@@ -95,6 +95,11 @@ class MainActivity : AppCompatActivity() {
         binding.btnDailyCheckIn.setOnClickListener { showDailyCheckInDialog() }
         binding.btnQuickCheckIn.setOnClickListener { showDailyCheckInDialog() }
 
+        // Home Direct Custom Blocker Action
+        binding.btnHomeCustomBlocker.setOnClickListener {
+            startActivity(Intent(this, CustomBlockerActivity::class.java))
+        }
+
         // Vault Add Goal
         binding.btnAddSavingsGoal.setOnClickListener { showAddGoalDialog() }
 

@@ -59,6 +59,9 @@ object VaultCalculator {
             HabitType.BETTING -> "bets avoided"
             HabitType.ALCOHOL -> "standard drinks avoided"
             HabitType.SMOKING -> "cigarettes not smoked"
+            HabitType.DIGITAL_ADDICTION -> "app opens avoided"
+            HabitType.ADULT_CONTENT -> "triggers resisted"
+            HabitType.SPECULATIVE_TRADING -> "trades avoided"
         }
 
         return HabitSavingsBreakdown(

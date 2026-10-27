@@ -3,7 +3,10 @@ package com.betshield.app.model
 enum class HabitType(val displayName: String, val emoji: String) {
     BETTING("Betting & Gambling", "🎲"),
     ALCOHOL("Alcohol", "🍷"),
-    SMOKING("Smoking & Nicotine", "🚭")
+    SMOKING("Smoking & Nicotine", "🚭"),
+    DIGITAL_ADDICTION("Apps & Screen Addiction", "📱"),
+    ADULT_CONTENT("Adult & Pornography", "🛑"),
+    SPECULATIVE_TRADING("Crypto & Speculative Trading", "📈")
 }
 
 enum class GoalType(val displayName: String) {
@@ -18,7 +21,7 @@ data class HabitProfile(
     val startDateEpochDay: Long,
     val baselineSpendPerDay: Double, // in main currency units (e.g. ₹ or $)
     val baselineMinutesPerDay: Int,
-    val baselineQuantityPerDay: Double, // cigarettes per day or drinks per day
+    val baselineQuantityPerDay: Double, // cigarettes per day, drinks per day, or app opens avoided
     val currencyCode: String = "INR",
     val isActive: Boolean = true,
     val motivations: List<String> = emptyList()

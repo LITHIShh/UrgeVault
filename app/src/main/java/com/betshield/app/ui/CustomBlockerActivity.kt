@@ -9,16 +9,21 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.betshield.app.BetShieldApplication
+import com.betshield.app.R
 import com.betshield.app.databinding.ActivityCustomBlockerBinding
 import com.betshield.app.databinding.ItemBlocklistEntryBinding
 import com.betshield.app.databinding.ItemInstalledAppBinding
 import com.betshield.app.monetization.AdManager
+import com.google.android.material.materialswitch.MaterialSwitch
 import com.google.android.material.tabs.TabLayout
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -28,14 +33,20 @@ class CustomBlockerActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityCustomBlockerBinding
     private val app = BetShieldApplication.instance
+    private val prefs by lazy { app.preferencesManager }
+    private val blocklist by lazy { app.blocklistDatabase }
+    private val passwordManager by lazy { app.passwordManager }
 
     private val installedAppsList = mutableListOf<AppEntry>()
     private val filteredAppsList = mutableListOf<AppEntry>()
     private val customWebsitesList = mutableListOf<String>()
-    private val filteredWebsitesList = mutableListOf<String>()
+
+    private val preloadedBettingList = mutableListOf<Pair<String, String>>() // Name, Type
+    private val filteredBettingList = mutableListOf<Pair<String, String>>()
 
     private lateinit var appsAdapter: AppsAdapter
-    private lateinit var websitesAdapter: WebsitesAdapter
+    private lateinit var websitesAdapter: CustomWebsitesAdapter
+    private lateinit var preloadedAdapter: PreloadedBettingAdapter
 
     data class AppEntry(
         val appName: String,
@@ -49,240 +60,328 @@ class CustomBlockerActivity : AppCompatActivity() {
         binding = ActivityCustomBlockerBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        setupAdapters()
-        setupListeners()
-        loadInstalledApps()
-        loadCustomWebsites()
+        setupTabs()
+        setupCategories()
+        setupCustomWebsites()
+        setupInstalledApps()
+        setupPreloadedBetting()
+        updateBadgeCount()
 
-        // Monetization: Load AdMob Banner & Preload Interstitial
+        // Load AdMob banner at bottom
         AdManager.loadBanner(binding.adBannerContainer, this)
-        AdManager.loadInterstitial(this)
     }
 
-    private fun setupAdapters() {
-        appsAdapter = AppsAdapter(filteredAppsList)
-        websitesAdapter = WebsitesAdapter(filteredWebsitesList)
-
-        binding.rvCustomItems.layoutManager = LinearLayoutManager(this)
-        binding.rvCustomItems.adapter = appsAdapter
-    }
-
-    private fun setupListeners() {
-        binding.tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+    private fun setupTabs() {
+        binding.tabLayoutBlocker.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
-                if (tab?.position == 0) {
-                    binding.rvCustomItems.adapter = appsAdapter
-                    binding.btnAddDomain.visibility = View.GONE
-                    binding.tilSearchInput.hint = "Search installed apps..."
-                    filterApps(binding.etSearchOrAdd.text?.toString().orEmpty())
-                } else {
-                    binding.rvCustomItems.adapter = websitesAdapter
-                    binding.btnAddDomain.visibility = View.VISIBLE
-                    binding.tilSearchInput.hint = "Enter website (e.g. tiktok.com)..."
-                    filterWebsites(binding.etSearchOrAdd.text?.toString().orEmpty())
+                binding.containerTabCategories.visibility = if (tab?.position == 0) View.VISIBLE else View.GONE
+                binding.containerTabWebsites.visibility = if (tab?.position == 1) View.VISIBLE else View.GONE
+                binding.containerTabApps.visibility = if (tab?.position == 2) View.VISIBLE else View.GONE
+                binding.containerTabPreloadedBetting.visibility = if (tab?.position == 3) View.VISIBLE else View.GONE
+
+                if (tab?.position == 2 && installedAppsList.isEmpty()) {
+                    loadInstalledApps()
                 }
             }
+
             override fun onTabUnselected(tab: TabLayout.Tab?) {}
             override fun onTabReselected(tab: TabLayout.Tab?) {}
         })
+    }
 
-        binding.etSearchOrAdd.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                val query = s?.toString().orEmpty()
-                if (binding.tabLayout.selectedTabPosition == 0) {
-                    filterApps(query)
-                } else {
-                    filterWebsites(query)
+    private fun setupCategories() {
+        binding.switchBlockGambling.isChecked = prefs.isGamblingBlockingEnabled
+        binding.switchBlockAdult.isChecked = prefs.isAdultBlockingEnabled
+        binding.switchBlockSocial.isChecked = prefs.isSocialMediaBlockingEnabled
+        binding.switchBlockGaming.isChecked = prefs.isGamingBlockingEnabled
+        binding.switchBlockCrypto.isChecked = prefs.isCryptoBlockingEnabled
+
+        binding.switchBlockGambling.setOnCheckedChangeListener { _, isChecked ->
+            handleCategoryToggle(
+                targetSwitch = binding.switchBlockGambling,
+                isChecked = isChecked,
+                onApproved = {
+                    prefs.isGamblingBlockingEnabled = isChecked
+                    updateBadgeCount()
                 }
-            }
-            override fun afterTextChanged(s: Editable?) {}
-        })
+            )
+        }
 
-        // Add custom domain button
-        binding.btnAddDomain.setOnClickListener {
-            val domain = binding.etSearchOrAdd.text?.toString()?.trim()?.lowercase().orEmpty()
-            if (domain.isNotEmpty() && domain.contains(".")) {
-                app.preferencesManager.addCustomDomain(domain)
-                binding.etSearchOrAdd.setText("")
-                loadCustomWebsites()
-                Toast.makeText(this, "Website added to blocklist: $domain", Toast.LENGTH_SHORT).show()
-            } else {
-                Toast.makeText(this, "Please enter a valid domain (e.g. instagram.com)", Toast.LENGTH_SHORT).show()
-            }
+        binding.switchBlockAdult.setOnCheckedChangeListener { _, isChecked ->
+            handleCategoryToggle(
+                targetSwitch = binding.switchBlockAdult,
+                isChecked = isChecked,
+                onApproved = {
+                    prefs.isAdultBlockingEnabled = isChecked
+                    updateBadgeCount()
+                }
+            )
+        }
+
+        binding.switchBlockSocial.setOnCheckedChangeListener { _, isChecked ->
+            prefs.isSocialMediaBlockingEnabled = isChecked
+            updateBadgeCount()
+        }
+
+        binding.switchBlockGaming.setOnCheckedChangeListener { _, isChecked ->
+            prefs.isGamingBlockingEnabled = isChecked
+            updateBadgeCount()
+        }
+
+        binding.switchBlockCrypto.setOnCheckedChangeListener { _, isChecked ->
+            prefs.isCryptoBlockingEnabled = isChecked
+            updateBadgeCount()
         }
     }
 
-    private fun loadInstalledApps() {
-        binding.progressBar.visibility = View.VISIBLE
-        lifecycleScope.launch(Dispatchers.IO) {
-            val pm = packageManager
-            val packages = pm.getInstalledPackages(PackageManager.GET_META_DATA)
-            val currentPkg = packageName
-            val customBlocked = app.preferencesManager.customApps
-            val defaultBlocked = app.blocklistDatabase.defaultAppPackages
+    private fun handleCategoryToggle(targetSwitch: MaterialSwitch, isChecked: Boolean, onApproved: () -> Unit) {
+        if (!isChecked && passwordManager.isPasswordSet()) {
+            PasswordDialog(
+                context = this,
+                onSuccess = { onApproved() },
+                onCancel = { targetSwitch.isChecked = true }
+            ).show()
+        } else {
+            onApproved()
+        }
+    }
 
-            val apps = mutableListOf<AppEntry>()
-            for (pkg in packages) {
-                // Exclude system framework and BetShield itself
-                val isSystem = (pkg.applicationInfo.flags and ApplicationInfo.FLAG_SYSTEM) != 0
-                if (pkg.packageName == currentPkg || (isSystem && !pkg.packageName.contains("chrome") && !pkg.packageName.contains("browser"))) {
-                    continue
-                }
-
-                val label = pkg.applicationInfo.loadLabel(pm).toString()
-                val icon = pkg.applicationInfo.loadIcon(pm)
-                val isBlocked = customBlocked.contains(pkg.packageName) || defaultBlocked.contains(pkg.packageName)
-
-                apps.add(AppEntry(label, pkg.packageName, icon, isBlocked))
-            }
-
-            apps.sortBy { it.appName.lowercase() }
-
-            withContext(Dispatchers.Main) {
-                binding.progressBar.visibility = View.GONE
-                installedAppsList.clear()
-                installedAppsList.addAll(apps)
-                filterApps(binding.etSearchOrAdd.text?.toString().orEmpty())
+    private fun setupCustomWebsites() {
+        websitesAdapter = CustomWebsitesAdapter(customWebsitesList) { domain ->
+            // Delete custom domain with PIN check
+            if (passwordManager.isPasswordSet()) {
+                PasswordDialog(
+                    context = this,
+                    onSuccess = {
+                        prefs.removeCustomDomain(domain)
+                        loadCustomWebsites()
+                        updateBadgeCount()
+                        Toast.makeText(this, "Unblocked: $domain", Toast.LENGTH_SHORT).show()
+                    }
+                ).show()
+            } else {
+                prefs.removeCustomDomain(domain)
+                loadCustomWebsites()
+                updateBadgeCount()
+                Toast.makeText(this, "Unblocked: $domain", Toast.LENGTH_SHORT).show()
             }
         }
+
+        binding.rvCustomWebsites.layoutManager = LinearLayoutManager(this)
+        binding.rvCustomWebsites.adapter = websitesAdapter
+
+        binding.btnSubmitCustomDomain.setOnClickListener {
+            val input = binding.etCustomDomainInput.text.toString().trim()
+            if (input.isNotEmpty()) {
+                prefs.addCustomDomain(input)
+                binding.etCustomDomainInput.text?.clear()
+                loadCustomWebsites()
+                updateBadgeCount()
+                Toast.makeText(this, "Added to Blocklist: $input", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        loadCustomWebsites()
     }
 
     private fun loadCustomWebsites() {
         customWebsitesList.clear()
-        customWebsitesList.addAll(app.preferencesManager.customDomains)
-        filterWebsites(binding.etSearchOrAdd.text?.toString().orEmpty())
+        customWebsitesList.addAll(prefs.customDomains.sorted())
+        websitesAdapter.notifyDataSetChanged()
     }
 
-    private fun filterApps(query: String) {
-        val q = query.trim().lowercase()
+    private fun setupInstalledApps() {
+        appsAdapter = AppsAdapter(filteredAppsList) { entry, isBlocked ->
+            if (!isBlocked && passwordManager.isPasswordSet()) {
+                // Turning OFF an app block -> requires PIN
+                PasswordDialog(
+                    context = this,
+                    onSuccess = {
+                        prefs.removeCustomApp(entry.packageName)
+                        entry.isBlocked = false
+                        appsAdapter.notifyDataSetChanged()
+                        updateBadgeCount()
+                    },
+                    onCancel = {
+                        entry.isBlocked = true
+                        appsAdapter.notifyDataSetChanged()
+                    }
+                ).show()
+            } else {
+                if (isBlocked) {
+                    prefs.addCustomApp(entry.packageName)
+                    entry.isBlocked = true
+                } else {
+                    prefs.removeCustomApp(entry.packageName)
+                    entry.isBlocked = false
+                }
+                updateBadgeCount()
+            }
+        }
+
+        binding.rvInstalledApps.layoutManager = LinearLayoutManager(this)
+        binding.rvInstalledApps.adapter = appsAdapter
+
+        binding.etSearchApps.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                filterInstalledApps(s?.toString().orEmpty())
+            }
+            override fun afterTextChanged(s: Editable?) {}
+        })
+    }
+
+    private fun loadInstalledApps() {
+        binding.progressLoadingApps.visibility = View.VISIBLE
+        lifecycleScope.launch(Dispatchers.IO) {
+            val pm = packageManager
+            val packages = pm.getInstalledApplications(PackageManager.GET_META_DATA)
+            val currentPkg = packageName
+            val blockedApps = prefs.customApps
+
+            val apps = packages
+                .filter { it.packageName != currentPkg && (it.flags and ApplicationInfo.FLAG_SYSTEM) == 0 }
+                .map { appInfo ->
+                    AppEntry(
+                        appName = pm.getApplicationLabel(appInfo).toString(),
+                        packageName = appInfo.packageName,
+                        icon = pm.getApplicationIcon(appInfo),
+                        isBlocked = blockedApps.contains(appInfo.packageName)
+                    )
+                }
+                .sortedBy { it.appName.lowercase() }
+
+            withContext(Dispatchers.Main) {
+                installedAppsList.clear()
+                installedAppsList.addAll(apps)
+                filterInstalledApps(binding.etSearchApps.text.toString())
+                binding.progressLoadingApps.visibility = View.GONE
+            }
+        }
+    }
+
+    private fun filterInstalledApps(query: String) {
         filteredAppsList.clear()
-        if (q.isEmpty()) {
+        if (query.isBlank()) {
             filteredAppsList.addAll(installedAppsList)
         } else {
-            for (app in installedAppsList) {
-                if (app.appName.lowercase().contains(q) || app.packageName.lowercase().contains(q)) {
-                    filteredAppsList.add(app)
-                }
-            }
+            val lower = query.lowercase()
+            filteredAppsList.addAll(installedAppsList.filter {
+                it.appName.lowercase().contains(lower) || it.packageName.lowercase().contains(lower)
+            })
         }
         appsAdapter.notifyDataSetChanged()
     }
 
-    private fun filterWebsites(query: String) {
-        val q = query.trim().lowercase()
-        filteredWebsitesList.clear()
-        if (q.isEmpty()) {
-            filteredWebsitesList.addAll(customWebsitesList)
-        } else {
-            for (site in customWebsitesList) {
-                if (site.lowercase().contains(q)) {
-                    filteredWebsitesList.add(site)
+    private fun setupPreloadedBetting() {
+        preloadedBettingList.clear()
+        blocklist.gamblingDomains.sorted().forEach { preloadedBettingList.add(Pair(it, "Betting Website")) }
+        blocklist.gamblingAppPackages.sorted().forEach { preloadedBettingList.add(Pair(it, "Betting App Package")) }
+        filteredBettingList.addAll(preloadedBettingList)
+
+        preloadedAdapter = PreloadedBettingAdapter(filteredBettingList)
+        binding.rvPreloadedBetting.layoutManager = LinearLayoutManager(this)
+        binding.rvPreloadedBetting.adapter = preloadedAdapter
+
+        binding.etSearchPreloadedBetting.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                val q = s?.toString().orEmpty().lowercase()
+                filteredBettingList.clear()
+                if (q.isBlank()) {
+                    filteredBettingList.addAll(preloadedBettingList)
+                } else {
+                    filteredBettingList.addAll(preloadedBettingList.filter {
+                        it.first.lowercase().contains(q)
+                    })
                 }
+                preloadedAdapter.notifyDataSetChanged()
             }
-        }
-        websitesAdapter.notifyDataSetChanged()
+            override fun afterTextChanged(s: Editable?) {}
+        })
     }
 
-    // Apps Adapter
-    inner class AppsAdapter(private val items: List<AppEntry>) :
-        RecyclerView.Adapter<AppsAdapter.ViewHolder>() {
+    private fun updateBadgeCount() {
+        val total = blocklist.getTotalBlockedCount()
+        binding.tvTotalBlockedBadge.text = "$total Active Items Blocked"
+    }
 
-        inner class ViewHolder(val binding: ItemInstalledAppBinding) :
-            RecyclerView.ViewHolder(binding.root)
+    // ==========================================
+    // ADAPTERS
+    // ==========================================
+
+    inner class CustomWebsitesAdapter(
+        private val items: List<String>,
+        private val onDeleteClick: (String) -> Unit
+    ) : RecyclerView.Adapter<CustomWebsitesAdapter.ViewHolder>() {
+
+        inner class ViewHolder(val binding: ItemBlocklistEntryBinding) : RecyclerView.ViewHolder(binding.root)
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-            val itemBinding = ItemInstalledAppBinding.inflate(
-                LayoutInflater.from(parent.context), parent, false
-            )
-            return ViewHolder(itemBinding)
+            val b = ItemBlocklistEntryBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            return ViewHolder(b)
+        }
+
+        override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+            val domain = items[position]
+            holder.binding.tvItemName.text = domain
+            holder.binding.tvItemCategory.text = "Custom User Blocked Website"
+            holder.binding.tvItemStatus.text = "DELETE"
+            holder.binding.tvItemStatus.setTextColor(ContextCompat.getColor(this@CustomBlockerActivity, R.color.danger))
+            holder.binding.tvItemStatus.setOnClickListener { onDeleteClick(domain) }
+            holder.binding.ivItemType.setImageResource(R.drawable.ic_block)
+        }
+
+        override fun getItemCount(): Int = items.size
+    }
+
+    inner class AppsAdapter(
+        private val items: List<AppEntry>,
+        private val onToggle: (AppEntry, Boolean) -> Unit
+    ) : RecyclerView.Adapter<AppsAdapter.ViewHolder>() {
+
+        inner class ViewHolder(val binding: ItemInstalledAppBinding) : RecyclerView.ViewHolder(binding.root)
+
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+            val b = ItemInstalledAppBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            return ViewHolder(b)
         }
 
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
             val item = items[position]
             holder.binding.tvAppName.text = item.appName
             holder.binding.tvAppPackage.text = item.packageName
-            if (item.icon != null) {
-                holder.binding.ivAppIcon.setImageDrawable(item.icon)
-            }
+            holder.binding.ivAppIcon.setImageDrawable(item.icon)
 
             holder.binding.switchBlockApp.setOnCheckedChangeListener(null)
             holder.binding.switchBlockApp.isChecked = item.isBlocked
-
             holder.binding.switchBlockApp.setOnCheckedChangeListener { _, isChecked ->
-                if (isChecked) {
-                    // Blocking app
-                    item.isBlocked = true
-                    app.preferencesManager.addCustomApp(item.packageName)
-                    Toast.makeText(this@CustomBlockerActivity, "${item.appName} is now blocked", Toast.LENGTH_SHORT).show()
-                } else {
-                    // Unblocking app -> Require Password!
-                    if (app.passwordManager.isPasswordSet()) {
-                        PasswordDialog(
-                            context = this@CustomBlockerActivity,
-                            onSuccess = {
-                                item.isBlocked = false
-                                app.preferencesManager.removeCustomApp(item.packageName)
-                                Toast.makeText(this@CustomBlockerActivity, "${item.appName} unblocked", Toast.LENGTH_SHORT).show()
-                            },
-                            onCancel = {
-                                holder.binding.switchBlockApp.isChecked = true
-                            }
-                        ).show()
-                    } else {
-                        item.isBlocked = false
-                        app.preferencesManager.removeCustomApp(item.packageName)
-                    }
-                }
+                onToggle(item, isChecked)
             }
         }
 
         override fun getItemCount(): Int = items.size
     }
 
-    // Websites Adapter
-    inner class WebsitesAdapter(private val items: List<String>) :
-        RecyclerView.Adapter<WebsitesAdapter.ViewHolder>() {
+    inner class PreloadedBettingAdapter(
+        private val items: List<Pair<String, String>>
+    ) : RecyclerView.Adapter<PreloadedBettingAdapter.ViewHolder>() {
 
-        inner class ViewHolder(val binding: ItemBlocklistEntryBinding) :
-            RecyclerView.ViewHolder(binding.root)
+        inner class ViewHolder(val binding: ItemBlocklistEntryBinding) : RecyclerView.ViewHolder(binding.root)
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-            val itemBinding = ItemBlocklistEntryBinding.inflate(
-                LayoutInflater.from(parent.context), parent, false
-            )
-            return ViewHolder(itemBinding)
+            val b = ItemBlocklistEntryBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            return ViewHolder(b)
         }
 
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-            val domain = items[position]
-            holder.binding.tvItemName.text = domain
-            holder.binding.tvItemCategory.text = "Custom Blocked Domain"
-            holder.binding.tvItemStatus.text = "UNBLOCK"
-
-            holder.binding.tvItemStatus.setOnClickListener {
-                // Unblocking domain -> Require Password
-                if (app.passwordManager.isPasswordSet()) {
-                    PasswordDialog(
-                        context = this@CustomBlockerActivity,
-                        onSuccess = {
-                            app.preferencesManager.removeCustomDomain(domain)
-                            loadCustomWebsites()
-                            Toast.makeText(this@CustomBlockerActivity, "$domain removed from blocklist", Toast.LENGTH_SHORT).show()
-                        }
-                    ).show()
-                } else {
-                    app.preferencesManager.removeCustomDomain(domain)
-                    loadCustomWebsites()
-                }
-            }
+            val item = items[position]
+            holder.binding.tvItemName.text = item.first
+            holder.binding.tvItemCategory.text = item.second
+            holder.binding.tvItemStatus.text = "PROTECTED"
+            holder.binding.tvItemStatus.setTextColor(ContextCompat.getColor(this@CustomBlockerActivity, R.color.primary))
         }
 
         override fun getItemCount(): Int = items.size
-    }
-
-    override fun onDestroy() {
-        // Keep user experience clean and uncluttered (no intrusive popups)
-        super.onDestroy()
     }
 }

@@ -81,6 +81,9 @@ class UrgeSosActivity : AppCompatActivity() {
             HabitType.BETTING -> "Pause before placing a bet."
             HabitType.ALCOHOL -> "Pause before taking a drink."
             HabitType.SMOKING -> "Pause before reaching for a smoke."
+            HabitType.DIGITAL_ADDICTION -> "Pause before opening the app."
+            HabitType.ADULT_CONTENT -> "Pause before giving in to this trigger."
+            HabitType.SPECULATIVE_TRADING -> "Pause before placing this impulse trade."
         }
     }
 
@@ -222,6 +225,9 @@ class UrgeSosActivity : AppCompatActivity() {
                 HabitType.BETTING -> "• Protecting my hard-earned money and long-term security\n• Rebuilding trust with family and loved ones\n• Breaking free from chasing losses and anxiety"
                 HabitType.ALCOHOL -> "• Protecting my liver, mental clarity, and deep sleep\n• Being fully present for my loved ones\n• Waking up feeling proud, calm, and in control"
                 HabitType.SMOKING -> "• Preserving my lung capacity, stamina, and heart health\n• Smelling clean and saving thousands every month\n• Freedom from nicotine mood swings"
+                HabitType.DIGITAL_ADDICTION -> "• Reclaiming hours of daily screen time for real life\n• Restoring my attention span and dopamine baseline\n• Being fully present in the real world"
+                HabitType.ADULT_CONTENT -> "• Healing my brain\'s reward pathway and intimacy\n• Building genuine confidence and self-respect\n• Reclaiming mental energy and focus"
+                HabitType.SPECULATIVE_TRADING -> "• Stopping emotional financial gambling and revenge trades\n• Protecting capital and long-term security\n• Freedom from constant price checking anxiety"
             }
         }
     }
@@ -240,6 +246,7 @@ class UrgeSosActivity : AppCompatActivity() {
                 HabitType.BETTING -> "18005224700" // National Council on Problem Gambling
                 HabitType.ALCOHOL -> "14416" // Tele-MANAS Mental Health & Addiction Line
                 HabitType.SMOKING -> "1800112356" // National Quitline
+                else -> "14416"
             }
             val intent = Intent(Intent.ACTION_DIAL, Uri.parse("tel:$helplineNumber"))
             startActivity(intent)
