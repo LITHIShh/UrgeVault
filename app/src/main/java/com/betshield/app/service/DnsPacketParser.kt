@@ -15,6 +15,7 @@ class DnsPacketParser {
         val udpHeaderOffset: Int,
         val dnsPayloadOffset: Int,
         val dnsPayloadLength: Int,
+        val dnsQuestionLength: Int,
         val sourceIp: ByteArray,
         val destIp: ByteArray,
         val sourcePort: Int,
@@ -60,8 +61,9 @@ class DnsPacketParser {
 
         // 4. DNS Header
         val dnsOffset = udpOffset + 8
-        val dnsLength = length - dnsOffset
-        if (dnsLength < 12) return null
+        if (udpLength < 8 + 12) return null
+        val actualDnsLength = Math.min(udpLength - 8, length - dnsOffset)
+        if (actualDnsLength < 12) return null
 
         buffer.position(dnsOffset)
         val transactionId = buffer.short
@@ -80,12 +82,13 @@ class DnsPacketParser {
         // 5. Parse QNAME
         val domainBuilder = StringBuilder()
         var pos = buffer.position()
-        while (pos < length) {
+        val dnsPayloadEnd = dnsOffset + actualDnsLength
+        while (pos < dnsPayloadEnd) {
             val labelLen = buffer.get(pos).toInt() and 0xFF
             pos++
             if (labelLen == 0) break // End of QNAME
 
-            if (labelLen > 63 || pos + labelLen > length) return null // Corrupted
+            if (labelLen > 63 || pos + labelLen > dnsPayloadEnd) return null // Corrupted
 
             if (domainBuilder.isNotEmpty()) {
                 domainBuilder.append('.')
@@ -96,10 +99,13 @@ class DnsPacketParser {
             pos += labelLen
         }
 
-        if (pos + 4 > length) return null
+        if (pos + 4 > dnsPayloadEnd) return null
         buffer.position(pos)
         val qType = buffer.short
         val qClass = buffer.short
+
+        // Exact length of the Question section (QNAME + 2 bytes QTYPE + 2 bytes QCLASS)
+        val questionLength = (pos + 4) - (dnsOffset + 12)
 
         return ParsedDnsQuery(
             domain = domainBuilder.toString(),
@@ -110,7 +116,8 @@ class DnsPacketParser {
             ipHeaderLength = ihl,
             udpHeaderOffset = udpOffset,
             dnsPayloadOffset = dnsOffset,
-            dnsPayloadLength = dnsLength,
+            dnsPayloadLength = actualDnsLength,
+            dnsQuestionLength = questionLength,
             sourceIp = sourceIp,
             destIp = destIp,
             sourcePort = sourcePort,
@@ -122,7 +129,7 @@ class DnsPacketParser {
      * Builds a synthetic DNS sinkhole response returning 0.0.0.0 (or NXDOMAIN).
      */
     fun createSinkholeResponsePacket(parsed: ParsedDnsQuery, rawPacket: ByteArray): ByteArray {
-        val dnsQuestionLength = (parsed.dnsPayloadLength - 12) // includes QNAME + QTYPE + QCLASS
+        val dnsQuestionLength = parsed.dnsQuestionLength
         if (dnsQuestionLength <= 0 || parsed.dnsPayloadOffset + 12 + dnsQuestionLength > rawPacket.size) {
             return ByteArray(0)
         }
@@ -145,8 +152,8 @@ class DnsPacketParser {
         buffer.put(64.toByte()) // TTL
         buffer.put(17.toByte()) // Protocol: UDP (17)
         buffer.putShort(0.toShort()) // Checksum placeholder
-        buffer.put(parsed.destIp) // Source IP = original Dest IP
-        buffer.put(parsed.sourceIp) // Dest IP = original Source IP
+        buffer.put(parsed.destIp) // Source IP = original Dest IP (e.g. 10.0.0.1)
+        buffer.put(parsed.sourceIp) // Dest IP = original Source IP (e.g. 10.0.0.2)
 
         // Calculate IP Checksum
         val ipChecksum = computeIpChecksum(response, 0, 20)
@@ -183,7 +190,7 @@ class DnsPacketParser {
         buffer.putShort(0xC00C.toShort()) // Pointer to QNAME at offset 12 in DNS header
         buffer.putShort(0x0001.toShort()) // Type A
         buffer.putShort(0x0001.toShort()) // Class IN
-        buffer.putInt(300) // TTL = 300 seconds
+        buffer.putInt(60) // TTL = 60 seconds
         buffer.putShort(4.toShort()) // Data length = 4 bytes
         buffer.put(0.toByte()) // 0.0.0.0
         buffer.put(0.toByte())
@@ -202,7 +209,7 @@ class DnsPacketParser {
         dnsResponsePayload: ByteArray,
         payloadLength: Int
     ): ByteArray {
-        if (payloadLength <= 0 || payloadLength > dnsResponsePayload.size) {
+        if (payloadLength < 12 || payloadLength > dnsResponsePayload.size) {
             return ByteArray(0)
         }
         val totalUdpLength = 8 + payloadLength
@@ -221,8 +228,8 @@ class DnsPacketParser {
         buffer.put(64.toByte()) // TTL
         buffer.put(17.toByte()) // Protocol: UDP (17)
         buffer.putShort(0.toShort()) // Checksum placeholder
-        buffer.put(parsed.destIp) // Source IP = original Destination IP (DNS server)
-        buffer.put(parsed.sourceIp) // Destination IP = original Source IP (Client device)
+        buffer.put(parsed.destIp) // Source IP = original Destination IP (DNS server e.g. 10.0.0.1)
+        buffer.put(parsed.sourceIp) // Destination IP = original Source IP (Client device e.g. 10.0.0.2)
 
         // Calculate IP Checksum
         val ipChecksum = computeIpChecksum(packet, 0, 20)

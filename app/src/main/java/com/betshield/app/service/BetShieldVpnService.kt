@@ -19,6 +19,8 @@ import java.io.FileOutputStream
 import java.net.DatagramPacket
 import java.net.DatagramSocket
 import java.net.InetAddress
+import java.util.concurrent.ExecutorService
+import java.util.concurrent.Executors
 import java.util.concurrent.atomic.AtomicBoolean
 
 class BetShieldVpnService : VpnService(), Runnable {
@@ -29,6 +31,16 @@ class BetShieldVpnService : VpnService(), Runnable {
         private const val NOTIFICATION_ID = 1001
         private const val TAG = "BetShieldVpn"
 
+        private const val VPN_INTERFACE_IP = "10.0.0.2"
+        private const val VPN_DNS_SERVER_IP = "10.0.0.1"
+
+        private val FALLBACK_UPSTREAM_RESOLVERS = listOf(
+            "1.1.1.3", // Cloudflare Family (Malware & Adult/Betting filter)
+            "8.8.8.8", // Google DNS (Globally accessible, resilient fallback)
+            "1.1.1.1", // Cloudflare standard
+            "9.9.9.9"  // Quad9
+        )
+
         @Volatile
         var isRunning: Boolean = false
             private set
@@ -38,6 +50,10 @@ class BetShieldVpnService : VpnService(), Runnable {
     private val isStopping = AtomicBoolean(false)
     private var workerThread: Thread? = null
     private val dnsParser = DnsPacketParser()
+
+    private val outputStreamLock = Any()
+    private var outputStream: FileOutputStream? = null
+    private var dnsExecutor: ExecutorService? = null
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         val action = intent?.action ?: ACTION_START
@@ -67,7 +83,7 @@ class BetShieldVpnService : VpnService(), Runnable {
                 startForeground(NOTIFICATION_ID, notification)
             }
         } catch (e: Throwable) {
-            Log.e(TAG, "Failed to startForeground with type specialUse, retrying fallback", e)
+            Log.e(TAG, "Failed startForeground with type specialUse, using fallback", e)
             try {
                 startForeground(NOTIFICATION_ID, buildNotification())
             } catch (t: Throwable) {
@@ -83,32 +99,25 @@ class BetShieldVpnService : VpnService(), Runnable {
             val builder = Builder()
                 .setSession("UrgeVault")
                 .setMtu(1500)
-                // Use a valid /24 subnet for the TUN virtual interface
-                .addAddress("10.0.0.2", 24)
-                .addDnsServer("10.0.0.2")
-                // Route local TUN DNS traffic
-                .addRoute("10.0.0.2", 32)
-                // Intercept standard public DNS servers explicitly (/32)
-                // Note: Upstream resolver 1.1.1.3 is intentionally omitted to avoid routing loops
-                .addRoute("8.8.8.8", 32)
-                .addRoute("8.8.4.4", 32)
-                .addRoute("1.1.1.1", 32)
-                .addRoute("1.0.0.1", 32)
-                .addRoute("9.9.9.9", 32)
-                .addRoute("9.9.9.11", 32)
-                .addRoute("208.67.222.222", 32)
-                .addRoute("208.67.220.220", 32)
+                // Virtual TUN address
+                .addAddress(VPN_INTERFACE_IP, 24)
+                // Set the virtual DNS server to 10.0.0.1 (different from interface IP 10.0.0.2 to avoid martian packet drops)
+                .addDnsServer(VPN_DNS_SERVER_IP)
+                // Route ONLY the virtual DNS server IP through the TUN interface.
+                // All regular web traffic (HTTP, HTTPS, video, games) goes directly to the physical network!
+                .addRoute(VPN_DNS_SERVER_IP, 32)
 
-            // Prevent our own app's upstream sockets from routing into TUN
+            // Exclude our own app package so that upstream queries never loop
             try {
                 builder.addDisallowedApplication(packageName)
             } catch (e: Exception) {
-                Log.w(TAG, "Could not add self to disallowed apps", e)
+                Log.w(TAG, "Could not addDisallowedApplication: $packageName", e)
             }
 
             vpnInterface = builder.establish()
             if (vpnInterface != null) {
                 isRunning = true
+                dnsExecutor = Executors.newFixedThreadPool(12)
                 workerThread = Thread(this, "UrgeVault-VpnWorker").apply { start() }
                 Log.i(TAG, "UrgeVault VPN service successfully started.")
             } else {
@@ -128,22 +137,15 @@ class BetShieldVpnService : VpnService(), Runnable {
     override fun run() {
         val pfd = vpnInterface ?: return
         val inputStream = FileInputStream(pfd.fileDescriptor)
-        val outputStream = FileOutputStream(pfd.fileDescriptor)
-        val packetBuffer = ByteArray(32767)
+        synchronized(outputStreamLock) {
+            outputStream = FileOutputStream(pfd.fileDescriptor)
+        }
 
         val app = BetShieldApplication.instance
         val blocklist = app.blocklistDatabase
         val prefs = app.preferencesManager
 
-        var upstreamSocket: DatagramSocket? = null
-        try {
-            upstreamSocket = DatagramSocket().apply {
-                protect(this)
-                soTimeout = 2500
-            }
-        } catch (e: Exception) {
-            Log.e(TAG, "Error initializing upstream socket", e)
-        }
+        val packetBuffer = ByteArray(32767)
 
         while (!isStopping.get()) {
             try {
@@ -167,64 +169,31 @@ class BetShieldVpnService : VpnService(), Runnable {
                     val domain = query.domain
                     val isBlocked = blocklist.isDomainBlocked(domain)
 
+                    // Clone the raw packet bytes for asynchronous processing
+                    val rawPacketCopy = ByteArray(length)
+                    System.arraycopy(packetBuffer, 0, rawPacketCopy, 0, length)
+
                     if (isBlocked) {
                         Log.w(TAG, "BLOCKED domain: $domain")
                         prefs.incrementInterceptionCount()
 
-                        // Craft synthetic sinkhole DNS response returning 0.0.0.0
+                        // Synthesize 0.0.0.0 sinkhole response immediately
                         try {
-                            val sinkholeResponse = dnsParser.createSinkholeResponsePacket(query, packetBuffer)
+                            val sinkholeResponse = dnsParser.createSinkholeResponsePacket(query, rawPacketCopy)
                             if (sinkholeResponse.isNotEmpty()) {
-                                outputStream.write(sinkholeResponse)
-                                outputStream.flush()
+                                synchronized(outputStreamLock) {
+                                    outputStream?.write(sinkholeResponse)
+                                    outputStream?.flush()
+                                }
                             }
                         } catch (e: Exception) {
                             Log.e(TAG, "Error writing sinkhole response", e)
                         }
                     } else {
-                        // Forward clean DNS query to safe upstream DNS resolver
-                        try {
-                            if (upstreamSocket == null || upstreamSocket.isClosed) {
-                                upstreamSocket = DatagramSocket().apply {
-                                    protect(this)
-                                    soTimeout = 2500
-                                }
-                            }
-
-                            val upstreamDnsIp = InetAddress.getByName(prefs.upstreamDns)
-                            val dnsPayload = ByteArray(query.dnsPayloadLength)
-                            System.arraycopy(
-                                packetBuffer,
-                                query.dnsPayloadOffset,
-                                dnsPayload,
-                                0,
-                                query.dnsPayloadLength
-                            )
-
-                            val sendPacket = DatagramPacket(
-                                dnsPayload,
-                                dnsPayload.size,
-                                upstreamDnsIp,
-                                53
-                            )
-                            upstreamSocket?.send(sendPacket)
-
-                            val receiveBuffer = ByteArray(1500)
-                            val receivePacket = DatagramPacket(receiveBuffer, receiveBuffer.size)
-                            upstreamSocket?.receive(receivePacket)
-
-                            // Translate upstream DNS response back to TUN interface
-                            val clientResponse = dnsParser.createForwardedResponsePacket(
-                                query,
-                                receivePacket.data,
-                                receivePacket.length
-                            )
-                            if (clientResponse.isNotEmpty()) {
-                                outputStream.write(clientResponse)
-                                outputStream.flush()
-                            }
-                        } catch (e: Exception) {
-                            // DNS forward timeout or unreachability - normal for transient network changes
+                        // Forward clean DNS query to safe upstream DNS resolver in background pool
+                        val configuredUpstream = prefs.upstreamDns
+                        dnsExecutor?.execute {
+                            forwardDnsQuery(query, rawPacketCopy, configuredUpstream)
                         }
                     }
                 }
@@ -233,11 +202,84 @@ class BetShieldVpnService : VpnService(), Runnable {
                 Log.e(TAG, "Error in VPN worker packet loop", e)
             }
         }
+    }
 
-        try {
-            upstreamSocket?.close()
-        } catch (e: Exception) {
-            // Ignore
+    private fun forwardDnsQuery(
+        query: DnsPacketParser.ParsedDnsQuery,
+        rawPacket: ByteArray,
+        preferredUpstream: String
+    ) {
+        val dnsPayload = ByteArray(query.dnsPayloadLength)
+        System.arraycopy(
+            rawPacket,
+            query.dnsPayloadOffset,
+            dnsPayload,
+            0,
+            query.dnsPayloadLength
+        )
+
+        // Try preferred upstream first, then failover through known good resolvers
+        val resolversToTry = mutableListOf<String>()
+        if (preferredUpstream.isNotBlank()) {
+            resolversToTry.add(preferredUpstream)
+        }
+        for (fallback in FALLBACK_UPSTREAM_RESOLVERS) {
+            if (!resolversToTry.contains(fallback)) {
+                resolversToTry.add(fallback)
+            }
+        }
+
+        var responsePayload: ByteArray? = null
+        var responseLength = 0
+
+        for (resolverIp in resolversToTry) {
+            var socket: DatagramSocket? = null
+            try {
+                socket = DatagramSocket()
+                protect(socket)
+                socket.soTimeout = 1500
+
+                val targetAddress = InetAddress.getByName(resolverIp)
+                val sendPacket = DatagramPacket(dnsPayload, dnsPayload.size, targetAddress, 53)
+                socket.send(sendPacket)
+
+                val receiveBuffer = ByteArray(1500)
+                val receivePacket = DatagramPacket(receiveBuffer, receiveBuffer.size)
+                socket.receive(receivePacket)
+
+                if (receivePacket.length >= 12) {
+                    val respId = ((receiveBuffer[0].toInt() and 0xFF) shl 8) or (receiveBuffer[1].toInt() and 0xFF)
+                    val expectedId = query.transactionId.toInt() and 0xFFFF
+                    if (respId == expectedId) {
+                        responsePayload = receiveBuffer
+                        responseLength = receivePacket.length
+                        break
+                    }
+                }
+            } catch (_: Exception) {
+                // Timeout or network unreachable on this resolver, try next
+                continue
+            } finally {
+                try { socket?.close() } catch (_: Exception) {}
+            }
+        }
+
+        if (responsePayload != null && responseLength > 0 && !isStopping.get()) {
+            try {
+                val clientResponse = dnsParser.createForwardedResponsePacket(
+                    query,
+                    responsePayload,
+                    responseLength
+                )
+                if (clientResponse.isNotEmpty()) {
+                    synchronized(outputStreamLock) {
+                        outputStream?.write(clientResponse)
+                        outputStream?.flush()
+                    }
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "Error writing forwarded DNS response", e)
+            }
         }
     }
 
@@ -245,12 +287,22 @@ class BetShieldVpnService : VpnService(), Runnable {
         isStopping.set(true)
         isRunning = false
         try {
+            dnsExecutor?.shutdownNow()
+            dnsExecutor = null
+        } catch (_: Exception) {}
+
+        try {
             workerThread?.interrupt()
+            synchronized(outputStreamLock) {
+                outputStream?.close()
+                outputStream = null
+            }
             vpnInterface?.close()
             vpnInterface = null
         } catch (e: Exception) {
             Log.e(TAG, "Error closing VPN interface", e)
         }
+
         try {
             stopForeground(STOP_FOREGROUND_REMOVE)
         } catch (e: Exception) {
@@ -260,7 +312,6 @@ class BetShieldVpnService : VpnService(), Runnable {
     }
 
     private fun buildNotification(): Notification {
-        // Ensure channel is registered
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val nm = getSystemService(NotificationManager::class.java)
             if (nm != null && nm.getNotificationChannel(BetShieldApplication.VPN_NOTIFICATION_CHANNEL_ID) == null) {
