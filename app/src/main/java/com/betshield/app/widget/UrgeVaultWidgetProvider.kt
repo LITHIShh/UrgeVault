@@ -44,7 +44,7 @@ class UrgeVaultWidgetProvider : AppWidgetProvider() {
 
             val views = RemoteViews(context.packageName, R.layout.widget_urge_vault)
 
-            val streakText = "🔥 ${summary.longestActiveDays} Days"
+            val streakText = if (summary.longestActiveDays == 1L) "🔥 1 Day" else "🔥 ${summary.longestActiveDays} Days"
             views.setTextViewText(R.id.tvWidgetStreakDays, streakText)
             views.setTextViewText(R.id.tvWidgetMoneySaved, CurrencyFormatter.format(summary.totalMoneyProtected))
 

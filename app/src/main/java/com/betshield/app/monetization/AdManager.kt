@@ -52,6 +52,11 @@ object AdManager {
      * Attaches and loads a real or test AdMob Adaptive Banner into the provided container.
      */
     fun loadBanner(container: ViewGroup, context: Context, onAdBlockerDetected: (() -> Unit)? = null) {
+        // UrgeVault PRO: 100% Ad-Free Sanctuary
+        if (com.betshield.app.BetShieldApplication.instance.preferencesManager.isProUser) {
+            container.visibility = android.view.View.GONE
+            return
+        }
         try {
             val adUnitId = AdConfig.getBannerAdUnitId(context)
             val adView = AdView(context).apply {
@@ -89,6 +94,7 @@ object AdManager {
      * Preloads an Interstitial Ad.
      */
     fun loadInterstitial(context: Context) {
+        if (com.betshield.app.BetShieldApplication.instance.preferencesManager.isProUser) return
         val adUnitId = AdConfig.getInterstitialAdUnitId(context)
         val adRequest = AdRequest.Builder().build()
         InterstitialAd.load(
@@ -113,6 +119,10 @@ object AdManager {
      * Displays the preloaded Interstitial Ad if available.
      */
     fun showInterstitial(activity: Activity, onClosed: () -> Unit) {
+        if (com.betshield.app.BetShieldApplication.instance.preferencesManager.isProUser) {
+            onClosed()
+            return
+        }
         if (!canShowFullScreenAd()) {
             onClosed()
             return
@@ -143,6 +153,7 @@ object AdManager {
      * Preloads a Rewarded Video Ad.
      */
     fun loadRewardedAd(context: Context) {
+        if (com.betshield.app.BetShieldApplication.instance.preferencesManager.isProUser) return
         val adUnitId = AdConfig.getRewardedAdUnitId(context)
         val adRequest = AdRequest.Builder().build()
         RewardedAd.load(
@@ -167,6 +178,10 @@ object AdManager {
      * Displays a Rewarded Video Ad.
      */
     fun showRewardedAd(activity: Activity, onRewardEarned: () -> Unit, onFailedOrDismissed: () -> Unit) {
+        if (com.betshield.app.BetShieldApplication.instance.preferencesManager.isProUser) {
+            onRewardEarned()
+            return
+        }
         val ad = rewardedAd
         if (ad != null) {
             var earned = false
@@ -196,6 +211,7 @@ object AdManager {
      * Preloads an App Open Ad (high-revenue ad format on app open).
      */
     fun loadAppOpenAd(context: Context) {
+        if (com.betshield.app.BetShieldApplication.instance.preferencesManager.isProUser) return
         val adUnitId = AdConfig.getAppOpenAdUnitId(context)
         val adRequest = AdRequest.Builder().build()
         AppOpenAd.load(
@@ -220,6 +236,7 @@ object AdManager {
      * Displays App Open Ad when app enters foreground.
      */
     fun showAppOpenAd(activity: Activity) {
+        if (com.betshield.app.BetShieldApplication.instance.preferencesManager.isProUser) return
         if (!canShowFullScreenAd()) {
             return
         }

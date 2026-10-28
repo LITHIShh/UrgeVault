@@ -77,21 +77,35 @@ class BetBlockerAccessibilityService : AccessibilityService() {
         val blocklist = app.blocklistDatabase
         val passwordManager = app.passwordManager
 
-        // 1. Anti-Tampering: Protect Settings from disabling BetShield without password
-        if (eventPackage == "com.android.settings") {
-            val textContent = extractEventText(event)
-            val isTamperingAttempt = textContent.contains("urgevault", ignoreCase = true) ||
-                    textContent.contains("betshield", ignoreCase = true) ||
-                    textContent.contains("uninstall", ignoreCase = true) ||
-                    textContent.contains("force stop", ignoreCase = true)
+        // 1. Hardened Anti-Uninstall & Tamper Defense
+        val lowerPackage = eventPackage.lowercase()
+        if (lowerPackage == "com.android.settings" ||
+            lowerPackage.contains("packageinstaller") ||
+            lowerPackage.contains("settings")
+        ) {
+            val textContent = extractEventText(event).lowercase()
+            val isUrgeVaultTarget = textContent.contains("urgevault") ||
+                    textContent.contains("betshield") ||
+                    textContent.contains("quitbet") ||
+                    textContent.contains("com.betshield.app")
 
-            if (isTamperingAttempt && passwordManager.isPasswordSet() && !passwordManager.isTemporarilyUnlocked()) {
-                Log.w(TAG, "Tamper attempt detected in Settings. Forcing unlock authorization.")
+            val isTamperAction = textContent.contains("uninstall") ||
+                    textContent.contains("force stop") ||
+                    textContent.contains("deactivate") ||
+                    textContent.contains("disable") ||
+                    textContent.contains("clear data") ||
+                    textContent.contains("clear storage")
+
+            val isTamperingAttempt = (isUrgeVaultTarget && isTamperAction) ||
+                    (lowerPackage.contains("packageinstaller") && isUrgeVaultTarget)
+
+            if (isTamperingAttempt && !passwordManager.isTemporarilyUnlocked()) {
+                Log.w(TAG, "Anti-Uninstall attempt intercepted in $eventPackage! Intercepting to protect user from relapse removal.")
                 performGlobalAction(GLOBAL_ACTION_HOME)
 
                 val unlockIntent = Intent(this, PasswordUnlockActivity::class.java).apply {
                     flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
-                    putExtra(PasswordUnlockActivity.EXTRA_REASON, "Tamper Protection: Authorization Required")
+                    putExtra(PasswordUnlockActivity.EXTRA_REASON, "Anti-Uninstall Protection: Authorization Required")
                 }
                 startActivity(unlockIntent)
                 return

@@ -1,5 +1,8 @@
 package com.betshield.app.ui
 
+import android.app.admin.DevicePolicyManager
+import android.content.ComponentName
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.net.VpnService
@@ -8,6 +11,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.CompoundButton
+import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
@@ -27,12 +31,14 @@ import com.betshield.app.model.HabitType
 import com.betshield.app.model.SavingsGoal
 import com.betshield.app.monetization.AdManager
 import com.betshield.app.monetization.AdSettingsDialog
+import com.betshield.app.monetization.PremiumManager
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
 import com.betshield.app.data.PreferencesManager
 import com.betshield.app.data.QuoteManager
 import com.betshield.app.data.RecoveryQuote
 import com.betshield.app.monetization.AdBlockerDetector
+import com.betshield.app.receiver.BetShieldDeviceAdminReceiver
 import com.betshield.app.service.BetBlockerAccessibilityService
 import com.betshield.app.service.BetShieldVpnService
 import com.betshield.app.util.CurrencyFormatter
@@ -84,9 +90,90 @@ class MainActivity : AppCompatActivity() {
             enableProtection()
             updateShieldUi()
         } else {
+            // Check 24-Hour Cool-Down Delay (PRO Feature)
+            if (app.preferencesManager.isProUser && app.preferencesManager.is24HourCoolDownEnabled) {
+                val now = System.currentTimeMillis()
+                val expiry = app.preferencesManager.coolDownExpiryTimestamp
+
+                if (expiry > now) {
+                    updateShieldUi()
+                    val remainingMs = expiry - now
+                    val hours = remainingMs / (1000 * 60 * 60)
+                    val minutes = (remainingMs / (1000 * 60)) % 60
+                    val timeStr = if (hours > 0) "${hours}h ${minutes}m" else "${minutes}m"
+
+                    AlertDialog.Builder(this)
+                        .setTitle("⏳ 24-Hour Relapse Delay Active")
+                        .setMessage("Impulsive cravings subside within 20 minutes. UrgeVault's shield is locked for another $timeStr to protect your streak.\n\nOnly your Accountability Ally can override this delay.")
+                        .setPositiveButton("Stay Protected") { _, _ ->
+                            updateShieldUi()
+                        }
+                        .setNeutralButton("Ally Override") { _, _ ->
+                            if (app.passwordManager.isAllyPinSet()) {
+                                PasswordDialog(
+                                    context = this,
+                                    requireAllyPin = true,
+                                    onSuccess = {
+                                        app.preferencesManager.coolDownExpiryTimestamp = 0L
+                                        app.preferencesManager.isShieldEnabled = false
+                                        disableProtection()
+                                        updateShieldUi()
+                                        Toast.makeText(this, "Protection paused with Ally Override.", Toast.LENGTH_SHORT).show()
+                                    },
+                                    onCancel = {
+                                        updateShieldUi()
+                                    }
+                                ).show()
+                            } else {
+                                Toast.makeText(this, "No Ally PIN configured. The 24-hour delay cannot be overridden.", Toast.LENGTH_LONG).show()
+                            }
+                        }
+                        .setCancelable(false)
+                        .show()
+                    return@OnCheckedChangeListener
+                } else if (expiry == 0L) {
+                    updateShieldUi()
+                    AlertDialog.Builder(this)
+                        .setTitle("⏳ Trigger 24-Hour Relapse Delay?")
+                        .setMessage("To protect against impulsive relapse urges, you have enabled the 24-Hour Delay. Once initiated, the shield remains 100% active for 24 hours before it can be turned off.\n\nAre you sure you want to start the 24-hour cool-down?")
+                        .setPositiveButton("Start 24h Cool-Down") { _, _ ->
+                            app.preferencesManager.coolDownExpiryTimestamp = System.currentTimeMillis() + (24 * 60 * 60 * 1000L)
+                            Toast.makeText(this, "⏳ 24-Hour Relapse Delay initiated. Shield remains active for 24 hours.", Toast.LENGTH_LONG).show()
+                            updateShieldUi()
+                        }
+                        .setNegativeButton("Cancel") { _, _ ->
+                            updateShieldUi()
+                        }
+                        .show()
+                    return@OnCheckedChangeListener
+                } else {
+                    app.preferencesManager.coolDownExpiryTimestamp = 0L
+                }
+            }
+
+            // Check Accountability Ally PIN Lock (PRO Feature)
+            if (app.preferencesManager.isAllyPinEnabled && app.passwordManager.isAllyPinSet()) {
+                PasswordDialog(
+                    context = this,
+                    requireAllyPin = true,
+                    onSuccess = {
+                        app.preferencesManager.isShieldEnabled = false
+                        disableProtection()
+                        updateShieldUi()
+                        Toast.makeText(this, "Protection paused with Ally PIN.", Toast.LENGTH_SHORT).show()
+                    },
+                    onCancel = {
+                        updateShieldUi()
+                    }
+                ).show()
+                return@OnCheckedChangeListener
+            }
+
+            // Standard Master PIN Check
             if (app.passwordManager.isPasswordSet()) {
                 PasswordDialog(
                     context = this,
+                    requireAllyPin = false,
                     onSuccess = {
                         app.preferencesManager.isShieldEnabled = false
                         disableProtection()
@@ -171,6 +258,9 @@ class MainActivity : AppCompatActivity() {
         }
         updateThemeToggleUi()
         updateShieldUi()
+        updateProUi()
+        updateAllyPinUi()
+        updateDeviceAdminUi()
         refreshAllData()
         AdManager.showAppOpenAd(this)
     }
@@ -369,6 +459,164 @@ class MainActivity : AppCompatActivity() {
                 binding.bottomNavigationView.selectedItemId = R.id.nav_settings
             }
         }
+
+        // Initialize Pro & Hardened Defense Settings
+        setupProAndSecuritySettings()
+    }
+
+    private fun setupProAndSecuritySettings() {
+        val prefs = app.preferencesManager
+        val isPro = prefs.isProUser
+
+        // Quick Top Bar Pro Upgrade Badge
+        binding.tvQuickProText.text = if (isPro) "👑 PRO" else "👑 PRO"
+        binding.btnQuickProUpgrade.setOnClickListener {
+            HapticEngine.performClick(it)
+            ProPaywallDialog(this) {
+                updateProUi()
+                refreshAllData()
+            }.show()
+        }
+
+        // Settings Pro Status Card
+        updateProUi()
+
+        binding.cardSettingsProUpgrade.setOnClickListener {
+            HapticEngine.performClick(it)
+            ProPaywallDialog(this) {
+                updateProUi()
+                refreshAllData()
+            }.show()
+        }
+
+        // 24-Hour Cool-Down Delay
+        binding.switchSettings24HourDelay.isChecked = prefs.is24HourCoolDownEnabled
+        binding.switchSettings24HourDelay.setOnCheckedChangeListener { switchView, isChecked ->
+            if (!prefs.isProUser && isChecked) {
+                switchView.isChecked = false
+                Toast.makeText(this, "24-Hour Relapse Delay is an exclusive UrgeVault PRO feature.", Toast.LENGTH_SHORT).show()
+                ProPaywallDialog(this) {
+                    updateProUi()
+                }.show()
+                return@setOnCheckedChangeListener
+            }
+            prefs.is24HourCoolDownEnabled = isChecked
+            if (!isChecked) {
+                prefs.coolDownExpiryTimestamp = 0L
+            }
+            HapticEngine.performClick(switchView)
+            Toast.makeText(
+                this,
+                if (isChecked) "24-Hour Relapse Delay activated. Shield cannot be turned off instantly."
+                else "24-Hour Delay deactivated.",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+
+        // Accountability Ally PIN
+        updateAllyPinUi()
+        binding.cardSettingsAllyPin.setOnClickListener {
+            HapticEngine.performClick(it)
+            if (!prefs.isProUser) {
+                Toast.makeText(this, "Accountability Ally PIN is an exclusive UrgeVault PRO feature.", Toast.LENGTH_SHORT).show()
+                ProPaywallDialog(this) {
+                    updateProUi()
+                }.show()
+                return@setOnClickListener
+            }
+            showAllyPinSetupDialog()
+        }
+
+        // Device Admin Anti-Uninstall
+        updateDeviceAdminUi()
+        binding.btnToggleDeviceAdmin.setOnClickListener {
+            HapticEngine.performClick(it)
+            val dpm = getSystemService(Context.DEVICE_POLICY_SERVICE) as DevicePolicyManager
+            val adminComponent = ComponentName(this, BetShieldDeviceAdminReceiver::class.java)
+            if (!dpm.isAdminActive(adminComponent)) {
+                val intent = Intent(DevicePolicyManager.ACTION_ADD_DEVICE_ADMIN).apply {
+                    putExtra(DevicePolicyManager.EXTRA_DEVICE_ADMIN, adminComponent)
+                    putExtra(
+                        DevicePolicyManager.EXTRA_ADD_EXPLANATION,
+                        "Prevents impulsive uninstallation of UrgeVault in crisis moments."
+                    )
+                }
+                startActivity(intent)
+            } else {
+                Toast.makeText(this, "Anti-Uninstall Armor is already active.", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun updateProUi() {
+        val isPro = app.preferencesManager.isProUser
+        if (isPro) {
+            binding.tvSettingsProTitle.text = "👑 UrgeVault PRO Active"
+            binding.tvSettingsProStatusBadge.text = "ACTIVE"
+            binding.tvSettingsProStatusBadge.setTextColor(ContextCompat.getColor(this, R.color.primary))
+            binding.tvSettingsProStatusSubtitle.text = "100% Ad-Free Sanctuary • Relapse delay and ally armor enabled."
+            binding.cardSettingsProUpgrade.strokeColor = ContextCompat.getColor(this, R.color.primary)
+            binding.tvQuickProText.text = "👑 PRO"
+        } else {
+            binding.tvSettingsProTitle.text = "👑 UrgeVault PRO"
+            binding.tvSettingsProStatusBadge.text = "UPGRADE"
+            binding.tvSettingsProStatusBadge.setTextColor(ContextCompat.getColor(this, R.color.accent))
+            binding.tvSettingsProStatusSubtitle.text = "100% Ad-Free • 24h Delay • Accountability Ally PIN • Hardened Uninstall Armor"
+            binding.cardSettingsProUpgrade.strokeColor = ContextCompat.getColor(this, R.color.accent)
+            binding.tvQuickProText.text = "👑 PRO"
+        }
+    }
+
+    private fun updateAllyPinUi() {
+        val prefs = app.preferencesManager
+        val isAllySet = app.passwordManager.isAllyPinSet() && prefs.isAllyPinEnabled
+        binding.tvSettingsAllyPinStatus.text = if (isAllySet) "Active • Only ally can unlock changes" else "Not configured • Tap to set ally lock"
+        binding.tvSettingsAllyPinAction.text = if (isAllySet) "Manage →" else "Setup →"
+    }
+
+    private fun updateDeviceAdminUi() {
+        val dpm = getSystemService(Context.DEVICE_POLICY_SERVICE) as DevicePolicyManager
+        val adminComponent = ComponentName(this, BetShieldDeviceAdminReceiver::class.java)
+        val isAdminActive = dpm.isAdminActive(adminComponent)
+        if (isAdminActive) {
+            binding.tvSettingsDeviceAdminStatus.text = "Active • Uninstall disabled from Settings"
+            binding.btnToggleDeviceAdmin.text = "Active ✓"
+            binding.btnToggleDeviceAdmin.isEnabled = false
+        } else {
+            binding.tvSettingsDeviceAdminStatus.text = "Inactive • Tap to prevent impulsive removal"
+            binding.btnToggleDeviceAdmin.text = "Activate"
+            binding.btnToggleDeviceAdmin.isEnabled = true
+        }
+    }
+
+    private fun showAllyPinSetupDialog() {
+        val passwordManager = app.passwordManager
+        val prefs = app.preferencesManager
+
+        val input = EditText(this).apply {
+            hint = "Enter 4-6 digit secret PIN"
+            inputType = android.text.InputType.TYPE_CLASS_NUMBER or android.text.InputType.TYPE_NUMBER_VARIATION_PASSWORD
+            setPadding(48, 36, 48, 36)
+        }
+
+        AlertDialog.Builder(this)
+            .setTitle("Accountability Ally Secret PIN")
+            .setMessage("Have your trusted ally enter a PIN that only they know. You will not be able to turn off protection or uninstall without this PIN.")
+            .setView(input)
+            .setPositiveButton("Save Ally PIN") { _, _ ->
+                val pin = input.text.toString().trim()
+                if (pin.length >= 4) {
+                    passwordManager.setAllyPin(pin)
+                    prefs.isAllyPinEnabled = true
+                    updateAllyPinUi()
+                    HapticEngine.performSuccess(this)
+                    Toast.makeText(this, "🤝 Accountability Ally PIN secured!", Toast.LENGTH_LONG).show()
+                } else {
+                    Toast.makeText(this, "PIN must be at least 4 digits.", Toast.LENGTH_SHORT).show()
+                }
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
     }
 
     private fun refreshAllData() {
@@ -386,10 +634,12 @@ class MainActivity : AppCompatActivity() {
         // 1. Home Dashboard Metrics & Enhanced Streak Experience
         val days = summary.longestActiveDays
         binding.tvHomeDaysClean.text = days.toString()
+        binding.tvHomeDaysLabel.text = if (days == 1L) "Day Clean" else "Days Clean"
         binding.tvHomeMoneyProtected.text = CurrencyFormatter.format(summary.totalMoneyProtected)
         val hours = String.format("%.1f", summary.totalHoursReclaimed)
         binding.tvHomeTimeReclaimed.text = "${hours}h"
-        binding.tvHomeUrgesResisted.text = "${summary.urgesResisted} Urges"
+        binding.tvHomeUrgesResisted.text = if (summary.urgesResisted == 1) "1 Urge" else "${summary.urgesResisted} Urges"
+        binding.tvHomeUrgesLabel.text = "Surfed"
 
         // Streak Tier
         val tier = when {
@@ -556,7 +806,8 @@ class MainActivity : AppCompatActivity() {
             }
 
             val sub = TextView(this).apply {
-                text = "${item.eligibleDays} days · ${CurrencyFormatter.format(item.moneyProtected)} saved · ${item.quantityAvoided.toInt()} ${item.unitLabel}"
+                val dayLabel = if (item.eligibleDays == 1L) "1 day" else "${item.eligibleDays} days"
+                text = "$dayLabel · ${CurrencyFormatter.format(item.moneyProtected)} saved · ${item.quantityAvoided.toInt()} ${item.unitLabel}"
                 setTextColor(ContextCompat.getColor(context, R.color.text_secondary))
                 textSize = 12f
             }
@@ -616,7 +867,9 @@ class MainActivity : AppCompatActivity() {
 
             val detailsText = TextView(this).apply {
                 val hours = item.minutesReclaimed / 60.0
-                text = "${String.format("%.1f", hours)} hours saved  •  ${item.quantityAvoided.toInt()} ${item.unitLabel}"
+                val hourFormatted = String.format("%.1f", hours)
+                val hourLabel = if (hourFormatted == "1.0") "1.0 hour" else "$hourFormatted hours"
+                text = "$hourLabel saved  •  ${item.quantityAvoided.toInt()} ${item.unitLabel}"
                 setTextColor(ContextCompat.getColor(context, R.color.text_secondary))
                 textSize = 13f
             }

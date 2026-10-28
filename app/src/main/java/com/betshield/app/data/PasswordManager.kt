@@ -15,6 +15,8 @@ class PasswordManager(context: Context) {
         private const val PREFS_NAME = "betshield_security"
         private const val KEY_PASSWORD_HASH = "key_password_hash"
         private const val KEY_PASSWORD_SALT = "key_password_salt"
+        private const val KEY_ALLY_PIN_HASH = "key_ally_pin_hash"
+        private const val KEY_ALLY_PIN_SALT = "key_ally_pin_salt"
         private const val HASH_ITERATIONS = 10000
     }
 
@@ -78,6 +80,46 @@ class PasswordManager(context: Context) {
 
     fun lockSession() {
         sessionUnlockUntil = 0L
+    }
+
+    // --- Accountability Ally PIN Implementation ---
+
+    fun isAllyPinSet(): Boolean {
+        return prefs.contains(KEY_ALLY_PIN_HASH) && prefs.contains(KEY_ALLY_PIN_SALT)
+    }
+
+    fun setAllyPin(pin: String): Boolean {
+        if (pin.length < 4) return false
+        val salt = ByteArray(16)
+        SecureRandom().nextBytes(salt)
+        val hash = hashPassword(pin, salt)
+        val saltBase64 = Base64.encodeToString(salt, Base64.NO_WRAP)
+        val hashBase64 = Base64.encodeToString(hash, Base64.NO_WRAP)
+        prefs.edit()
+            .putString(KEY_ALLY_PIN_SALT, saltBase64)
+            .putString(KEY_ALLY_PIN_HASH, hashBase64)
+            .apply()
+        return true
+    }
+
+    fun verifyAllyPin(pin: String): Boolean {
+        val storedSaltBase64 = prefs.getString(KEY_ALLY_PIN_SALT, null) ?: return false
+        val storedHashBase64 = prefs.getString(KEY_ALLY_PIN_HASH, null) ?: return false
+        val salt = Base64.decode(storedSaltBase64, Base64.NO_WRAP)
+        val computedHash = hashPassword(pin, salt)
+        val computedHashBase64 = Base64.encodeToString(computedHash, Base64.NO_WRAP)
+        val matches = storedHashBase64 == computedHashBase64
+        if (matches) {
+            unlockSession(5)
+        }
+        return matches
+    }
+
+    fun clearAllyPin() {
+        prefs.edit()
+            .remove(KEY_ALLY_PIN_SALT)
+            .remove(KEY_ALLY_PIN_HASH)
+            .apply()
     }
 
     private fun hashPassword(password: String, salt: ByteArray): ByteArray {

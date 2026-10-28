@@ -107,14 +107,27 @@
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 
-    <!-- Return Home Button -->
+    <!-- Urgent Grounding & Safe Action Buttons -->
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnReturnHome"
+        android:id="@+id/btnUrgeSosGrounding"
         style="@style/Widget.Material3.Button"
         android:layout_width="match_parent"
         android:layout_height="54dp"
-        android:text="@string/btn_return_home"
+        android:layout_marginBottom="12dp"
+        android:text="🌿 Take Grounding Breath (Urge SOS)"
         android:textColor="@color/white"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        app:cornerRadius="14dp" />
+
+    <!-- Return Home Button -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnReturnHome"
+        style="@style/Widget.Material3.Button.TonalButton"
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:text="@string/btn_return_home"
+        android:textColor="@color/text_primary"
         android:textSize="15sp"
         android:textStyle="bold"
         app:cornerRadius="14dp" />

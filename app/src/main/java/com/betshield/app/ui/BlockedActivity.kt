@@ -28,10 +28,34 @@ class BlockedActivity : AppCompatActivity() {
 
         binding.tvBlockedTarget.text = if (isApp) "App: $target" else "Domain: $target"
 
-        // Helpline Phone Call Intent
+        // Dynamic SOS Grounding Quote
+        val randomQuote = com.betshield.app.data.QuoteManager.getRandomQuote()
+        binding.tvQuote.text = "\"${randomQuote.quote}\"\n— ${randomQuote.author}"
+
+        // Urgent Action: 60-Second Grounding Breath (Urge SOS)
+        binding.btnUrgeSosGrounding.setOnClickListener {
+            val sosIntent = Intent(this, UrgeSosActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+            }
+            startActivity(sosIntent)
+            finish()
+        }
+
+        // Helpline or Accountability Ally Dialing
+        val prefs = com.betshield.app.BetShieldApplication.instance.preferencesManager
+        val hasAlly = prefs.allyPhone.isNotBlank()
+        if (hasAlly) {
+            binding.tvHelpline.text = "Call Ally: ${prefs.allyName} (${prefs.allyPhone})"
+        }
+
         binding.tvHelpline.setOnClickListener {
+            val phoneUri = if (hasAlly) {
+                Uri.parse("tel:${prefs.allyPhone.trim()}")
+            } else {
+                Uri.parse("tel:18005224700")
+            }
             val phoneIntent = Intent(Intent.ACTION_DIAL).apply {
-                data = Uri.parse("tel:18005224700")
+                data = phoneUri
             }
             startActivity(phoneIntent)
         }

@@ -12,8 +12,12 @@ class PasswordUnlockActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        val app = com.betshield.app.BetShieldApplication.instance
+        val requireAlly = app.preferencesManager.isAllyPinEnabled && app.passwordManager.isAllyPinSet()
+
         val dialog = PasswordDialog(
             context = this,
+            requireAllyPin = requireAlly,
             onSuccess = {
                 finish()
             },

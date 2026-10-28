@@ -20,6 +20,7 @@ class BetShieldApplication : Application() {
     lateinit var passwordManager: PasswordManager
     lateinit var blocklistDatabase: BlocklistDatabase
     lateinit var urgeVaultRepository: com.betshield.app.data.UrgeVaultRepository
+    lateinit var premiumManager: com.betshield.app.monetization.PremiumManager
 
     override fun onCreate() {
         super.onCreate()
@@ -29,6 +30,7 @@ class BetShieldApplication : Application() {
         passwordManager = PasswordManager(this)
         blocklistDatabase = BlocklistDatabase(this)
         urgeVaultRepository = com.betshield.app.data.UrgeVaultRepository(this)
+        premiumManager = com.betshield.app.monetization.PremiumManager(this)
 
         // Initialize AdMob Monetization
         com.betshield.app.monetization.AdManager.initialize(this)

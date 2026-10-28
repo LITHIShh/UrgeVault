@@ -154,4 +154,32 @@ class PreferencesManager(context: Context) {
     var isVpnProtectionEnabled: Boolean
         get() = prefs.getBoolean("key_vpn_protection_enabled", false)
         set(value) = prefs.edit().putBoolean("key_vpn_protection_enabled", value).apply()
+
+    // UrgeVault PRO Tier & Hardened Friction Defense
+    var isProUser: Boolean
+        get() = prefs.getBoolean("key_is_pro_user", false)
+        set(value) = prefs.edit().putBoolean("key_is_pro_user", value).apply()
+
+    var proTier: String
+        get() = prefs.getString("key_pro_tier", "free") ?: "free"
+        set(value) = prefs.edit().putString("key_pro_tier", value).apply()
+
+    // 24-Hour Mandatory Cool-Down Delay (Relapse-Proof Armor)
+    var is24HourCoolDownEnabled: Boolean
+        get() = prefs.getBoolean("key_24h_cooldown_enabled", false)
+        set(value) = prefs.edit().putBoolean("key_24h_cooldown_enabled", value).apply()
+
+    var coolDownExpiryTimestamp: Long
+        get() = prefs.getLong("key_cooldown_expiry_timestamp", 0L)
+        set(value) = prefs.edit().putLong("key_cooldown_expiry_timestamp", value).apply()
+
+    // Accountability Ally Secret PIN Lock
+    var isAllyPinEnabled: Boolean
+        get() = prefs.getBoolean("key_ally_pin_enabled", false)
+        set(value) = prefs.edit().putBoolean("key_ally_pin_enabled", value).apply()
+
+    // Device Admin Anti-Uninstall Hardened Protection
+    var isDeviceAdminProtectionEnabled: Boolean
+        get() = prefs.getBoolean("key_device_admin_protection_enabled", false)
+        set(value) = prefs.edit().putBoolean("key_device_admin_protection_enabled", value).apply()
 }
