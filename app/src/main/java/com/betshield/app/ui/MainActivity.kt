@@ -609,7 +609,7 @@ class MainActivity : AppCompatActivity() {
                     passwordManager.setAllyPin(pin)
                     prefs.isAllyPinEnabled = true
                     updateAllyPinUi()
-                    HapticEngine.performSuccess(this)
+                    HapticEngine.performSuccess(context = this)
                     Toast.makeText(this, "🤝 Accountability Ally PIN secured!", Toast.LENGTH_LONG).show()
                 } else {
                     Toast.makeText(this, "PIN must be at least 4 digits.", Toast.LENGTH_SHORT).show()

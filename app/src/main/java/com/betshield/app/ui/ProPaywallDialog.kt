@@ -92,7 +92,7 @@ class ProPaywallDialog(
         }
 
         binding.btnUpgradeAction.setOnClickListener {
-            HapticEngine.performSuccess(context)
+            HapticEngine.performSuccess(context = context)
             premiumManager.activatePro(selectedTier)
             Toast.makeText(
                 context,
@@ -135,11 +135,11 @@ class ProPaywallDialog(
                 val (success, message) = premiumManager.redeemPromoCode(code)
                 Toast.makeText(context, message, Toast.LENGTH_LONG).show()
                 if (success) {
-                    HapticEngine.performSuccess(context)
+                    HapticEngine.performSuccess(context = context)
                     dialog.dismiss()
                     onSuccess?.invoke()
                 } else {
-                    HapticEngine.performWarning(context)
+                    HapticEngine.performWarning(context = context)
                 }
             }
             .setNegativeButton("Cancel", null)
